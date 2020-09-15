@@ -23,7 +23,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onFilesUntoggled,
   ...others
 }) => {
-  const [toggledButton, setToggledButton] = useState<string>(ToggleValues.NONE);
+  const [toggledButton, setToggledButton] = useState<string>(
+    ToggleValues.FILES
+  );
 
   function handleToggleChange(
     event: React.MouseEvent<HTMLElement>,
@@ -54,7 +56,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   const classes = useStyles();
   return (
     <AppBar
-      elevation={1}
+      elevation={4}
       className={classes.root}
       position="static"
       color="inherit"

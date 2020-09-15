@@ -10,8 +10,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawerPaper: {
       width: drawerWidth,
-      backgroundColor: "black",
       position: "static",
+      borderLeft: `1px solid ${theme.palette.divider}`,
+      borderRight: `1px solid ${theme.palette.divider}`,
     },
     drawerHeader: {
       display: "flex",
