@@ -13,20 +13,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&$expanded": {
       margin: "auto",
     },
+    expanded: {},
   },
 
   accordionSummary: {
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
-    minHeight: 56,
+    minHeight: 30,
     "&$expanded": {
-      minHeight: 56,
+      minHeight: 30,
+      backgroundColor: "black",
     },
+    expanded: {},
   },
   content: {
     "&$expanded": {
       margin: "12px 0",
     },
+  },
+  accordionTitle: {
+    fontSize: "1rem",
+    asdf: {},
   },
   expanded: {},
 }));
