@@ -7,6 +7,7 @@ import {
 import Dropzone from "react-dropzone";
 import React from "react";
 import CustomAccordion from "./CustomAccordion";
+import LoadProfileExcelParser from "../../common/loadprofile/ExcelParser";
 
 type LoadProfileAccordionProps = {
   expandedPanel: string;
@@ -21,6 +22,21 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   onPanelChange,
   ...others
 }) => {
+  async function handleFileDrop(files: File[]) {
+    let excelParsers: LoadProfileExcelParser[] = [];
+
+    excelParsers = files.map((file: File) => {
+      return new LoadProfileExcelParser(file);
+    });
+
+    excelParsers.forEach((parsers) => {
+      parsers
+        .extractMonthlyLoadProfileFromFile()
+        .then((result) => {})
+        .catch((er) => {});
+    });
+  }
+
   return (
     <CustomAccordion
       onPanelChange={onPanelChange}
@@ -28,7 +44,7 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
       panelName={panelName}
       expandedPanel={expandedPanel}
     >
-      <Dropzone onDrop={(acceptedFiles: File[]) => console.log(acceptedFiles)}>
+      <Dropzone onDrop={handleFileDrop}>
         {({ getRootProps, getInputProps }) => (
           <section>
             <div {...getRootProps()}>
