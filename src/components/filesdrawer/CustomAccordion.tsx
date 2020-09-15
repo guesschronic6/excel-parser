@@ -1,5 +1,5 @@
 import React from "react";
-import useStyles from "./use-styles";
+import useStyles from "./accordion-styles";
 import {
   Accordion,
   AccordionSummary,
@@ -47,7 +47,9 @@ const CustomAccordion: React.FunctionComponent<CustomAccordionProps> = ({
       >
         <Typography className={classes.accordionTitle}>{title}</Typography>
       </AccordionSummary>
-      <AccordionDetails>{children}</AccordionDetails>
+      <AccordionDetails className={classes.accordionDetails}>
+        {children}
+      </AccordionDetails>
     </Accordion>
   );
 };

@@ -20,12 +20,15 @@ class LoadProfileExcelParser {
       let workbook = await FileUtil.extractWorkbookFromFile(this.file);
       let sheets: any = workbook.Sheets;
 
-      console.log({ workbook, sheets });
-
       workbook.SheetNames.forEach((sheetName) => {
         let sheet = workbook.Sheets[sheetName];
         let range = XLSX.utils.decode_range(sheet["!ref"] as string);
-        console.log({ sheetName, sheet, range });
+
+        console.log({
+          function: "workbook.SheetNames.forEach()",
+          params: { sheetName },
+          info: { sheet, range },
+        });
       });
     } catch (error) {
       console.log(error);

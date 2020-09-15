@@ -36,6 +36,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     asdf: {},
   },
   expanded: {},
+  accordionDetails: {
+    backgroundColor: theme.palette.background.default,
+    padding: "5px",
+    position: "relative",
+  },
 }));
 
 export default useStyles;

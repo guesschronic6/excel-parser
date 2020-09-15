@@ -1,8 +1,8 @@
-import { Accordion, Drawer } from "@material-ui/core";
+import { Drawer } from "@material-ui/core";
 import React, { useState } from "react";
 import useStyles from "./use-styles";
 
-import { LoadProfileAccordion, loadProfilePanelName } from "./accordions";
+import { LoadProfileAccordion, loadProfilePanelName } from "./loadprofile";
 
 type FilesDrawerProps = {
   open: boolean;
