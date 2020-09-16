@@ -64,6 +64,8 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
         >
           {({ getRootProps, getInputProps }) => (
             <section
+              onMouseEnter={handleDragEnter}
+              onMouseLeave={handleDragLeave}
               className={clsx(classes.dropZone, {
                 [classes.dropZone_focused]: dragging,
               })}

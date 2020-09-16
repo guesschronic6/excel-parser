@@ -1,7 +1,4 @@
-import {
-  saveLoadProfileSettings,
-  loadLoadProfileSettings,
-} from "./StorageManager";
+import { LoadProfileSettings } from "./StorageManager";
 
 import LoadPRofileObjects from "./loadprofile";
 
@@ -11,4 +8,4 @@ const LoadProfile = {
   Objects: LoadPRofileObjects,
 };
 
-export { saveLoadProfileSettings, loadLoadProfileSettings, Month, LoadProfile };
+export { LoadProfileSettings, Month, LoadProfile };

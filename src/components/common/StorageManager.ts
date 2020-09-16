@@ -5,53 +5,46 @@ enum LoadProfileStorageKey {
   DATE_FORMAT = "lp_dateFormat",
 }
 
-function loadLoadProfileSettings(): {
+class LoadProfileSettings {
   kwdelCol: number;
   dateCol: number;
   timeCol: number;
   dateFormat: string;
-} {
-  const kwdelCol = Number(
-    localStorage.getItem(LoadProfileStorageKey.KWDEL) || "1"
-  );
-  const dateCol = Number(
-    localStorage.getItem(LoadProfileStorageKey.DATE) || "2"
-  );
-  const timeCol = Number(
-    localStorage.getItem(LoadProfileStorageKey.TIME) || "3"
-  );
-  const dateFormat =
-    localStorage.getItem(LoadProfileStorageKey.DATE_FORMAT) || "MM/dd/yyyy";
 
-  return {
-    kwdelCol,
-    dateCol,
-    timeCol,
-    dateFormat,
-  };
-}
-
-function saveLoadProfileSettings(
-  kwdelCol?: number,
-  dateCol?: number,
-  timeCol?: number,
-  dateFormat?: string
-) {
-  if (kwdelCol) {
-    localStorage.setItem(LoadProfileStorageKey.KWDEL, String(kwdelCol));
+  constructor() {
+    this.kwdelCol = Number(
+      localStorage.getItem(LoadProfileStorageKey.KWDEL) || "1"
+    );
+    this.dateCol = Number(
+      localStorage.getItem(LoadProfileStorageKey.DATE) || "2"
+    );
+    this.timeCol = Number(
+      localStorage.getItem(LoadProfileStorageKey.TIME) || "3"
+    );
+    this.dateFormat =
+      localStorage.getItem(LoadProfileStorageKey.DATE_FORMAT) || "MM/dd/yyyy";
   }
 
-  if (timeCol) {
-    localStorage.setItem(LoadProfileStorageKey.TIME, String(timeCol));
-  }
+  save() {
+    if (this.kwdelCol) {
+      localStorage.setItem(LoadProfileStorageKey.KWDEL, String(this.kwdelCol));
+    }
 
-  if (dateCol) {
-    localStorage.setItem(LoadProfileStorageKey.DATE, String(dateCol));
-  }
+    if (this.timeCol) {
+      localStorage.setItem(LoadProfileStorageKey.TIME, String(this.timeCol));
+    }
 
-  if (dateFormat) {
-    localStorage.setItem(LoadProfileStorageKey.DATE_FORMAT, String(dateFormat));
+    if (this.dateCol) {
+      localStorage.setItem(LoadProfileStorageKey.DATE, String(this.dateCol));
+    }
+
+    if (this.dateFormat) {
+      localStorage.setItem(
+        LoadProfileStorageKey.DATE_FORMAT,
+        String(this.dateFormat)
+      );
+    }
   }
 }
 
-export { loadLoadProfileSettings, saveLoadProfileSettings };
+export { LoadProfileSettings };
