@@ -1,4 +1,10 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme, makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles({
+  button: {
+    textTransform: "none",
+  },
+});
 
 const theme = createMuiTheme({
   palette: {
@@ -19,6 +25,18 @@ const theme = createMuiTheme({
     background: {
       default: "#F5F7F9",
     },
+  },
+
+  props: {
+    MuiButtonBase: {},
+  },
+  overrides: {
+    MuiButtonBase: {
+      root: {
+        textTransform: "none",
+      },
+    },
+    MuiTab: {},
   },
 });
 

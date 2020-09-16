@@ -7,24 +7,30 @@ import useStyles from "./use-styles";
 import React, { useState } from "react";
 
 type ToolbarProps = {
-  onSettingsClicked: () => void;
+  onSettingsToggled: () => void;
+  onSettingsUntoggled: () => void;
   onFilesToggled: () => void;
   onFilesUntoggled: () => void;
 };
 
 enum ToggleValues {
   FILES = "files",
+  SETTINGS = "settings",
   NONE = "",
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
   onFilesToggled,
-  onSettingsClicked,
+  onSettingsToggled,
+  onSettingsUntoggled,
   onFilesUntoggled,
   ...others
 }) => {
   const [toggledButton, setToggledButton] = useState<string>(
     ToggleValues.FILES
+  );
+  const [otherToggledButton, setOtherToggledButton] = useState<string>(
+    ToggleValues.SETTINGS
   );
 
   function handleToggleChange(
@@ -45,12 +51,22 @@ const Toolbar: React.FC<ToolbarProps> = ({
     }
   }
 
-  function handleSettingsClick() {
+  function handleOtherToggleChange(
+    event: React.MouseEvent<HTMLElement>,
+    newToggle: string
+  ) {
     console.log({
-      method: "handleSettingsClick()",
-      params: {},
+      method: "handleOtherToggleChange()",
+      params: { newToggle },
     });
-    onSettingsClicked();
+
+    const prevToggled = otherToggledButton;
+    setOtherToggledButton(newToggle);
+    if (newToggle == ToggleValues.SETTINGS) {
+      onSettingsToggled();
+    } else if (prevToggled == ToggleValues.SETTINGS) {
+      onSettingsUntoggled();
+    }
   }
 
   const classes = useStyles();
@@ -74,9 +90,15 @@ const Toolbar: React.FC<ToolbarProps> = ({
           </ToggleButtonGroup>
         </Box>
         <Box className={classes.otherButtonsContainer}>
-          <IconButton onClick={handleSettingsClick}>
-            <Settings />
-          </IconButton>
+          <ToggleButtonGroup
+            onChange={handleOtherToggleChange}
+            value={otherToggledButton}
+            exclusive
+          >
+            <ToggleButton value={ToggleValues.SETTINGS}>
+              <Settings />
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
       </Box>
     </AppBar>

@@ -5,6 +5,7 @@ import useStyles from "./use-style";
 import Toolbar from "../toolbar";
 import FilesDrawer, { useStyles as filesDrawerStyles } from "../filesdrawer";
 import clsx from "clsx";
+import Settings from "../settings";
 type DashboardProps = {};
 
 const Dashboard: React.FC<DashboardProps> = (props) => {
@@ -12,8 +13,15 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   const filesDrawerClasses = filesDrawerStyles();
 
   const [openFilesDrawer, setOpenFilesDrawer] = useState<boolean>(true);
+  const [openSettings, setOpenSettings] = useState<boolean>(true);
 
-  function handleSettingsClick() {}
+  function handleSettingsToggle() {
+    setOpenSettings(true);
+  }
+
+  function handleSettingsUntoggle() {
+    setOpenSettings(false);
+  }
 
   function handleFilesToggle() {
     setOpenFilesDrawer(true);
@@ -26,18 +34,18 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   return (
     <Box className={classes.root}>
       <Toolbar
-        onSettingsClicked={handleSettingsClick}
+        onSettingsToggled={handleSettingsToggle}
+        onSettingsUntoggled={handleSettingsUntoggle}
         onFilesToggled={handleFilesToggle}
         onFilesUntoggled={handleFilesUntoggle}
       />
       <FilesDrawer open={openFilesDrawer} />
       <div
-        className={clsx(filesDrawerClasses.content, {
+        className={clsx(classes.content, filesDrawerClasses.content, {
           [filesDrawerClasses.contentShift]: openFilesDrawer,
         })}
       >
-        {" "}
-        <Typography variant="h1">CONTENT HERE</Typography>
+        {openSettings && <Settings />}
       </div>
     </Box>
   );

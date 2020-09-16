@@ -1,9 +1,9 @@
 import { Typography, LinearProgress, Button } from "@material-ui/core";
 import { ErrorOutline } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import cardStyles from "./card-styles";
 import LoadProfile from "../../common/loadprofile";
-import LoadProfileExcelParser from "../../common/loadprofile/ExcelParser";
+import LoadProfileExcelParser from "../../common/loadprofile/LoadProfileExcelParser";
 
 type LoadProfileProps = {
   file: File;
@@ -13,33 +13,35 @@ const LoadProfileCard: React.FunctionComponent<LoadProfileProps> = ({
   file,
   ...others
 }) => {
-  const [progress, setProgress] = useState<{
-    message: string;
-    percent: number;
-  } | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [processInfo, setProcessInfo] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const classes = cardStyles();
 
   useEffect(() => {
-    let excelParser = new LoadProfileExcelParser(file);
-    excelParser.extractMonthlyLoadProfileFromFile(onProgress);
-  }, []);
-
-  function onProgress(message: string, progress: number) {
-    setProgress({ message, percent: progress });
-  }
+    setProcessInfo("Parsing excel file...");
+    async function generateLoadProfile() {
+      setProcessing(true);
+      let excelParser = new LoadProfileExcelParser(file);
+      await excelParser.extractMonthlyLoadProfileFromFile();
+      setProcessing(false);
+      setProcessInfo("finished");
+    }
+    generateLoadProfile();
+  }, [file]);
 
   return (
     <div className={classes.root}>
       <div className={classes.content}>
         <Typography className={classes.filename}>{file.name}</Typography>
         <div className={classes.progress_content}>
-          {progress && (
-            <LinearProgress value={progress?.percent} variant="determinate" />
-          )}
-          <Typography
-            className={classes.progress_text}
-          >{`processing ${progress?.message}%`}</Typography>
+          <LinearProgress
+            value={0}
+            variant={processing ? "indeterminate" : "determinate"}
+          />
+          <Typography className={classes.progress_text}>
+            {processInfo}
+          </Typography>
         </div>
       </div>
       <div className={classes.action}>

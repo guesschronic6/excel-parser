@@ -1,4 +1,4 @@
-import ExcelParser from "./ExcelParser";
+import LoadProfileExcelParser from "./LoadProfileExcelParser";
 
 import {
   LoadProfile_Day,
@@ -12,7 +12,7 @@ const Objects = {
   LoadProfile_Hour,
   LoadProfile_Month,
   LoadProfile_Raw,
-  ExcelParser,
+  LoadProfileExcelParser,
 };
 
 const LoadProfileUtils = {};

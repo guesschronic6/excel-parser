@@ -6,19 +6,22 @@ class LoadProfile_Raw {
   day: number;
   month: Month;
   year: number;
+  minute: number;
 
   constructor(
     kwdel: number,
     day: number,
     month: Month,
     year: number,
-    hour: number
+    hour: number,
+    minute: number
   ) {
     this.kwdel = kwdel;
     this.day = day;
     this.hour = hour;
     this.month = month;
     this.year = year;
+    this.minute = minute;
   }
 }
 
