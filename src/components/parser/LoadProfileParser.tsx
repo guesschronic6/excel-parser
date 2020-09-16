@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
 import { FileUtil } from "../common/utils";
 import XLSX from "xlsx";
-import { loadLoadProfileSettings } from "../common/StorageManager";
-import { LoadProfileSettings } from "../common/LoadProfileSettings";
-import { LoadProfile_Raw } from "../common/loadprofile/objects";
+import { LoadProfileStorage } from "../loadprofile";
+import { LoadProfileSettings } from "../loadprofile/types/LoadProfileSettings";
+import { LoadProfile_Raw } from "../loadprofile/objects";
 import moment from "moment";
 
 type LoadProfileParserProps = {
@@ -29,7 +29,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   const [progressInfo, setsProgressInfo] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
   const [settings, setSettings] = useState<LoadProfileSettings>(
-    loadLoadProfileSettings()
+    LoadProfileStorage.loadSettings()
   );
 
   useEffect(() => {
@@ -48,7 +48,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
 
   useEffect(() => {
     if (workbook === null) return;
-    setSettings(loadLoadProfileSettings());
+    setSettings(LoadProfileStorage.loadSettings());
 
     for (let sheetName of workbook.SheetNames) {
       let worksheet = workbook.Sheets[sheetName];

@@ -1,9 +1,9 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import FormTextField from "./FormTextField";
 import { Button } from "@material-ui/core";
-import { saveLoadProfileSettings, loadLoadProfileSettings } from "../../common";
+import { LoadProfileStorage } from "../../loadprofile";
 import loadProfileStyles from "./lp-styles";
-import { LoadProfileSettings } from "../../common/LoadProfileSettings";
+import { LoadProfileSettings } from "../../loadprofile/types/LoadProfileSettings";
 
 type LoadProfileSettingsProps = {};
 
@@ -18,7 +18,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
   const [timeFormat, setTimeFormat] = useState("");
 
   useEffect(() => {
-    let lpSettings = loadLoadProfileSettings();
+    let lpSettings = LoadProfileStorage.loadSettings();
     setKwdel(lpSettings.kwdelCol);
     setDateFormat(lpSettings.dateFormat);
     setDate(lpSettings.dateCol);
@@ -57,7 +57,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
   }
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    saveLoadProfileSettings({
+    LoadProfileStorage.saveSettings({
       kwdelCol: kwdel,
       timeCol: time,
       dateCol: date,

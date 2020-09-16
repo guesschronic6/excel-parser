@@ -1,9 +1,9 @@
 import { CellObject, WorkSheet } from "xlsx/types";
-import { FileUtil } from "../utils";
+import { FileUtil } from "../common/utils";
 import XLSX from "xlsx";
 import moment from "moment";
-import { LoadProfileSettings } from "../LoadProfileSettings";
-import { loadLoadProfileSettings } from "../StorageManager";
+import { LoadProfileSettings } from "./types/LoadProfileSettings";
+import LoadProfileStorage from "./LoadProfileStorage";
 import { LoadProfile_Raw } from "./objects";
 import { Month } from "../enums";
 
@@ -23,14 +23,14 @@ class LoadProfileExcelParser {
   constructor(file: File) {
     this.worksheets = [];
     this.file = file;
-    this.settings = loadLoadProfileSettings();
+    this.settings = LoadProfileStorage.loadSettings();
     this.errors = [];
   }
   //progresssCallback() params message~to progress report messagem, progress: the progress value (percent)
   async extractMonthlyLoadProfileFromFile() {
     try {
       let workbook = await FileUtil.extractWorkbookFromFile(this.file); //extracts the workbook from the file
-      this.settings = loadLoadProfileSettings(); //To reload the settings from the local storage
+      this.settings = LoadProfileStorage.loadSettings(); //To reload the settings from the local storage
       this.errors = [];
       workbook.SheetNames.forEach((sheetName) => {
         let worksheet = workbook.Sheets[sheetName];

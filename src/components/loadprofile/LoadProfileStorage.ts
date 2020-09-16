@@ -1,4 +1,4 @@
-import { LoadProfileSettings } from "./LoadProfileSettings";
+import { LoadProfileSettings } from "./types/LoadProfileSettings";
 enum LoadProfileStorageKey {
   KWDEL = "lp_kwdelCol",
   DATE = "lp_dateCol",
@@ -7,7 +7,7 @@ enum LoadProfileStorageKey {
   TIME_FORMAT = "lp_timeFormat",
 }
 
-function loadLoadProfileSettings(): LoadProfileSettings {
+function loadSettings(): LoadProfileSettings {
   let kwdelCol = Number(
     localStorage.getItem(LoadProfileStorageKey.KWDEL) || "1"
   );
@@ -26,7 +26,7 @@ function loadLoadProfileSettings(): LoadProfileSettings {
   };
 }
 
-function saveLoadProfileSettings(settings: LoadProfileSettings): void {
+function saveSettings(settings: LoadProfileSettings): void {
   if (settings.kwdelCol) {
     localStorage.setItem(
       LoadProfileStorageKey.KWDEL,
@@ -57,4 +57,9 @@ function saveLoadProfileSettings(settings: LoadProfileSettings): void {
   }
 }
 
-export { loadLoadProfileSettings, saveLoadProfileSettings };
+const LoadProfileStorage = {
+  loadSettings,
+  saveSettings,
+};
+
+export default LoadProfileStorage;

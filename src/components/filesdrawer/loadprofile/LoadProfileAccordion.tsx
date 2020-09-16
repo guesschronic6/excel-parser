@@ -1,17 +1,13 @@
-import Dropzone, { useDropzone } from "react-dropzone";
 import React, { useEffect, useState } from "react";
-import CustomAccordion from "../customaccordion/";
-import LoadProfileCard from "./LoadProfileCard";
-import { Box, Typography } from "@material-ui/core";
+import CustomAccordion from "../CustomAccordion";
+import FileCard from "../FileCard";
 import { LoadProfileParser } from "../../parser";
-import useStyles from "./use-styles";
-import clsx from "clsx";
+import FileDrop from "../FileDrop";
 
 type LoadProfileAccordionProps = {
   expandedPanel: string;
   onPanelChange: (newPanel: string) => void;
 };
-
 const panelName = "laodprofile_filespanel";
 const title = "Load Profile Files";
 
@@ -21,8 +17,6 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   ...others
 }) => {
   const [files, setFiles] = useState<{ key: string; value: File }[]>([]);
-  const [dragging, setDragging] = useState(false);
-  const classes = useStyles();
 
   useEffect(() => {
     console.log("new fiels added");
@@ -40,13 +34,9 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
     });
   }
 
-  function handleDragEnter() {
-    setDragging(true);
-  }
+  function handleDragEnter() {}
 
-  function handleDragLeave() {
-    setDragging(false);
-  }
+  function handleDragLeave() {}
 
   return (
     <CustomAccordion
@@ -55,67 +45,36 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
       panelName={panelName}
       expandedPanel={expandedPanel}
     >
-      <Box display="flex" flexDirection="column" width="100%">
-        <Dropzone
-          onDrop={handleFileDrop}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <section
-              onMouseEnter={handleDragEnter}
-              onMouseLeave={handleDragLeave}
-              className={clsx(classes.dropZone, {
-                [classes.dropZone_focused]: dragging,
-              })}
-            >
-              <div
-                {...getRootProps({ className: `${classes.dropZone_content}` })}
-              >
-                <input {...getInputProps()} />
-                <Typography
-                  variant="subtitle1"
-                  color="textSecondary"
-                  className={classes.dropZoneText}
-                >
-                  Drag 'n' drop some files here, or click to select files
-                </Typography>
-              </div>
-            </section>
-          )}
-        </Dropzone>
-        <Box
-          display="flex"
-          flexDirection="column"
-          maxWidth="100%"
-          gridGap={5}
-          marginTop={1}
-        >
-          {files.map((file) => {
-            return (
-              <LoadProfileParser
-                key={file.key}
-                file={file.value}
-                render={({
-                  progress,
-                  progressInfo,
-                  file,
-                }: {
-                  progress: number;
-                  progressInfo: string;
-                  file: File;
-                }) => (
-                  <LoadProfileCard
-                    progress={progress}
-                    progressInfo={progressInfo}
-                    file={file}
-                  />
-                )}
-              />
-            );
-          })}
-        </Box>
-      </Box>
+      <FileDrop
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onFileDrop={handleFileDrop}
+        helperText="Drop files here"
+      >
+        {files.map((file) => {
+          return (
+            <LoadProfileParser
+              key={file.key}
+              file={file.value}
+              render={({
+                progress,
+                progressInfo,
+                file,
+              }: {
+                progress: number;
+                progressInfo: string;
+                file: File;
+              }) => (
+                <FileCard
+                  progress={progress}
+                  progressInfo={progressInfo}
+                  file={file}
+                />
+              )}
+            />
+          );
+        })}
+      </FileDrop>
     </CustomAccordion>
   );
 };

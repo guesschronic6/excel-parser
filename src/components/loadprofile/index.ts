@@ -1,3 +1,3 @@
-import { LoadProfileAccordion2 } from "./components";
+import LoadProfileStorage from "./LoadProfileStorage";
 
-export { LoadProfileAccordion2 };
+export { LoadProfileStorage };
