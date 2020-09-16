@@ -1,5 +1,4 @@
 import React from "react";
-import useStyles from "./accordion-styles";
 import {
   Accordion,
   AccordionSummary,
@@ -7,6 +6,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
+import useStyles from "./use-styles";
 
 type CustomAccordionProps = {
   expandedPanel: string;

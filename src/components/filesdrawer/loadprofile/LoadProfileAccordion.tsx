@@ -1,6 +1,6 @@
 import Dropzone, { useDropzone } from "react-dropzone";
 import React, { useEffect, useState } from "react";
-import CustomAccordion from "../CustomAccordion";
+import CustomAccordion from "../customaccordion/";
 import LoadProfileCard from "./LoadProfileCard";
 import { Box, Typography } from "@material-ui/core";
 import { LoadProfileParser } from "../../parser";
@@ -114,10 +114,6 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
               />
             );
           })}
-
-          {/* {files.map((file) => {
-            return <LoadProfileCard key={file.key} file={file.value} />;
-          })} */}
         </Box>
       </Box>
     </CustomAccordion>

@@ -5,9 +5,7 @@ import moment from "moment";
 import { LoadProfileSettings } from "../LoadProfileSettings";
 import { loadLoadProfileSettings } from "../StorageManager";
 import { LoadProfile_Raw } from "./objects";
-import { ErrorSharp } from "@material-ui/icons";
 import { Month } from "../enums";
-import SelectInput from "@material-ui/core/Select/SelectInput";
 
 type LoadProfileCellData = {
   kwdelCell: CellObject;
