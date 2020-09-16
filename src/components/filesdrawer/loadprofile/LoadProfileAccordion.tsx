@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import CustomAccordion from "../CustomAccordion";
 import LoadProfileCard from "./LoadProfileCard";
 import { Box, Typography } from "@material-ui/core";
+import { LoadProfileParser } from "../../parser";
 import useStyles from "./use-styles";
 import clsx from "clsx";
 
@@ -40,12 +41,10 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   }
 
   function handleDragEnter() {
-    console.log("drag enter");
     setDragging(true);
   }
 
   function handleDragLeave() {
-    console.log("drag leave");
     setDragging(false);
   }
 
@@ -93,8 +92,32 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
           marginTop={1}
         >
           {files.map((file) => {
-            return <LoadProfileCard key={file.key} file={file.value} />;
+            return (
+              <LoadProfileParser
+                key={file.key}
+                file={file.value}
+                render={({
+                  progress,
+                  progressInfo,
+                  file,
+                }: {
+                  progress: number;
+                  progressInfo: string;
+                  file: File;
+                }) => (
+                  <LoadProfileCard
+                    progress={progress}
+                    progressInfo={progressInfo}
+                    file={file}
+                  />
+                )}
+              />
+            );
           })}
+
+          {/* {files.map((file) => {
+            return <LoadProfileCard key={file.key} file={file.value} />;
+          })} */}
         </Box>
       </Box>
     </CustomAccordion>

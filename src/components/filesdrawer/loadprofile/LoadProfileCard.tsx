@@ -7,40 +7,26 @@ import LoadProfileExcelParser from "../../common/loadprofile/LoadProfileExcelPar
 
 type LoadProfileProps = {
   file: File;
+  progressInfo: string;
+  progress: number;
 };
 
 const LoadProfileCard: React.FunctionComponent<LoadProfileProps> = ({
   file,
+  progress,
+  progressInfo,
   ...others
 }) => {
-  const [processing, setProcessing] = useState(false);
-  const [processInfo, setProcessInfo] = useState("");
-  const [errors, setErrors] = useState<string[]>([]);
   const classes = cardStyles();
-
-  useEffect(() => {
-    setProcessInfo("Parsing excel file...");
-    async function generateLoadProfile() {
-      setProcessing(true);
-      let excelParser = new LoadProfileExcelParser(file);
-      await excelParser.extractMonthlyLoadProfileFromFile();
-      setProcessing(false);
-      setProcessInfo("finished");
-    }
-    generateLoadProfile();
-  }, [file]);
 
   return (
     <div className={classes.root}>
       <div className={classes.content}>
         <Typography className={classes.filename}>{file.name}</Typography>
         <div className={classes.progress_content}>
-          <LinearProgress
-            value={0}
-            variant={processing ? "indeterminate" : "determinate"}
-          />
+          <LinearProgress value={progress} variant="determinate" />
           <Typography className={classes.progress_text}>
-            {processInfo}
+            {progressInfo}
           </Typography>
         </div>
       </div>
