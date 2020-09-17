@@ -67,9 +67,8 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       setSettings(LoadProfileStorage.loadSettings());
 
       let lp_rawDatas: LoadProfile_Raw[] = [];
-      handleProgressUpdate(`Parsing ...`, 10);
       for (let sheetName of workbook.SheetNames) {
-        // handleProgressUpdate(`Parsing ${sheetName}`, 0);
+        handleProgressUpdate(`Parsing ${sheetName}`, 0);
 
         console.log("Parsing worksheet: " + sheetName);
         let worksheet = workbook.Sheets[sheetName];
@@ -97,7 +96,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   }, [workbook]);
 
   function handleFileParsed(lp_rawDatas: LoadProfile_Raw[]) {
-    // onFileParsed(lp_rawDatas);
+    onFileParsed(lp_rawDatas);
   }
 
   function handleProgressUpdate(info: string, percent: number) {
