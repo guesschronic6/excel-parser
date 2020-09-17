@@ -9,6 +9,7 @@ class LoadProfile_Raw {
   year: number;
   minute: number;
   meteringPoint: string;
+  row: number;
 
   constructor(
     kwdel: number,
@@ -17,7 +18,8 @@ class LoadProfile_Raw {
     year: number,
     hour: number,
     minute: number,
-    meteringPoint: string
+    meteringPoint: string,
+    row: number
   ) {
     this.kwdel = kwdel;
     this.day = day;
@@ -26,6 +28,7 @@ class LoadProfile_Raw {
     this.year = year;
     this.minute = minute;
     this.meteringPoint = meteringPoint;
+    this.row = row;
     if (this.hour === 0 && this.minute === 0) {
       this.hour = 24;
     } else if (this.minute > 0) {

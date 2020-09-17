@@ -31,7 +31,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     ToggleValues.FILES
   );
   const [otherToggledButton, setOtherToggledButton] = useState<string>(
-    ToggleValues.SETTINGS
+    ToggleValues.NONE
   );
 
   function handleToggleChange(

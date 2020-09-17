@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     width: "100%",
     height: "100%",
+    position: "relative",
   },
 }));
 

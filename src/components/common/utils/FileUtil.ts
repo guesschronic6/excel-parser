@@ -2,8 +2,9 @@ import { WorkBook } from "xlsx/types";
 import XLSX from "xlsx";
 import InvalidFileError from "../../errors/InvalidFileError";
 
-function extractWorkbookFromFile(file: File): Promise<WorkBook> {
+async function extractWorkbookFromFile(file: File): Promise<WorkBook> {
   return new Promise<WorkBook>((resolve, reject) => {
+    console.log("FileUTils: Timeout wait for 10 secs....");
     let fileExtension: string = file.name.split(".")[1];
     console.log({
       method: "extractWorkbookFromFile()",

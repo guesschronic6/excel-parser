@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     flexDirection: "column",
     zIndex: theme.zIndex.mobileStepper,
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
   title_div: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -22,7 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabs: {
     display: "inline-block",
   },
-
   content: {
     marginTop: theme.spacing(5),
     display: "flex",

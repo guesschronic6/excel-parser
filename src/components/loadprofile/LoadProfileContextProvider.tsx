@@ -23,18 +23,18 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
   >(new Map<string, LoadProfile_Month>());
 
   useEffect(() => {
-    console.log(monthlyLoadProfiles);
+    console.log("MonthlyLoadProfiles State Updated");
   }, [monthlyLoadProfiles]);
 
-  async function updateLoadProfiles(rawDatas: LoadProfile_Raw[]) {
+  function updateLoadProfiles(rawDatas: LoadProfile_Raw[]) {
     console.log("Updating load profile datas in context....");
-    rawDatas.forEach((rawData) => {
+    for (let rawData of rawDatas) {
       let key = `${rawData.month}-${rawData.year}`;
       console.log("key: " + key);
       if (!monthlyLoadProfiles.has(key)) {
         setMonthlyLoadProfiles((prevVal) => {
-          console.log("Inserting new LoadProfileMonth, key: " + key);
-          prevVal.set(key, new LoadProfile_Month(rawData.month, rawData.year));
+          // console.log("Inserting new LoadProfileMonth, key: " + key);
+          // prevVal.set(key, new LoadProfile_Month(rawData.month, rawData.year));
           return prevVal;
         });
       }
@@ -42,11 +42,11 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
       setMonthlyLoadProfiles((prevVal) => {
         let monthlyLoadProfile = prevVal.get(key) as LoadProfile_Month;
         monthlyLoadProfile?.addData(rawData);
-        prevVal.set(key, monthlyLoadProfile);
-        console.log(prevVal);
+        // prevVal.set(key, monthlyLoadProfile);
+        // console.log(prevVal);
         return prevVal;
       });
-    });
+    }
   }
 
   return (

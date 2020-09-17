@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
 import { FileUtil } from "../common/utils";
 import XLSX from "xlsx";
@@ -9,7 +9,7 @@ import moment from "moment";
 
 type LoadProfileParserProps = {
   file: File;
-  render: any;
+  render?: any;
   onFileParsed: (data: LoadProfile_Raw[]) => void;
 };
 
@@ -36,7 +36,6 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   );
 
   useEffect(() => {
-    setErrors([]);
     const extractWorkbook = async () => {
       let wb = null;
       try {
@@ -48,46 +47,70 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       }
     };
     extractWorkbook();
-  }, [file]);
+  }, []);
 
   useEffect(() => {
     console.log("errors updated");
+    console.log(errors);
   }, [errors]);
+
+  useEffect(() => {
+    console.log(`${progressInfo} percent: ${progress}`);
+  }, [progress]);
 
   //Generates the loadprofiles from the given data
   useEffect(() => {
-    if (workbook === null) return;
-    setSettings(LoadProfileStorage.loadSettings());
-    let lp_rawDatas: LoadProfile_Raw[] = [];
-    for (let sheetName of workbook.SheetNames) {
-      let worksheet = workbook.Sheets[sheetName];
-      let range = XLSX.utils.decode_range(worksheet["!ref"] as string);
-      const totalRows = range.e.r - range.s.r;
-      for (let row = 0; row <= range.e.r; row++) {
-        const percent = (row / totalRows) * 100;
-        setProgress(percent);
-        setsProgressInfo(String(`processing row ${row}/${totalRows}`));
-        try {
-          let cells = extractCells(worksheet, row, sheetName);
-          let rawData = extractDataFromRow(cells);
-          lp_rawDatas.push(rawData);
-        } catch (e) {
-          setErrors((prevVal) => [...prevVal, e.message]);
+    const parseWorkbook = async () => {
+      if (workbook === null) return;
+      console.log("Parsing workbook...");
+
+      setSettings(LoadProfileStorage.loadSettings());
+
+      let lp_rawDatas: LoadProfile_Raw[] = [];
+      handleProgressUpdate(`Parsing ...`, 10);
+      for (let sheetName of workbook.SheetNames) {
+        // handleProgressUpdate(`Parsing ${sheetName}`, 0);
+
+        console.log("Parsing worksheet: " + sheetName);
+        let worksheet = workbook.Sheets[sheetName];
+        let range = XLSX.utils.decode_range(worksheet["!ref"] as string);
+        const totalRows = range.e.r - range.s.r;
+        for (let row = 0; row <= range.e.r; row++) {
+          const percent = (row / totalRows) * 100;
+          handleProgressUpdate(`processing row ${row}/${totalRows}`, percent);
+          try {
+            let cells = await extractCells(worksheet, row, sheetName);
+            let rawData = await extractDataFromRow(cells);
+            // console.log(`Row pushed: ${rawData.row}`);
+            // console.log(rawData);
+            lp_rawDatas.push(rawData);
+          } catch (e) {
+            setErrors((prevVal) => [...prevVal, e.message]);
+          }
         }
       }
-    }
-    onFileParsed(lp_rawDatas);
-
-    setProgress(100);
-    setsProgressInfo(`Finished :D`);
+      console.log("finished");
+      handleProgressUpdate("Finished (:", 100);
+      handleFileParsed(lp_rawDatas);
+    };
+    parseWorkbook();
   }, [workbook]);
 
+  function handleFileParsed(lp_rawDatas: LoadProfile_Raw[]) {
+    // onFileParsed(lp_rawDatas);
+  }
+
+  function handleProgressUpdate(info: string, percent: number) {
+    setProgress(percent);
+    setsProgressInfo(info);
+  }
+
   //Extracts the load profile raw data from the row,
-  function extractCells(
+  async function extractCells(
     worksheet: WorkSheet,
     row: number,
     sheetName: string
-  ): LoadProfileRowData {
+  ): Promise<LoadProfileRowData> {
     //Builds the raw cell location {column, row}
     let kwdelAddress = { c: settings.kwdelCol, r: row };
     let dateAddress = { c: settings.dateCol, r: row };
@@ -107,14 +130,16 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
     };
   }
 
-  function extractDataFromRow(rowData: LoadProfileRowData): LoadProfile_Raw {
+  async function extractDataFromRow(
+    rowData: LoadProfileRowData
+  ): Promise<LoadProfile_Raw> {
     let error = null;
     let anyErrors = false;
     let rawData: LoadProfile_Raw | null = null;
 
-    let kwdelCellData = extractKwdelCellData(rowData.kwdelCell);
-    let dateCellData = extractDateCellData(rowData.dateCell);
-    let timeCellData = extractTimeCellData(rowData.timeCell);
+    let kwdelCellData = await extractKwdelCellData(rowData.kwdelCell);
+    let dateCellData = await extractDateCellData(rowData.dateCell);
+    let timeCellData = await extractTimeCellData(rowData.timeCell);
 
     anyErrors = Boolean(
       kwdelCellData.error || dateCellData.error || timeCellData.error
@@ -137,20 +162,21 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       rawData = new LoadProfile_Raw(
         kwdel,
         day,
-        month,
+        month + 1,
         year,
         hour,
         minute,
-        rowData.sheetName
+        rowData.sheetName,
+        rowData.row
       );
     }
 
     return rawData;
   }
 
-  function extractKwdelCellData(
+  async function extractKwdelCellData(
     kwdelCell: CellObject
-  ): { error: string | null; value: number | null } {
+  ): Promise<{ error: string | null; value: number | null }> {
     let error = null;
     let value = null;
     if (!(kwdelCell.t === "n" || Number(kwdelCell.v || kwdelCell.w))) {
@@ -161,9 +187,9 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
     return { error, value };
   }
 
-  function extractDateCellData(
+  async function extractDateCellData(
     dateCell: CellObject
-  ): { error: string | null; value: Date | null } {
+  ): Promise<{ error: string | null; value: Date | null }> {
     let error: string | null = null;
     let value = null;
     let x: any = null;
@@ -191,12 +217,18 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       value = dateCell.v as Date;
     }
 
+    // console.log({
+    //   DateCellRaw: dateCell.w,
+    //   value,
+    //   error,
+    // });
+
     return { error, value };
   }
 
-  function extractTimeCellData(
+  async function extractTimeCellData(
     timeCell: CellObject
-  ): { error: string | null; value: Date | null } {
+  ): Promise<{ error: string | null; value: Date | null }> {
     let error: string | null = null;
     let value = null;
     let x: any = null;
@@ -220,7 +252,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
 
   return (
     <React.Fragment>
-      {render({ progress, progressInfo, file, errors })}
+      {render({ progress, progressInfo, fileFromParser: file, errors })}
     </React.Fragment>
   );
 };

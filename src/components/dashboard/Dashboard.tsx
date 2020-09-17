@@ -6,6 +6,7 @@ import Toolbar from "../toolbar";
 import FilesDrawer, { useStyles as filesDrawerStyles } from "../filesdrawer";
 import clsx from "clsx";
 import Settings from "../settings";
+import { MainContent } from "../maincontent";
 type DashboardProps = {};
 
 const Dashboard: React.FC<DashboardProps> = (props) => {
@@ -13,7 +14,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   const filesDrawerClasses = filesDrawerStyles();
 
   const [openFilesDrawer, setOpenFilesDrawer] = useState<boolean>(true);
-  const [openSettings, setOpenSettings] = useState<boolean>(true);
+  const [openSettings, setOpenSettings] = useState<boolean>(false);
 
   function handleSettingsToggle() {
     setOpenSettings(true);
@@ -46,6 +47,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
         })}
       >
         {openSettings && <Settings />}
+        <MainContent />
       </div>
     </Box>
   );

@@ -22,11 +22,12 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   const loadProfileContext = useContext(LoadProfileContext);
 
   useEffect(() => {
-    console.log("new fiels added");
+    console.log("New File Added...");
   }, [files, setFiles]);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
+      //Set the files...IF dupplicate, returns
       setFiles((prevMap) => {
         const duplicate = prevMap.filter(
           (keyvalue) => keyvalue.key === file.name
@@ -67,18 +68,18 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
               render={({
                 progress,
                 progressInfo,
-                file,
+                fileFromParser,
                 errors,
               }: {
                 progress: number;
                 progressInfo: string;
-                file: File;
+                fileFromParser: File;
                 errors: string[];
               }) => (
                 <FileCard
                   progress={progress}
                   progressInfo={progressInfo}
-                  file={file}
+                  file={fileFromParser}
                   errors={errors}
                 />
               )}

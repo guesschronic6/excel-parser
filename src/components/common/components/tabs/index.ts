@@ -1,3 +1,4 @@
 import VerticalTab from "./VerticalTab";
+import HorizontalTab from "./HorizontalTab";
 
-export { VerticalTab };
+export { VerticalTab, HorizontalTab };
