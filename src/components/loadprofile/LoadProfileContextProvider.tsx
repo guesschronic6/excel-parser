@@ -9,8 +9,10 @@ import {
 
 const LoadProfileContext = createContext<{
   updateLoadProfiles: (rawDatas: LoadProfile_Raw[]) => void;
+  monthlyLoadProfiles: Map<string, LoadProfile_Month>;
 }>({
   updateLoadProfiles: (rawDatas) => {},
+  monthlyLoadProfiles: new Map(),
 });
 
 type LoadProfileContextProviderProps = {};
@@ -24,35 +26,47 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
 
   useEffect(() => {
     console.log("MonthlyLoadProfiles State Updated");
+    console.log(monthlyLoadProfiles);
+    console.log(Array.from(monthlyLoadProfiles.values()));
   }, [monthlyLoadProfiles]);
 
   function updateLoadProfiles(rawDatas: LoadProfile_Raw[]) {
     console.log("Updating load profile datas in context....");
-    for (let rawData of rawDatas) {
-      let key = `${rawData.month}-${rawData.year}`;
-      console.log("key: " + key);
-      if (!monthlyLoadProfiles.has(key)) {
-        setMonthlyLoadProfiles((prevVal) => {
-          // console.log("Inserting new LoadProfileMonth, key: " + key);
-          // prevVal.set(key, new LoadProfile_Month(rawData.month, rawData.year));
-          return prevVal;
-        });
-      }
+    new Promise<Map<string, LoadProfile_Month>>((resolve, reject) => {
+      let newMonthlyLoadProfiles = new Map(monthlyLoadProfiles);
 
-      setMonthlyLoadProfiles((prevVal) => {
-        let monthlyLoadProfile = prevVal.get(key) as LoadProfile_Month;
+      for (let rawData of rawDatas) {
+        let key = `${rawData.month}-${rawData.year}`;
+
+        if (!monthlyLoadProfiles.has(key)) {
+          console.log("Adding new monthly load profile, key: " + key);
+          newMonthlyLoadProfiles.set(
+            key,
+            new LoadProfile_Month(rawData.month, rawData.year)
+          );
+        }
+
+        let monthlyLoadProfile = newMonthlyLoadProfiles.get(
+          key
+        ) as LoadProfile_Month;
         monthlyLoadProfile?.addData(rawData);
-        // prevVal.set(key, monthlyLoadProfile);
-        // console.log(prevVal);
-        return prevVal;
+        newMonthlyLoadProfiles.set(key, monthlyLoadProfile);
+      }
+      resolve(newMonthlyLoadProfiles);
+    })
+      .then((result) => {
+        setMonthlyLoadProfiles(result);
+      })
+      .catch((e) => {
+        console.log(e);
       });
-    }
   }
 
   return (
     <LoadProfileContext.Provider
       value={{
         updateLoadProfiles,
+        monthlyLoadProfiles,
       }}
     >
       {children}

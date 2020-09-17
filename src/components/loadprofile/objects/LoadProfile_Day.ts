@@ -18,6 +18,7 @@ class LoadProfile_Day {
   }
 
   addLoadProfileData(rawData: LoadProfile_Raw) {
+    console.log("Updating hour data of day: " + this.day);
     this.loadProfile_hour[rawData.hour - 1].addKwdel(rawData.kwdel);
   }
 }

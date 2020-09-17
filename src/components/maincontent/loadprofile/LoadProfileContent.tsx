@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { HorizontalTab } from "../../common/components/tabs";
+import DataContent from "./DataContent";
 type LoadProfileContentProps = {};
 
 enum DataTab {
@@ -42,7 +43,7 @@ const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = ({
       </div>
 
       <div className={classes.content}>
-        {selectedTab === DataTab.DATA && <></>}
+        {selectedTab === DataTab.DATA && <DataContent></DataContent>}
       </div>
     </div>
   );
@@ -68,6 +69,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flexGrow: 1,
+    display: "flex",
+    gap: "25px",
+    maxHeight: "100%",
+    maxWidth: "100%",
+    overflow: "auto",
   },
 }));
 

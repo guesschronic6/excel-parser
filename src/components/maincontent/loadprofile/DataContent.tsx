@@ -1,6 +1,8 @@
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles, Theme, Typography } from "@material-ui/core";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
+
 import React, { useContext } from "react";
+import MonthlyCard from "./MonthlyCard";
 
 type DataContentProps = {};
 
@@ -10,18 +12,26 @@ const DataContent: React.FunctionComponent<DataContentProps> = ({
   const loadProfileContext = useContext(LoadProfileContext);
   const classes = useStyles();
 
-  return <div className={classes.root}></div>;
+  return (
+    <React.Fragment>
+      <div>
+        {Array.from(loadProfileContext.monthlyLoadProfiles.values()).map(
+          (monthlyLP) => {
+            return (
+              <MonthlyCard
+                key={`montlyLp_${monthlyLP.month}-${monthlyLP.year}`}
+                loadProfileMonth={monthlyLP}
+              />
+            );
+          }
+        )}
+      </div>
+    </React.Fragment>
+  );
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    maxHeigh: "100%",
-    overflow: "scroll",
-    maxWidth: "100%",
-    display: "flex",
-    gap: "20px",
-    padding: 20,
-  },
+  root: {},
 }));
 
 export default DataContent;

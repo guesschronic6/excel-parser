@@ -17,6 +17,9 @@ class LoadProfile_Month {
   }
 
   addData(rawData: LoadProfile_Raw) {
+    console.log(
+      `Adding data to month: ${Month[this.month - 1]} year: ${this.year} `
+    );
     this.loadProfileDays[rawData.day - 1].addLoadProfileData(rawData);
   }
 

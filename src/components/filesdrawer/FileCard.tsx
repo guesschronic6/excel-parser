@@ -3,6 +3,8 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogTitle,
+  Divider,
   LinearProgress,
   makeStyles,
   Theme,
@@ -43,45 +45,60 @@ const FileCard: React.FunctionComponent<FilecardProps> = ({
         <div className={classes.content}>
           <Typography className={classes.filename}>{file.name}</Typography>
           <div className={classes.progress_content}>
-            <LinearProgress value={progress} variant="determinate" />
+            <LinearProgress
+              value={progress}
+              variant={
+                progress === 0 || progress === 100
+                  ? "determinate"
+                  : "indeterminate"
+              }
+            />
             <Typography className={classes.progress_text}>
               {progressInfo}
             </Typography>
           </div>
         </div>
         <div className={classes.action}>
-          <Button
-            className={classes.button}
-            size="small"
-            color="secondary"
-            startIcon={<ErrorOutline color="error" />}
-            onClick={handleSeeErrorsClick}
-          >
-            see errors
-          </Button>
+          {errors.length !== 0 && (
+            <Button
+              className={classes.button}
+              size="small"
+              color="secondary"
+              startIcon={<ErrorOutline color="error" />}
+              onClick={handleSeeErrorsClick}
+            >
+              see errors
+            </Button>
+          )}
           <Button className={classes.button} size="small" color="primary">
             close
           </Button>
         </div>
       </div>
       <Dialog open={openError} onClose={handleCloseErrorDialog}>
+        <DialogTitle>
+          <Typography variant="h6" color="error">
+            Errors
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            {file.name}
+          </Typography>
+          <Divider />
+        </DialogTitle>
         <DialogContent>
-          <Box
-            maxWidth="500px"
-            maxHeight="700px"
-            height="500px"
-            width="700px"
-            overflow="auto"
-          >
+          <Box overflow="auto" padding="5px 25px">
             {errors.map((error, index) => {
               return (
-                <Typography
-                  key={`${index}~error`}
-                  variant="subtitle1"
-                  color="error"
-                >
-                  {error}
-                </Typography>
+                <div key={index} className={classes.error_container}>
+                  <Typography
+                    component="p"
+                    className={classes.error_text}
+                    key={`${index}~error`}
+                  >
+                    {error}
+                  </Typography>
+                  <Divider />
+                </div>
               );
             })}
           </Box>
@@ -127,6 +144,14 @@ const cardStyles = makeStyles((theme: Theme) => ({
   action: {},
   button: {
     textTransform: "none",
+  },
+  error_container: {
+    maxWidth: "100%",
+  },
+  error_text: {
+    fontSize: "0.9rem",
+    padding: "10px 5px",
+    whiteSpace: "pre-wrap",
   },
 }));
 
