@@ -1,52 +1,93 @@
 import {
+  Box,
   Button,
+  Dialog,
+  DialogContent,
   LinearProgress,
   makeStyles,
   Theme,
   Typography,
 } from "@material-ui/core";
 import { ErrorOutline } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 
 type FilecardProps = {
   file: File;
   progressInfo: string;
   progress: number;
+  errors?: string[];
 };
 
 const FileCard: React.FunctionComponent<FilecardProps> = ({
   file,
   progress,
   progressInfo,
+  errors = [],
   ...others
 }) => {
   const classes = cardStyles();
+  const [openError, setOpenError] = useState(false);
+
+  function handleSeeErrorsClick() {
+    console.log(errors);
+    setOpenError(true);
+  }
+
+  function handleCloseErrorDialog() {
+    setOpenError(false);
+  }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.content}>
-        <Typography className={classes.filename}>{file.name}</Typography>
-        <div className={classes.progress_content}>
-          <LinearProgress value={progress} variant="determinate" />
-          <Typography className={classes.progress_text}>
-            {progressInfo}
-          </Typography>
+    <React.Fragment>
+      <div className={classes.root}>
+        <div className={classes.content}>
+          <Typography className={classes.filename}>{file.name}</Typography>
+          <div className={classes.progress_content}>
+            <LinearProgress value={progress} variant="determinate" />
+            <Typography className={classes.progress_text}>
+              {progressInfo}
+            </Typography>
+          </div>
+        </div>
+        <div className={classes.action}>
+          <Button
+            className={classes.button}
+            size="small"
+            color="secondary"
+            startIcon={<ErrorOutline color="error" />}
+            onClick={handleSeeErrorsClick}
+          >
+            see errors
+          </Button>
+          <Button className={classes.button} size="small" color="primary">
+            close
+          </Button>
         </div>
       </div>
-      <div className={classes.action}>
-        <Button
-          className={classes.button}
-          size="small"
-          color="secondary"
-          startIcon={<ErrorOutline color="error" />}
-        >
-          see errors
-        </Button>
-        <Button className={classes.button} size="small" color="primary">
-          close
-        </Button>
-      </div>
-    </div>
+      <Dialog open={openError} onClose={handleCloseErrorDialog}>
+        <DialogContent>
+          <Box
+            maxWidth="500px"
+            maxHeight="700px"
+            height="500px"
+            width="700px"
+            overflow="auto"
+          >
+            {errors.map((error, index) => {
+              return (
+                <Typography
+                  key={`${index}~error`}
+                  variant="subtitle1"
+                  color="error"
+                >
+                  {error}
+                </Typography>
+              );
+            })}
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </React.Fragment>
   );
 };
 

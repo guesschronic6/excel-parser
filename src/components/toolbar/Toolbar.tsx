@@ -1,6 +1,7 @@
 import { AppBar, Box, IconButton } from "@material-ui/core";
 import { Folder, Settings } from "@material-ui/icons";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import StyledToggleButton from "./StyledToggleButton";
 
 import useStyles from "./use-styles";
 
@@ -84,9 +85,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
             value={toggledButton}
             exclusive
           >
-            <ToggleButton value={ToggleValues.FILES}>
+            <StyledToggleButton value={ToggleValues.FILES}>
               <Folder />
-            </ToggleButton>
+            </StyledToggleButton>
           </ToggleButtonGroup>
         </Box>
         <Box className={classes.otherButtonsContainer}>
@@ -95,9 +96,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
             value={otherToggledButton}
             exclusive
           >
-            <ToggleButton value={ToggleValues.SETTINGS}>
+            <StyledToggleButton value={ToggleValues.SETTINGS}>
               <Settings />
-            </ToggleButton>
+            </StyledToggleButton>
           </ToggleButtonGroup>
         </Box>
       </Box>

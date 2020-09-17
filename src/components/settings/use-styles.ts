@@ -22,22 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabs: {
     display: "inline-block",
   },
-  tab: {
-    textAlign: "start",
-    textTransform: "none",
-    fontWeight: "normal",
-    fontSize: "0.9em",
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-  tab_selected: {
-    backgroundColor: theme.palette.background.default,
-    color: theme.palette.primary.main,
-    fontWeight: "bold",
-  },
-  tab_wrapper: {
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-  },
+
   content: {
     marginTop: theme.spacing(5),
     display: "flex",

@@ -12,13 +12,13 @@ class LoadProfile_Day {
   }
 
   private populateLoadProfileHour(): void {
-    for (let hour = 0; hour < 12; hour++) {
+    for (let hour = 1; hour <= 24; hour++) {
       this.loadProfile_hour.push(new LoadProfile_Hour(hour));
     }
   }
 
   addLoadProfileData(rawData: LoadProfile_Raw) {
-    this.loadProfile_hour[rawData.hour].addKwdel(rawData.kwdel);
+    this.loadProfile_hour[rawData.hour - 1].addKwdel(rawData.kwdel);
   }
 }
 

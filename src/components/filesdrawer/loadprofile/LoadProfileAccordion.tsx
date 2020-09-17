@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CustomAccordion from "../CustomAccordion";
 import FileCard from "../FileCard";
-import { LoadProfileParser } from "../../parser";
+import { LoadProfileParser } from "../../loadprofile";
+import { LoadProfile_Raw } from "../../loadprofile/objects";
+import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import FileDrop from "../FileDrop";
 
 type LoadProfileAccordionProps = {
@@ -17,6 +19,7 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   ...others
 }) => {
   const [files, setFiles] = useState<{ key: string; value: File }[]>([]);
+  const loadProfileContext = useContext(LoadProfileContext);
 
   useEffect(() => {
     console.log("new fiels added");
@@ -38,6 +41,10 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
 
   function handleDragLeave() {}
 
+  function handleFileParsed(lpRawDatas: LoadProfile_Raw[]) {
+    loadProfileContext.updateLoadProfiles(lpRawDatas);
+  }
+
   return (
     <CustomAccordion
       onPanelChange={onPanelChange}
@@ -54,21 +61,25 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
         {files.map((file) => {
           return (
             <LoadProfileParser
+              onFileParsed={handleFileParsed}
               key={file.key}
               file={file.value}
               render={({
                 progress,
                 progressInfo,
                 file,
+                errors,
               }: {
                 progress: number;
                 progressInfo: string;
                 file: File;
+                errors: string[];
               }) => (
                 <FileCard
                   progress={progress}
                   progressInfo={progressInfo}
                   file={file}
+                  errors={errors}
                 />
               )}
             />

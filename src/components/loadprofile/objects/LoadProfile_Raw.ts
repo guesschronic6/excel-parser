@@ -1,3 +1,4 @@
+import { useForkRef } from "@material-ui/core";
 import { Month } from "../../enums";
 
 class LoadProfile_Raw {
@@ -7,6 +8,7 @@ class LoadProfile_Raw {
   month: Month;
   year: number;
   minute: number;
+  meteringPoint: string;
 
   constructor(
     kwdel: number,
@@ -14,7 +16,8 @@ class LoadProfile_Raw {
     month: Month,
     year: number,
     hour: number,
-    minute: number
+    minute: number,
+    meteringPoint: string
   ) {
     this.kwdel = kwdel;
     this.day = day;
@@ -22,6 +25,12 @@ class LoadProfile_Raw {
     this.month = month;
     this.year = year;
     this.minute = minute;
+    this.meteringPoint = meteringPoint;
+    if (this.hour === 0 && this.minute === 0) {
+      this.hour = 24;
+    } else if (this.minute > 0) {
+      this.hour = (this.hour + 1) % 25;
+    }
   }
 }
 

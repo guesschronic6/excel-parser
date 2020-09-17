@@ -2,26 +2,29 @@ import React, { useEffect, useState } from "react";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
 import { FileUtil } from "../common/utils";
 import XLSX from "xlsx";
-import { LoadProfileStorage } from "../loadprofile";
-import { LoadProfileSettings } from "../loadprofile/types/LoadProfileSettings";
-import { LoadProfile_Raw } from "../loadprofile/objects";
+import { LoadProfileStorage } from ".";
+import { LoadProfileSettings } from "./types/LoadProfileSettings";
+import { LoadProfile_Raw } from "./objects";
 import moment from "moment";
 
 type LoadProfileParserProps = {
   file: File;
   render: any;
+  onFileParsed: (data: LoadProfile_Raw[]) => void;
 };
 
-type LoadProfileCellData = {
+type LoadProfileRowData = {
   kwdelCell: CellObject;
   dateCell: CellObject;
   timeCell: CellObject;
   row: number;
+  sheetName: string;
 };
 
 const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   file,
   render,
+  onFileParsed,
   ...others
 }) => {
   const [workbook, setWorkbook] = useState<WorkBook | null>(null);
@@ -33,42 +36,48 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   );
 
   useEffect(() => {
+    setErrors([]);
     const extractWorkbook = async () => {
       let wb = null;
-
       try {
         wb = await FileUtil.extractWorkbookFromFile(file);
+        setWorkbook(wb);
       } catch (e) {
         console.log(e);
+        setErrors([e.message]);
       }
-      setWorkbook(wb);
     };
     extractWorkbook();
   }, [file]);
 
   useEffect(() => {
+    console.log("errors updated");
+  }, [errors]);
+
+  //Generates the loadprofiles from the given data
+  useEffect(() => {
     if (workbook === null) return;
     setSettings(LoadProfileStorage.loadSettings());
-
+    let lp_rawDatas: LoadProfile_Raw[] = [];
     for (let sheetName of workbook.SheetNames) {
       let worksheet = workbook.Sheets[sheetName];
       let range = XLSX.utils.decode_range(worksheet["!ref"] as string);
       const totalRows = range.e.r - range.s.r;
-
       for (let row = 0; row <= range.e.r; row++) {
         const percent = (row / totalRows) * 100;
         setProgress(percent);
         setsProgressInfo(String(`processing row ${row}/${totalRows}`));
-        console.log(`progress: ${progress} info: ${progressInfo}`);
         try {
-          let cells = extractCells(worksheet, row);
-          let rawData = extractRawDataFromCells(cells);
+          let cells = extractCells(worksheet, row, sheetName);
+          let rawData = extractDataFromRow(cells);
+          lp_rawDatas.push(rawData);
         } catch (e) {
-          errors.push(e.message);
-        } finally {
+          setErrors((prevVal) => [...prevVal, e.message]);
         }
       }
     }
+    onFileParsed(lp_rawDatas);
+
     setProgress(100);
     setsProgressInfo(`Finished :D`);
   }, [workbook]);
@@ -76,8 +85,9 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   //Extracts the load profile raw data from the row,
   function extractCells(
     worksheet: WorkSheet,
-    row: number
-  ): LoadProfileCellData {
+    row: number,
+    sheetName: string
+  ): LoadProfileRowData {
     //Builds the raw cell location {column, row}
     let kwdelAddress = { c: settings.kwdelCol, r: row };
     let dateAddress = { c: settings.dateCol, r: row };
@@ -93,28 +103,29 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       timeCell: worksheet[timeRef],
       dateCell: worksheet[dateRef],
       row,
+      sheetName: sheetName,
     };
   }
 
-  function extractRawDataFromCells(
-    cells: LoadProfileCellData
-  ): LoadProfile_Raw {
+  function extractDataFromRow(rowData: LoadProfileRowData): LoadProfile_Raw {
     let error = null;
     let anyErrors = false;
     let rawData: LoadProfile_Raw | null = null;
 
-    let kwdelCellData = extractKwdelCellData(cells.kwdelCell);
-    let dateCellData = extractDateCellData(cells.dateCell);
-    let timeCellData = extractTimeCellData(cells.timeCell);
+    let kwdelCellData = extractKwdelCellData(rowData.kwdelCell);
+    let dateCellData = extractDateCellData(rowData.dateCell);
+    let timeCellData = extractTimeCellData(rowData.timeCell);
 
     anyErrors = Boolean(
       kwdelCellData.error || dateCellData.error || timeCellData.error
     );
     if (anyErrors) {
-      error = `Errors in row ${cells.row + 1}: \n`;
-      kwdelCellData.error && error.concat(`\t${kwdelCellData.error}`);
-      dateCellData.error && error.concat(`\t${dateCellData.error}`);
-      timeCellData.error && error.concat(`\t${timeCellData.error}`);
+      error = `Errors in row ${rowData.row + 1}: \n`;
+      if (kwdelCellData.error)
+        error = error.concat(`\t${kwdelCellData.error}\n`);
+      if (dateCellData.error) error = error.concat(`\t${dateCellData.error}\n`);
+      if (timeCellData.error) error = error.concat(`\t${timeCellData.error}\n`);
+
       throw new Error(error);
     } else {
       let kwdel = kwdelCellData.value as number;
@@ -123,13 +134,16 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       let hour = timeCellData.value?.getHours() as number;
       let minute = timeCellData.value?.getMinutes() as number;
       let year = dateCellData.value?.getFullYear() as number;
-      rawData = new LoadProfile_Raw(kwdel, day, month - 1, year, hour, minute);
+      rawData = new LoadProfile_Raw(
+        kwdel,
+        day,
+        month,
+        year,
+        hour,
+        minute,
+        rowData.sheetName
+      );
     }
-
-    // console.log({
-    //   rawData,
-    //   error,
-    // });
 
     return rawData;
   }
@@ -153,9 +167,23 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
     let error: string | null = null;
     let value = null;
     let x: any = null;
+    // console.log({
+    //   dateCell_t: dateCell.t,
+    //   dateCell_w: dateCell.w,
+    //   dateCell_r: dateCell.r,
+    // });
     if (dateCell.t !== "d") {
       if (dateCell.t === "s") {
-        x = moment(dateCell.v || dateCell.w || dateCell.r, settings.dateFormat);
+        x = moment(
+          dateCell.v || dateCell.w || dateCell.r,
+          settings.dateFormat,
+          true
+        );
+        if (!x.isValid()) {
+          error = `DateCell expectations: date received: ${dateCell.v}`;
+        } else {
+          value = x.toDate();
+        }
       } else {
         error = `DateCell expectations: date received: ${dateCell.v}`;
       }
@@ -175,6 +203,11 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
     if (timeCell.t !== "d") {
       if (timeCell.t === "s") {
         x = moment(timeCell.v || timeCell.w || timeCell.r, settings.timeFormat);
+        if (!x.isValid()) {
+          error = `TimeCell expectations: date received: ${timeCell.v}`;
+        } else {
+          value = x.toDate();
+        }
       } else {
         error = `TimeCell expectations: date received: ${timeCell.v}`;
       }
@@ -186,7 +219,9 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
   }
 
   return (
-    <React.Fragment>{render({ progress, progressInfo, file })}</React.Fragment>
+    <React.Fragment>
+      {render({ progress, progressInfo, file, errors })}
+    </React.Fragment>
   );
 };
 

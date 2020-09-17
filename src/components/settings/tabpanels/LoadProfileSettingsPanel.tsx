@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import FormTextField from "./FormTextField";
+import { FormTextField } from "../../common/components/textfields";
 import { Button } from "@material-ui/core";
 import { LoadProfileStorage } from "../../loadprofile";
 import loadProfileStyles from "./lp-styles";

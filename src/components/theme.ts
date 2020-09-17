@@ -26,18 +26,6 @@ const theme = createMuiTheme({
       default: "#F5F7F9",
     },
   },
-
-  props: {
-    MuiButtonBase: {},
-  },
-  overrides: {
-    MuiButtonBase: {
-      root: {
-        textTransform: "none",
-      },
-    },
-    MuiTab: {},
-  },
 });
 
 export default theme;

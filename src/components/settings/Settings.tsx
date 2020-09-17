@@ -1,9 +1,8 @@
-import classes from "*.module.css";
 import { Tabs, Typography, Tab, Box } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import useStyles from "./use-styles";
 import { LoadProfileSettingsPanel } from "./tabpanels";
-import { LoadProfile } from "../common";
+import { VerticalTab } from "../common/components/tabs";
 
 type SettingsProps = {};
 
@@ -12,28 +11,6 @@ enum SettingsTabs {
   FeederDemandTab = "fd_tab",
 }
 
-function CustomTab({
-  label,
-  value,
-  ...others
-}: {
-  label: string;
-  value: string;
-}) {
-  const classes = useStyles();
-  return (
-    <Tab
-      classes={{
-        root: classes.tab,
-        wrapper: classes.tab_wrapper,
-        selected: classes.tab_selected,
-      }}
-      value={value}
-      label={label}
-      {...others}
-    />
-  );
-}
 interface TabPanelProps {
   children?: React.ReactNode;
   index: any;
@@ -82,11 +59,11 @@ const Settings: React.FunctionComponent<SettingsProps> = ({ ...others }) => {
           indicatorColor="primary"
           onChange={handleTabChange}
         >
-          <CustomTab
+          <VerticalTab
             label="Load Profile Settings"
             value={SettingsTabs.LoadProfileTab}
           />
-          <CustomTab
+          <VerticalTab
             value={SettingsTabs.FeederDemandTab}
             label="Feeder and Demand Settings"
           />
