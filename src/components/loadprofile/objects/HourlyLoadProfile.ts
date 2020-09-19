@@ -18,6 +18,14 @@ class HourlyLoadProfile {
     });
     return total / this.kwdelSet.length;
   }
+
+  getRawTotal(): number {
+    if (this.kwdelSet.length <= 0) return 0;
+    const total = this.kwdelSet.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue;
+    });
+    return total;
+  }
 }
 
 export default HourlyLoadProfile;
