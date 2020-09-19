@@ -37,7 +37,6 @@ class DailyLoadProfile {
         maxKwdel = kwdel;
       }
     }
-
     return {
       max: { kwdel: maxKwdel, hour, meteringPoint: "", date: new Date() },
       sum: { kwdel: sum, meteringPoint: "" },

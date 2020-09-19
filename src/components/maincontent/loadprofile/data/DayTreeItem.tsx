@@ -9,12 +9,13 @@ import HourTreeItem from "./HourTreeItem";
 
 type DayTreeProps = {
   loadProfiles: LoadProfile[];
+  totalLoadProfile: LoadProfile;
   dateString: string;
   nodeId: string;
 };
 
 const DayTree = (props: DayTreeProps) => {
-  const { loadProfiles, dateString, nodeId } = props;
+  const { loadProfiles, dateString, nodeId, totalLoadProfile } = props;
 
   const [date, setDate] = useState(new Date());
 
@@ -33,6 +34,7 @@ const DayTree = (props: DayTreeProps) => {
         dateString={dateString}
         header={true}
         loadProfiles={loadProfiles}
+        totalLoadProfile={totalLoadProfile}
       />
       {[...Array(24).keys()].map((hour) => {
         return (
@@ -42,6 +44,7 @@ const DayTree = (props: DayTreeProps) => {
             hour={hour + 1}
             dateString={dateString}
             loadProfiles={loadProfiles}
+            totalLoadProfile={totalLoadProfile}
           />
         );
       })}

@@ -5,10 +5,14 @@ import { LoadProfileMax, LoadProfileSum } from "../types";
 class LoadProfile {
   meteringPoint: string;
   dailyLoadProfiles: Map<string, DailyLoadProfile>;
+  max: LoadProfileMax;
+  sum: LoadProfileSum;
 
   constructor(meteringPoint: string) {
     this.meteringPoint = meteringPoint;
     this.dailyLoadProfiles = new Map();
+    this.max = { kwdel: 0, hour: 1, meteringPoint: "", date: new Date() };
+    this.sum = { kwdel: 0, meteringPoint: "" };
   }
 
   addLoadProfileData(rawData: LoadProfile_Raw, dateString: string) {
@@ -46,14 +50,17 @@ class LoadProfile {
       }
     }
 
+    this.max = {
+      kwdel: max,
+      hour: maxHour,
+      date: maxDate,
+      meteringPoint: this.meteringPoint,
+    };
+    this.sum = { kwdel: sum, meteringPoint: this.meteringPoint };
+
     return {
-      max: {
-        kwdel: max,
-        hour: maxHour,
-        date: maxDate,
-        meteringPoint: this.meteringPoint,
-      },
-      sum: { kwdel: sum, meteringPoint: this.meteringPoint },
+      max: this.max,
+      sum: this.sum,
     };
   }
 }

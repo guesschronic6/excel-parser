@@ -41,7 +41,7 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
         }
         newMonthlyLoadProfiles.get(key)?.addData(rawData);
       }
-
+      newMonthlyLoadProfiles.forEach((mlp) => mlp.initOtherDetails());
       resolve(newMonthlyLoadProfiles);
     })
       .then((result) => {

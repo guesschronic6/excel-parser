@@ -15,6 +15,7 @@ type HourTreeItemProps = TreeItemProps & {
   bgColor?: string;
   color?: string;
   loadProfiles: LoadProfile[];
+  totalLoadProfile: LoadProfile;
   dateString?: string;
   hour?: number;
   header?: boolean;
@@ -40,21 +41,9 @@ function HourTreeItem(props: HourTreeItemProps) {
     dateString = "",
     hour = 1,
     header = false,
+    totalLoadProfile,
     ...other
   } = props;
-
-  const getTotal = useCallback(() => {
-    let total = 0;
-    for (let loadProfile of loadProfiles.values()) {
-      let val = loadProfile.dailyLoadProfiles
-        .get(dateString)
-        ?.hourlyLoadProfiles[hour - 1].getTotalKwdel();
-      if (val) {
-        total += val;
-      }
-    }
-    return total;
-  }, [loadProfiles]);
 
   return (
     <TreeItem
@@ -111,7 +100,10 @@ function HourTreeItem(props: HourTreeItemProps) {
               variant="caption"
               color="inherit"
             >
-              {getTotal().toFixed(2)}
+              {totalLoadProfile
+                .getDailyLoadProfile(dateString)
+                .hourlyLoadProfiles[hour - 1].getRawTotal()
+                .toFixed(2)}
             </Typography>
           )}
         </div>

@@ -38,6 +38,7 @@ const MonthlyTree = (props: MonthlyTreeProps) => {
           let key = `DTI:D:${dateString}`;
           return (
             <DayTreeItem
+              totalLoadProfile={monthlyLoadProfile.totalLoadpRofile}
               key={key}
               nodeId={key}
               loadProfiles={loadProfiles}

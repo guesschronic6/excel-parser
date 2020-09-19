@@ -25,19 +25,6 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
   const { monthlyLoadProfile, ...others } = props;
   const classes = useStyles();
 
-  const [otherDits, setOtherDits] = useState<{
-    coincidentPeak: CoincidentalPeak;
-    nonCoincidentPeak: NoneCoincidentalPeak;
-    diversityFactor: DiversityFactor;
-    loadProfilesMax: LoadProfileMax[];
-    loadProfilesSum: LoadProfileSum[];
-  } | null>(null);
-
-  useEffect(() => {
-    let otherDits = monthlyLoadProfile.getCoincidentalPeakAndNonCoincidentalpeak();
-    setOtherDits(otherDits);
-  }, [monthlyLoadProfile]);
-
   return (
     <TreeView
       className={classes.root}
@@ -51,12 +38,12 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelText="Coincident Peak"
         labelIcon={TrendingUp}
         labelInfo={
-          otherDits && otherDits.coincidentPeak
-            ? `${otherDits.coincidentPeak.meteringPoint}: ${
-                otherDits.coincidentPeak.date.getMonth() + 1
-              }/${otherDits.coincidentPeak.date.getDate()}/${otherDits.coincidentPeak.date.getFullYear()} ${
-                otherDits.coincidentPeak.hour
-              }:00 kwdel: ${otherDits.coincidentPeak.kwdel.toFixed(2)}`
+          monthlyLoadProfile.coincidentPeak
+            ? `${monthlyLoadProfile.coincidentPeak.meteringPoint}: ${
+                monthlyLoadProfile.coincidentPeak.date.getMonth() + 1
+              }/${monthlyLoadProfile.coincidentPeak.date.getDate()}/${monthlyLoadProfile.coincidentPeak.date.getFullYear()} ${
+                monthlyLoadProfile.coincidentPeak.hour
+              }:00 kwdel: ${monthlyLoadProfile.coincidentPeak.kwdel.toFixed(2)}`
             : ""
         }
       />
@@ -65,8 +52,8 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelText="None Coincident Peak"
         labelIcon={Functions}
         labelInfo={
-          otherDits && otherDits.nonCoincidentPeak
-            ? ` ${otherDits.nonCoincidentPeak.kwdel.toFixed(2)}`
+          monthlyLoadProfile.nonCoincidentPeak
+            ? ` ${monthlyLoadProfile.nonCoincidentPeak.kwdel.toFixed(2)}`
             : ""
         }
       />
@@ -75,8 +62,8 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelText="Diversity Factor:"
         labelIcon={Functions}
         labelInfo={
-          otherDits && otherDits.diversityFactor
-            ? ` ${otherDits.diversityFactor.factor.toFixed(2)}`
+          monthlyLoadProfile.diversityFactor
+            ? ` ${monthlyLoadProfile.diversityFactor.factor.toFixed(2)}`
             : ""
         }
       />
@@ -86,23 +73,21 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelIcon={TrendingUp}
         labelInfo={""}
       >
-        {otherDits &&
-          otherDits.loadProfilesMax &&
-          otherDits.loadProfilesMax.map((lpMax) => {
-            return (
-              <StyledTreeItem
-                key={`LM:S${lpMax.meteringPoint}`}
-                nodeId={`LM:S${lpMax.meteringPoint}`}
-                labelIcon={TrendingUp}
-                labelText={`${lpMax.meteringPoint}`}
-                labelInfo={` ${
-                  lpMax.date.getMonth() + 1
-                }/${lpMax.date.getDate()}/${lpMax.date.getFullYear()} ${
-                  lpMax.hour
-                }:00 kwdel: ${lpMax.kwdel.toFixed(2)}`}
-              />
-            );
-          })}
+        {monthlyLoadProfile.loadProfilesMax.map((lpMax) => {
+          return (
+            <StyledTreeItem
+              key={`LM:S${lpMax.meteringPoint}`}
+              nodeId={`LM:S${lpMax.meteringPoint}`}
+              labelIcon={TrendingUp}
+              labelText={`${lpMax.meteringPoint}`}
+              labelInfo={` ${
+                lpMax.date.getMonth() + 1
+              }/${lpMax.date.getDate()}/${lpMax.date.getFullYear()} ${
+                lpMax.hour
+              }:00 kwdel: ${lpMax.kwdel.toFixed(2)}`}
+            />
+          );
+        })}
       </StyledTreeItem>
       <StyledTreeItem
         nodeId="7"
@@ -110,19 +95,17 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelIcon={Functions}
         labelInfo={""}
       >
-        {otherDits &&
-          otherDits.loadProfilesSum &&
-          otherDits.loadProfilesSum.map((lpSum) => {
-            return (
-              <StyledTreeItem
-                key={`LS:S${lpSum.meteringPoint}`}
-                nodeId={`LS:S${lpSum.meteringPoint}`}
-                labelIcon={Functions}
-                labelText={`${lpSum.meteringPoint}`}
-                labelInfo={` ${lpSum.kwdel.toFixed(2)}`}
-              />
-            );
-          })}
+        {monthlyLoadProfile.loadProfilesSum.map((lpSum) => {
+          return (
+            <StyledTreeItem
+              key={`LS:S${lpSum.meteringPoint}`}
+              nodeId={`LS:S${lpSum.meteringPoint}`}
+              labelIcon={Functions}
+              labelText={`${lpSum.meteringPoint}`}
+              labelInfo={` ${lpSum.kwdel.toFixed(2)}`}
+            />
+          );
+        })}
       </StyledTreeItem>
     </TreeView>
   );

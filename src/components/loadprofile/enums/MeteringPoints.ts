@@ -49,7 +49,7 @@ class MeteringPoint {
   }
 
   static getMeteringPoint(meteringPoint: string): MeteringPoint | null {
-    switch (meteringPoint) {
+    switch (meteringPoint.toUpperCase()) {
       case this.MF3MPITZAMC01.key:
         return this.MF3MPITZAMC01;
       case this.MF3MPITZAMC02.key:

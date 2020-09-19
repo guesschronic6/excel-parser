@@ -15,11 +15,23 @@ class MonthlyLoadProfile {
   loadProfiles: Map<string, LoadProfile>;
   billingPeriod: BillingPeriod;
   dateStrings: Set<string>;
+  coincidentPeak: CoincidentalPeak | null;
+  nonCoincidentPeak: NoneCoincidentalPeak | null;
+  diversityFactor: DiversityFactor | null;
+  loadProfilesMax: LoadProfileMax[];
+  loadProfilesSum: LoadProfileSum[];
+  totalLoadpRofile: LoadProfile;
 
   constructor(billingPeriod: BillingPeriod) {
     this.billingPeriod = billingPeriod;
     this.loadProfiles = new Map();
     this.dateStrings = new Set();
+    this.totalLoadpRofile = new LoadProfile("Total");
+    this.coincidentPeak = null;
+    this.nonCoincidentPeak = null;
+    this.diversityFactor = null;
+    this.loadProfilesMax = [];
+    this.loadProfilesSum = [];
   }
 
   addData(rawData: LoadProfile_Raw) {
@@ -36,50 +48,77 @@ class MonthlyLoadProfile {
     this.loadProfiles.get(key)?.addLoadProfileData(rawData, dateString);
   }
 
-  getCoincidentalPeakAndNonCoincidentalpeak(): {
-    coincidentPeak: CoincidentalPeak;
-    nonCoincidentPeak: NoneCoincidentalPeak;
-    diversityFactor: DiversityFactor;
-    loadProfilesMax: LoadProfileMax[];
-    loadProfilesSum: LoadProfileSum[];
-  } {
+  initOtherDetails() {
     let coincidentKwdel = 0;
     let coincidentMeteringPoint = MeteringPoint.MF3MPITZAMC01.toString();
     let coincidentDate = new Date();
     let coincidentHour = 0;
-
     let nonCoincidentKwdel = 0;
-    let loadProfilesMax: LoadProfileMax[] = [];
-    let loadProfilesSum: LoadProfileSum[] = [];
+
+    this.loadProfilesMax = [];
+    this.loadProfilesSum = [];
+    this.totalLoadpRofile = new LoadProfile("Total");
 
     for (let loadProfile of this.loadProfiles.values()) {
-      const { max, sum } = loadProfile.getMaxAndSum();
-      loadProfilesMax.push(max);
-      loadProfilesSum.push(sum);
-      if (max.kwdel > coincidentKwdel) {
-        coincidentKwdel = max.kwdel;
-        coincidentDate = max.date;
-        coincidentHour = max.hour;
-        coincidentMeteringPoint = max.meteringPoint;
+      for (let dailyLp of [...loadProfile.dailyLoadProfiles.values()]) {
+        for (let hourlyLp of dailyLp.hourlyLoadProfiles) {
+          let rawData = new LoadProfile_Raw(
+            hourlyLp.getTotalKwdel(),
+            dailyLp.date.getDate(),
+            dailyLp.date.getMonth() + 1,
+            dailyLp.date.getFullYear(),
+            hourlyLp.hour,
+            3,
+            "Total",
+            0
+          );
+          let dateString = `${rawData.month}/${rawData.day}/${rawData.year}`;
+          this.totalLoadpRofile.addLoadProfileData(rawData, dateString);
+        }
+      }
 
-        nonCoincidentKwdel += sum.kwdel;
+      const { max, sum } = loadProfile.getMaxAndSum();
+      console.log("max of " + loadProfile.meteringPoint);
+      console.log(max);
+      console.log("sum of " + loadProfile.meteringPoint);
+      console.log(sum);
+      this.loadProfilesMax.push(max);
+      this.loadProfilesSum.push(sum);
+      nonCoincidentKwdel += max.kwdel;
+      console.log(nonCoincidentKwdel);
+    }
+
+    for (let dlp of this.totalLoadpRofile.dailyLoadProfiles.values()) {
+      for (let hlp of dlp.hourlyLoadProfiles) {
+        if (hlp.getRawTotal() > coincidentKwdel) {
+          coincidentKwdel = hlp.getRawTotal();
+          coincidentDate = dlp.date;
+          coincidentHour = hlp.hour;
+          coincidentMeteringPoint = "total";
+        }
       }
     }
 
     let diversityFactor = nonCoincidentKwdel / coincidentKwdel;
 
-    return {
-      coincidentPeak: {
-        kwdel: coincidentKwdel,
-        date: coincidentDate,
-        hour: coincidentHour,
-        meteringPoint: coincidentMeteringPoint,
-      },
-      nonCoincidentPeak: { kwdel: nonCoincidentKwdel },
-      diversityFactor: { factor: diversityFactor },
-      loadProfilesSum,
-      loadProfilesMax,
+    this.coincidentPeak = {
+      kwdel: coincidentKwdel,
+      date: coincidentDate,
+      hour: coincidentHour,
+      meteringPoint: coincidentMeteringPoint,
     };
+    this.nonCoincidentPeak = { kwdel: nonCoincidentKwdel };
+    this.diversityFactor = { factor: diversityFactor };
+
+    console.log({
+      info: "max and sum",
+      max: this.loadProfilesMax,
+      sum: this.loadProfilesSum,
+      coincidental: this.coincidentPeak,
+      nonCoincidental: this.nonCoincidentPeak,
+      diversityFactor: this.diversityFactor,
+      totalLoadProfile: this.totalLoadpRofile,
+    });
   }
 }
 
