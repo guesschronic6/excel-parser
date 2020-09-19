@@ -1,20 +1,20 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
-import { LoadProfile_Hour } from "../../loadprofile/objects";
+import { HourlyLoadProfile } from "../../loadprofile/objects";
 
 type HourCardProps = {
-  loadProfileHour: LoadProfile_Hour;
+  hourlyLoadProfile: HourlyLoadProfile;
 };
 
 const HourCard: React.FunctionComponent<HourCardProps> = ({
-  loadProfileHour,
+  hourlyLoadProfile,
   ...others
 }) => {
   return (
     <div>
       <Typography variant="body1">{`Hour: ${
-        loadProfileHour.hour
-      } kwdel: ${loadProfileHour.getTotalKwdel()}`}</Typography>
+        hourlyLoadProfile.hour
+      } kwdel: ${hourlyLoadProfile.getTotalKwdel()}`}</Typography>
     </div>
   );
 };

@@ -1,15 +1,10 @@
 import { CollectionsOutlined } from "@material-ui/icons";
 import React, { createContext, useEffect, useState } from "react";
-import {
-  LoadProfile_Raw,
-  LoadProfile_Month,
-  LoadProfile_Day,
-  LoadProfile_Hour,
-} from "../loadprofile/objects";
+import { LoadProfile_Raw, MonthlyLoadProfile } from "../loadprofile/objects";
 
 const LoadProfileContext = createContext<{
   updateLoadProfiles: (rawDatas: LoadProfile_Raw[]) => void;
-  monthlyLoadProfiles: Map<string, LoadProfile_Month>;
+  monthlyLoadProfiles: Map<string, MonthlyLoadProfile>;
 }>({
   updateLoadProfiles: (rawDatas) => {},
   monthlyLoadProfiles: new Map(),
@@ -21,37 +16,32 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
   ...others
 }) => {
   const [monthlyLoadProfiles, setMonthlyLoadProfiles] = useState<
-    Map<string, LoadProfile_Month>
-  >(new Map<string, LoadProfile_Month>());
+    Map<string, MonthlyLoadProfile>
+  >(new Map<string, MonthlyLoadProfile>());
 
   useEffect(() => {
     console.log("MonthlyLoadProfiles State Updated");
     console.log(monthlyLoadProfiles);
-    console.log(Array.from(monthlyLoadProfiles.values()));
   }, [monthlyLoadProfiles]);
 
   function updateLoadProfiles(rawDatas: LoadProfile_Raw[]) {
     console.log("Updating load profile datas in context....");
-    new Promise<Map<string, LoadProfile_Month>>((resolve, reject) => {
+    new Promise<Map<string, MonthlyLoadProfile>>((resolve, reject) => {
       let newMonthlyLoadProfiles = new Map(monthlyLoadProfiles);
-
       for (let rawData of rawDatas) {
-        let key = `${rawData.month}-${rawData.year}`;
-
-        if (!monthlyLoadProfiles.has(key)) {
+        let key = `${rawData.billingPeriod.month}-${rawData.year}`;
+        if (!newMonthlyLoadProfiles.has(key)) {
+          console.log("Loadprofile raw data:");
+          console.log(rawData);
           console.log("Adding new monthly load profile, key: " + key);
           newMonthlyLoadProfiles.set(
             key,
-            new LoadProfile_Month(rawData.month, rawData.year)
+            new MonthlyLoadProfile(rawData.billingPeriod)
           );
         }
-
-        let monthlyLoadProfile = newMonthlyLoadProfiles.get(
-          key
-        ) as LoadProfile_Month;
-        monthlyLoadProfile?.addData(rawData);
-        newMonthlyLoadProfiles.set(key, monthlyLoadProfile);
+        newMonthlyLoadProfiles.get(key)?.addData(rawData);
       }
+
       resolve(newMonthlyLoadProfiles);
     })
       .then((result) => {

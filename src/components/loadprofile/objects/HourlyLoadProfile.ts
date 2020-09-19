@@ -1,4 +1,4 @@
-class LoadProfile_Hour {
+class HourlyLoadProfile {
   hour: number;
   kwdelSet: number[];
 
@@ -8,7 +8,6 @@ class LoadProfile_Hour {
   }
 
   addKwdel(kwdel: number): void {
-    console.log(`Adding ${kwdel} to hour ${this.hour}`);
     this.kwdelSet.push(kwdel);
   }
 
@@ -21,4 +20,4 @@ class LoadProfile_Hour {
   }
 }
 
-export default LoadProfile_Hour;
+export default HourlyLoadProfile;

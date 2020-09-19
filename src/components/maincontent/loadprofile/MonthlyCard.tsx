@@ -1,33 +1,36 @@
-import {
-  Card,
-  CardHeader,
-  makeStyles,
-  Theme,
-  Typography,
-  CardContent,
-} from "@material-ui/core";
+import { makeStyles, Theme, Typography, Divider } from "@material-ui/core";
 import React from "react";
-import { LoadProfile_Month } from "../../loadprofile/objects";
+import { MonthlyLoadProfile } from "../../loadprofile/objects";
 import { Month } from "../../enums";
 import DaysCard from "./DaysCard";
 type MonthlyCardProps = {
-  loadProfileMonth: LoadProfile_Month;
+  monthlyLoadProfile: MonthlyLoadProfile;
 };
 
 const MonthlyCard: React.FunctionComponent<MonthlyCardProps> = ({
-  loadProfileMonth,
+  monthlyLoadProfile,
   ...others
 }) => {
   const classes = useStyles();
   return (
     <div className={classes.card}>
-      <CardHeader title={Month[loadProfileMonth.month - 1]} />
-
-      <CardContent className={classes.cardContent}>
-        {loadProfileMonth.loadProfileDays.map((lpDays) => {
-          return <DaysCard key={lpDays.day} loadProfileDay={lpDays}></DaysCard>;
+      <div className={classes.cardHeader}>
+        <Typography variant="h6" className={classes.cardTitle}>{`${
+          Month[monthlyLoadProfile.billingPeriod.month - 1]
+        } ${monthlyLoadProfile.billingPeriod.year}`}</Typography>
+        <Divider />
+      </div>
+      <div className={classes.cardContent}>
+        {[...monthlyLoadProfile.dateStrings.values()].map((dateString) => {
+          return (
+            <DaysCard
+              key={`MC: M:${monthlyLoadProfile.billingPeriod.month} Y:${monthlyLoadProfile.billingPeriod.year} D:${dateString}`}
+              monthlyLoadProfile={monthlyLoadProfile}
+              dateString={dateString}
+            />
+          );
         })}
-      </CardContent>
+      </div>
     </div>
   );
 };
@@ -35,17 +38,27 @@ const MonthlyCard: React.FunctionComponent<MonthlyCardProps> = ({
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
     display: "inline-block",
-    backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
+    backgroundColor: "transparent",
     margin: theme.spacing(5),
+    fontSize: "1rem",
   },
   cardContent: {
     display: "flex",
+    flexDirection: "column",
+    alignItems: "stretch",
     flexWrap: "wrap",
-    justifyContent: "space-evenly",
     maxWidth: "800px",
     gap: "10px",
+  },
+  cardHeader: {
+    padding: theme.spacing(2),
+    fontSize: "1em",
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+  },
+  cardTitle: {
+    fontSize: "1.5em",
   },
 }));
 

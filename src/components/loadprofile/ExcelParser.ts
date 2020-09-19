@@ -4,6 +4,7 @@ import { LoadProfileSettings } from "./types/LoadProfileSettings";
 import { LoadProfile_Raw } from "./objects";
 import moment from "moment";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
+import MeteringPoint from "./enums/MeteringPoints";
 
 type LoadProfileRowData = {
   kwdelCell: CellObject;
@@ -29,6 +30,13 @@ function extractLoadProfileRawFromWorkbook(
       let errors: string[] = [];
 
       for (let sheetName of workbook.SheetNames) {
+        if (!MeteringPoint.exists(sheetName)) {
+          errors.push(
+            `Invalid sheetname: ${sheetName}, expected: MF3MPITZAMC01~7`
+          );
+          continue;
+        }
+
         handleProgressUpdate(`Parsing ${sheetName}`, 0);
         console.log("Parsing worksheet: " + sheetName);
 
@@ -134,6 +142,7 @@ function extractDataFromRow(
     );
   }
 
+  // console.log(`row: ${rawData.row} ${rawData.hour}:${rawData.minute}`);
   return rawData;
 }
 
@@ -177,12 +186,6 @@ function extractDateCellData(
   } else {
     value = dateCell.v as Date;
   }
-
-  // console.log({
-  //   DateCellRaw: dateCell.w,
-  //   value,
-  //   error,
-  // });
 
   return { error, value };
 }

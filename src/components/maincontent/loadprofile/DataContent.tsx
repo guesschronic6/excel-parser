@@ -16,11 +16,11 @@ const DataContent: React.FunctionComponent<DataContentProps> = ({
     <React.Fragment>
       <div>
         {Array.from(loadProfileContext.monthlyLoadProfiles.values()).map(
-          (monthlyLP) => {
+          (monthlyLoadProfile) => {
             return (
               <MonthlyCard
-                key={`montlyLp_${monthlyLP.month}-${monthlyLP.year}`}
-                loadProfileMonth={monthlyLP}
+                key={`MC: M:${monthlyLoadProfile.billingPeriod.month} Y:${monthlyLoadProfile.billingPeriod.year}`}
+                monthlyLoadProfile={monthlyLoadProfile}
               />
             );
           }

@@ -1,11 +1,13 @@
-import LoadProfile_Day from "./LoadProfile_Day";
-import LoadProfile_Hour from "./LoadProfile_Hour";
-import LoadProfile_Month from "./LoadProfile_Month";
+import DailyLoadProfile from "./DailyLoadProfile";
+import HourlyLoadProfile from "./HourlyLoadProfile";
+import MonthlyLoadProfile from "./MonthlyLoadProfile";
 import LoadProfile_Raw from "./LoadProfile_Raw";
+import LoadProfile from "./LoadProfile";
 
 export {
-  LoadProfile_Day,
+  DailyLoadProfile,
   LoadProfile_Raw,
-  LoadProfile_Month,
-  LoadProfile_Hour,
+  MonthlyLoadProfile,
+  HourlyLoadProfile,
+  LoadProfile,
 };
