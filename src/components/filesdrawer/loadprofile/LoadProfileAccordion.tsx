@@ -5,6 +5,7 @@ import { LoadProfileParser } from "../../loadprofile";
 import { LoadProfile_Raw } from "../../loadprofile/objects";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import FileDrop from "../FileDrop";
+import { LoadProfileParserRenderProps } from "../../loadprofile/LoadProfileParser";
 
 type LoadProfileAccordionProps = {
   expandedPanel: string;
@@ -18,7 +19,7 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   onPanelChange,
   ...others
 }) => {
-  const [files, setFiles] = useState<{ key: string; value: File }[]>([]);
+  const [files, setFiles] = useState<Map<string, File>>(new Map());
   const loadProfileContext = useContext(LoadProfileContext);
 
   useEffect(() => {
@@ -29,11 +30,13 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
     files.forEach((file: File) => {
       //Set the files...IF dupplicate, returns
       setFiles((prevMap) => {
-        const duplicate = prevMap.filter(
-          (keyvalue) => keyvalue.key === file.name
-        );
-        if (duplicate.length !== 0) return prevMap;
-        return [...prevMap, { key: file.name, value: file }];
+        if (!prevMap.has(file.name)) {
+          const duplicate = new Map(prevMap);
+          duplicate.set(file.name, file);
+          return duplicate;
+        } else {
+          return prevMap;
+        }
       });
     });
   }
@@ -44,6 +47,19 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
 
   function handleFileParsed(lpRawDatas: LoadProfile_Raw[]) {
     loadProfileContext.updateLoadProfiles(lpRawDatas);
+  }
+
+  function handleRemoveFile(file: File, meteringPoints: string[]) {
+    setFiles((prevMap) => {
+      const duplicate = new Map(prevMap);
+      duplicate.delete(file.name);
+      return duplicate;
+    });
+
+    loadProfileContext.deleteLoadProfiles({
+      fileName: file.name,
+      meteringPoints,
+    });
   }
 
   return (
@@ -59,28 +75,26 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
         onFileDrop={handleFileDrop}
         helperText="Drop files here"
       >
-        {files.map((file) => {
+        {[...files.values()].map((file) => {
           return (
             <LoadProfileParser
               onFileParsed={handleFileParsed}
-              key={file.key}
-              file={file.value}
+              key={file.name}
+              file={file}
+              onRemoveFile={handleRemoveFile}
               render={({
                 progress,
                 progressInfo,
                 fileFromParser,
+                onRemoveFile,
                 errors,
-              }: {
-                progress: number;
-                progressInfo: string;
-                fileFromParser: File;
-                errors: string[];
-              }) => (
+              }: LoadProfileParserRenderProps) => (
                 <FileCard
                   progress={progress}
                   progressInfo={progressInfo}
                   file={fileFromParser}
                   errors={errors}
+                  onRemoveFile={onRemoveFile}
                 />
               )}
             />

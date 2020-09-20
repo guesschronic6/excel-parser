@@ -1,6 +1,5 @@
 import Feeder from "./Feeder";
 import Substation from "./Substation";
-import Transformer from "./Transformer";
 
 class MeteringPoint {
   static readonly MF3MPITZAMC01 = new MeteringPoint("MF3MPITZAMC01", [

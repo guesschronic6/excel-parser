@@ -3,7 +3,6 @@ import { FormTextField } from "../../common/components/textfields";
 import { Button } from "@material-ui/core";
 import { LoadProfileStorage } from "../../loadprofile";
 import loadProfileStyles from "./lp-styles";
-import { LoadProfileSettings } from "../../loadprofile/types/LoadProfileSettings";
 
 type LoadProfileSettingsProps = {};
 

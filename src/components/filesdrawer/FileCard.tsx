@@ -18,6 +18,7 @@ type FilecardProps = {
   progressInfo: string;
   progress: number;
   errors?: string[];
+  onRemoveFile: () => void;
 };
 
 const FileCard: React.FunctionComponent<FilecardProps> = ({
@@ -25,6 +26,7 @@ const FileCard: React.FunctionComponent<FilecardProps> = ({
   progress,
   progressInfo,
   errors = [],
+  onRemoveFile,
   ...others
 }) => {
   const classes = cardStyles();
@@ -70,8 +72,13 @@ const FileCard: React.FunctionComponent<FilecardProps> = ({
               see errors
             </Button>
           )}
-          <Button className={classes.button} size="small" color="primary">
-            close
+          <Button
+            className={classes.button}
+            onClick={onRemoveFile}
+            size="small"
+            color="primary"
+          >
+            Remove
           </Button>
         </div>
       </div>

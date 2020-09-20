@@ -1,4 +1,3 @@
-import classes from "*.module.css";
 import { makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { VerticalTab } from "../common/components/tabs";
@@ -23,7 +22,7 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.maincontent_root}>
       <div className={classes.tabs_container}>
         <Tabs
           className={classes.tabs}
@@ -40,32 +39,24 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
           />
         </Tabs>
       </div>
-      <div className={classes.content}>
-        {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileContent />}
-      </div>
+      {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileContent />}
     </div>
   );
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    flexGrow: 1,
-    display: "flex",
-    justifyContent: "stretch",
+  maincontent_root: {
     height: "100%",
     width: "100%",
-    maxHeight: "100%",
-    maxWidth: "100%",
+    display: "flex",
   },
   tabs_container: {
     marginTop: theme.spacing(10),
     maxWidth: "300px",
+    flexGrow: 0,
   },
   tabs: {
     display: "inline-block",
-  },
-  content: {
-    flexGrow: 1,
   },
 }));
 

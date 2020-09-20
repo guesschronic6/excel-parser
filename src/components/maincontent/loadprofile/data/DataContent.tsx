@@ -1,4 +1,4 @@
-import { makeStyles, Theme, Typography } from "@material-ui/core";
+import { makeStyles, Theme } from "@material-ui/core";
 import { LoadProfileContext } from "../../../loadprofile/LoadProfileContextProvider";
 import React, { useContext } from "react";
 
@@ -13,8 +13,8 @@ const DataContent: React.FunctionComponent<DataContentProps> = ({
   const classes = useStyles();
 
   return (
-    <React.Fragment>
-      <div className={classes.root}>
+    <div className={classes.dateCotnent_root}>
+      <div className={classes.dateCotnent_content}>
         {Array.from(loadProfileContext.monthlyLoadProfiles.values()).map(
           (monthlyLoadProfile) => {
             return (
@@ -26,15 +26,23 @@ const DataContent: React.FunctionComponent<DataContentProps> = ({
           }
         )}
       </div>
-    </React.Fragment>
+    </div>
   );
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: theme.spacing(5),
+  dateCotnent_root: {
+    flex: 1,
+    overflow: "auto",
+    padding: theme.spacing(4),
+  },
+  dateCotnent_content: {
     display: "flex",
+    flexDirection: "column",
+    justifyContent: "stretch",
+    padding: theme.spacing(5),
     gap: `${theme.spacing(3)}px`,
+    boxSizing: "border-box",
   },
 }));
 

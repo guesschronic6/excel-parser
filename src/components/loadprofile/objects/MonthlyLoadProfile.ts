@@ -1,4 +1,3 @@
-import { Month } from "../../enums";
 import LoadProfile_Raw from "./LoadProfile_Raw";
 import LoadProfile from "./LoadProfile";
 import BillingPeriod from "../../common/BillingPeriod";
@@ -48,6 +47,15 @@ class MonthlyLoadProfile {
     this.loadProfiles.get(key)?.addLoadProfileData(rawData, dateString);
   }
 
+  removeData(fileName: string, meteringPoints: string[]) {
+    meteringPoints.forEach((key) => {
+      if (this.loadProfiles.has(key)) {
+        let loadProfile = this.loadProfiles.get(key);
+        loadProfile?.removeLoadPRofileData(fileName);
+      }
+    });
+  }
+
   initOtherDetails() {
     let coincidentKwdel = 0;
     let coincidentMeteringPoint = MeteringPoint.MF3MPITZAMC01.toString();
@@ -78,14 +86,14 @@ class MonthlyLoadProfile {
       }
 
       const { max, sum } = loadProfile.getMaxAndSum();
-      console.log("max of " + loadProfile.meteringPoint);
-      console.log(max);
-      console.log("sum of " + loadProfile.meteringPoint);
-      console.log(sum);
-      this.loadProfilesMax.push(max);
-      this.loadProfilesSum.push(sum);
-      nonCoincidentKwdel += max.kwdel;
-      console.log(nonCoincidentKwdel);
+
+      if (sum.kwdel === 0) {
+        this.loadProfiles.delete(loadProfile.meteringPoint);
+      } else {
+        this.loadProfilesMax.push(max);
+        this.loadProfilesSum.push(sum);
+        nonCoincidentKwdel += max.kwdel;
+      }
     }
 
     for (let dlp of this.totalLoadpRofile.dailyLoadProfiles.values()) {

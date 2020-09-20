@@ -6,15 +6,9 @@ import {
   TrendingUp,
 } from "@material-ui/icons";
 import { TreeView } from "@material-ui/lab";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { MonthlyLoadProfile } from "../../../loadprofile/objects";
-import {
-  CoincidentalPeak,
-  DiversityFactor,
-  NoneCoincidentalPeak,
-  LoadProfileMax,
-  LoadProfileSum,
-} from "../../../loadprofile/types";
+
 import StyledTreeItem from "./StyledTreeItem";
 
 type DetailsTreeProps = {

@@ -25,6 +25,12 @@ class LoadProfile {
     this.dailyLoadProfiles.get(dateString)?.addLoadProfileData(rawData);
   }
 
+  removeLoadPRofileData(fileName: string) {
+    this.dailyLoadProfiles.forEach((dailyLoadProfile) => {
+      dailyLoadProfile.removeLoadProfileData(fileName);
+    });
+  }
+
   getDailyLoadProfile(dateString: string): DailyLoadProfile {
     return this.dailyLoadProfiles.has(dateString)
       ? (this.dailyLoadProfiles.get(dateString) as DailyLoadProfile)

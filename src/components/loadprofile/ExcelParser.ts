@@ -1,4 +1,4 @@
-import XLSX, { Range } from "xlsx";
+import XLSX from "xlsx";
 import { LoadProfileStorage } from ".";
 import { LoadProfileSettings } from "./types/LoadProfileSettings";
 import { LoadProfile_Raw } from "./objects";
@@ -15,56 +15,61 @@ type LoadProfileRowData = {
 };
 
 function extractLoadProfileRawFromWorkbook(
+  fileName: string,
   workbook: WorkBook,
   handleProgressUpdate: (progressInfo: string, progress: number) => void
 ) {
-  return new Promise<{ value: LoadProfile_Raw[]; errors: string[] }>(
-    async (resolve, reject) => {
-      if (workbook === null) {
-        reject(new Error("Invalid file"));
-        return;
-      }
-      console.log("Parsing workbook...");
-
-      let lp_rawDatas: LoadProfile_Raw[] = [];
-      let errors: string[] = [];
-
-      for (let sheetName of workbook.SheetNames) {
-        if (!MeteringPoint.exists(sheetName)) {
-          errors.push(
-            `Invalid sheetname: ${sheetName}, expected: MF3MPITZAMC01~7`
-          );
-          continue;
-        }
-
-        handleProgressUpdate(`Parsing ${sheetName}`, 0);
-        console.log("Parsing worksheet: " + sheetName);
-
-        const worksheet = workbook.Sheets[sheetName];
-        const range = XLSX.utils.decode_range(worksheet["!ref"] as string);
-        const totalRows = await Promise.resolve(range.e.r - range.s.r);
-        for (let row = 0; row <= range.e.r; row++) {
-          const percent = await calculatePercent(row, totalRows);
-          handleProgressUpdate(
-            `Processing rows ${row}/${totalRows} ${percent.toFixed(0)}%`,
-            percent
-          );
-          try {
-            let settings = LoadProfileStorage.loadSettings();
-            let cells = extractCells(worksheet, row, sheetName, settings);
-            let rawData = extractDataFromRow(cells, settings);
-
-            lp_rawDatas.push(rawData);
-          } catch (e) {
-            errors.push(e.message);
-          }
-        }
-      }
-      console.log("finished");
-      handleProgressUpdate("Finished processing", 100);
-      resolve({ value: lp_rawDatas, errors });
+  return new Promise<{
+    value: LoadProfile_Raw[];
+    errors: string[];
+    meteringPoints: string[];
+  }>(async (resolve, reject) => {
+    if (workbook === null) {
+      reject(new Error("Invalid file"));
+      return;
     }
-  );
+    console.log("Parsing workbook...");
+
+    let lp_rawDatas: LoadProfile_Raw[] = [];
+    let errors: string[] = [];
+    let meteringPoints: string[] = [];
+
+    for (let sheetName of workbook.SheetNames) {
+      if (!MeteringPoint.exists(sheetName)) {
+        errors.push(
+          `Invalid sheetname: ${sheetName}, expected: MF3MPITZAMC01~7`
+        );
+        continue;
+      }
+      meteringPoints.push(sheetName);
+
+      handleProgressUpdate(`Parsing ${sheetName}`, 0);
+      console.log("Parsing worksheet: " + sheetName);
+
+      const worksheet = workbook.Sheets[sheetName];
+      const range = XLSX.utils.decode_range(worksheet["!ref"] as string);
+      const totalRows = await Promise.resolve(range.e.r - range.s.r);
+      for (let row = 0; row <= range.e.r; row++) {
+        const percent = await calculatePercent(row, totalRows);
+        handleProgressUpdate(
+          `Processing rows ${row}/${totalRows} ${percent.toFixed(0)}%`,
+          percent
+        );
+        try {
+          let settings = LoadProfileStorage.loadSettings();
+          let cells = extractCells(worksheet, row, sheetName, settings);
+          let rawData = extractDataFromRow(cells, settings, fileName);
+
+          lp_rawDatas.push(rawData);
+        } catch (e) {
+          errors.push(e.message);
+        }
+      }
+    }
+    console.log("finished");
+    handleProgressUpdate("Finished processing", 100);
+    resolve({ value: lp_rawDatas, errors, meteringPoints });
+  });
 }
 
 function calculatePercent(i: number, total: number): Promise<number> {
@@ -103,7 +108,8 @@ function extractCells(
 
 function extractDataFromRow(
   rowData: LoadProfileRowData,
-  settings: LoadProfileSettings
+  settings: LoadProfileSettings,
+  fileName: string
 ): LoadProfile_Raw {
   let error = null;
   let anyErrors = false;
@@ -138,7 +144,8 @@ function extractDataFromRow(
       hour,
       minute,
       rowData.sheetName,
-      rowData.row
+      rowData.row,
+      fileName
     );
   }
 

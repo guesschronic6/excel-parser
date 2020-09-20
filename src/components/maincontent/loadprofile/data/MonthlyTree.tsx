@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MonthlyLoadProfile } from "../../../loadprofile/objects";
 
 import { TreeView } from "@material-ui/lab";
@@ -54,6 +54,7 @@ const MonthlyTree = (props: MonthlyTreeProps) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      flexShrink: 0,
       display: "inline-block",
       fontSize: "1rem",
       padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,

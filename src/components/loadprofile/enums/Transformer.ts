@@ -1,5 +1,3 @@
-import { isThisTypeNode } from "typescript";
-
 class Transformer {
   static readonly HYOSUNG_20MVA = new Transformer(
     "HYOSUNG_20MVA",

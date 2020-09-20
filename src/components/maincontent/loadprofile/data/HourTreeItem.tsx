@@ -1,5 +1,4 @@
 import {
-  SvgIconProps,
   makeStyles,
   Theme,
   createStyles,
@@ -8,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { TreeItemProps, TreeItem } from "@material-ui/lab";
 import { LoadProfile } from "../../../loadprofile/objects";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import useTreeItemStyles from "./useTreeItemStyles";
 
 type HourTreeItemProps = TreeItemProps & {
@@ -44,6 +43,10 @@ function HourTreeItem(props: HourTreeItemProps) {
     totalLoadProfile,
     ...other
   } = props;
+
+  useEffect(() => {
+    console.log("HourTreeItemRendered: Hour: " + hour);
+  }, []);
 
   return (
     <TreeItem

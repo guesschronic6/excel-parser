@@ -1,4 +1,3 @@
-import classes from "*.module.css";
 import { Box, Typography, makeStyles, Theme } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useState } from "react";

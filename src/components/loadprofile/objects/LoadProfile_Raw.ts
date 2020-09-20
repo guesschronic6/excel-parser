@@ -1,4 +1,3 @@
-import { useForkRef } from "@material-ui/core";
 import BillingPeriod from "../../common/BillingPeriod";
 import { Month } from "../../enums";
 
@@ -12,6 +11,7 @@ class LoadProfile_Raw {
   meteringPoint: string;
   row: number;
   billingPeriod: BillingPeriod;
+  fileName: string;
 
   constructor(
     kwdel: number,
@@ -21,7 +21,8 @@ class LoadProfile_Raw {
     hour: number,
     minute: number,
     meteringPoint: string,
-    row: number
+    row: number,
+    fileName: string = ""
   ) {
     this.kwdel = kwdel;
     this.day = day;
@@ -31,7 +32,7 @@ class LoadProfile_Raw {
     this.minute = minute;
     this.meteringPoint = meteringPoint;
     this.row = row;
-
+    this.fileName = fileName;
     if (this.hour === 0 && this.minute === 0) {
       this.hour = 23;
       this.minute = 59;
@@ -54,7 +55,7 @@ class LoadProfile_Raw {
 
     this.billingPeriod = new BillingPeriod(billingMonth, this.year);
 
-    if (this.minute == 0) {
+    if (this.minute === 0) {
       this.hour--;
       if (this.hour < 0) {
         this.hour = 23;

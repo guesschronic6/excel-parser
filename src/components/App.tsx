@@ -1,7 +1,12 @@
 import React, { FunctionComponent } from "react";
-import { CssBaseline, ThemeProvider, Box, useTheme } from "@material-ui/core";
+import {
+  CssBaseline,
+  ThemeProvider,
+  Box,
+  makeStyles,
+  Theme,
+} from "@material-ui/core";
 import theme from "./theme";
-import useStyles from "./use-styles";
 import LoadProfileContextProvider from "./loadprofile/LoadProfileContextProvider";
 import Dashboard from "./dashboard";
 import clsx from "clsx";
@@ -15,13 +20,21 @@ const App: FunctionComponent<AppProps> = (props) => {
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <LoadProfileContextProvider>
-          <Box className={clsx(classes.root)}>
+          <div className={clsx(classes.root)}>
             <Dashboard />
-          </Box>
+          </div>
         </LoadProfileContextProvider>
       </CssBaseline>
     </ThemeProvider>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    height: "100vh",
+    width: "100vw",
+    backgroundColor: theme.palette.background.default,
+  },
+}));
 
 export default App;

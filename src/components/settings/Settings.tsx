@@ -1,4 +1,4 @@
-import { Tabs, Typography, Tab, Box } from "@material-ui/core";
+import { Tabs, Typography, Box } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import useStyles from "./use-styles";
 import { LoadProfileSettingsPanel } from "./tabpanels";

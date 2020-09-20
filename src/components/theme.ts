@@ -1,10 +1,4 @@
-import { createMuiTheme, makeStyles } from "@material-ui/core";
-
-const useStyles = makeStyles({
-  button: {
-    textTransform: "none",
-  },
-});
+import { createMuiTheme } from "@material-ui/core";
 
 const theme = createMuiTheme({
   palette: {

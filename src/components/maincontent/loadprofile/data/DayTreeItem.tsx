@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { LoadProfile, MonthlyLoadProfile } from "../../../loadprofile/objects";
+import { LoadProfile } from "../../../loadprofile/objects";
 
-import { TreeView } from "@material-ui/lab";
 import StyledTreeItem from "./StyledTreeItem";
 import { Today } from "@material-ui/icons";
 import { Month } from "../../../enums";

@@ -18,7 +18,16 @@ class DailyLoadProfile {
   }
 
   addLoadProfileData(rawData: LoadProfile_Raw) {
-    this.hourlyLoadProfiles[rawData.hour].addKwdel(rawData.kwdel);
+    this.hourlyLoadProfiles[rawData.hour].addKwdel(
+      rawData.kwdel,
+      rawData.fileName
+    );
+  }
+
+  removeLoadProfileData(fileName: string) {
+    this.hourlyLoadProfiles.forEach((hourloadProfile) => {
+      hourloadProfile.removeKwdel(fileName);
+    });
   }
 
   getMaxAndSum(): {

@@ -1,12 +1,11 @@
-import { Typography, Box } from "@material-ui/core";
 import React, { useState } from "react";
-import useStyles from "./use-style";
 
 import Toolbar from "../toolbar";
 import FilesDrawer, { useStyles as filesDrawerStyles } from "../filesdrawer";
 import clsx from "clsx";
 import Settings from "../settings";
 import { MainContent } from "../maincontent";
+import { makeStyles, Theme } from "@material-ui/core";
 type DashboardProps = {};
 
 const Dashboard: React.FC<DashboardProps> = (props) => {
@@ -33,7 +32,7 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
   }
 
   return (
-    <Box className={classes.root}>
+    <div className={classes.dashboard_root}>
       <Toolbar
         onSettingsToggled={handleSettingsToggle}
         onSettingsUntoggled={handleSettingsUntoggle}
@@ -42,15 +41,26 @@ const Dashboard: React.FC<DashboardProps> = (props) => {
       />
       <FilesDrawer open={openFilesDrawer} />
       <div
-        className={clsx(classes.content, filesDrawerClasses.content, {
+        className={clsx(classes.dashboard_content, filesDrawerClasses.content, {
           [filesDrawerClasses.contentShift]: openFilesDrawer,
         })}
       >
         {openSettings && <Settings />}
         <MainContent />
       </div>
-    </Box>
+    </div>
   );
 };
+
+const useStyles = makeStyles((theme: Theme) => ({
+  dashboard_root: {
+    display: "flex",
+    height: "100%",
+    width: "100%",
+  },
+  dashboard_content: {
+    flex: 1,
+  },
+}));
 
 export default Dashboard;

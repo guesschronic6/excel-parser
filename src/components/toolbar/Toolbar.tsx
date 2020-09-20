@@ -1,6 +1,6 @@
-import { AppBar, Box, IconButton } from "@material-ui/core";
+import { AppBar, Box } from "@material-ui/core";
 import { Folder, Settings } from "@material-ui/icons";
-import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import { ToggleButtonGroup } from "@material-ui/lab";
 import StyledToggleButton from "./StyledToggleButton";
 
 import useStyles from "./use-styles";
@@ -45,9 +45,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
     const prevToggled = toggledButton;
     setToggledButton(newToggle);
-    if (newToggle == ToggleValues.FILES) {
+    if (newToggle === ToggleValues.FILES) {
       onFilesToggled();
-    } else if (prevToggled == ToggleValues.FILES) {
+    } else if (prevToggled === ToggleValues.FILES) {
       onFilesUntoggled();
     }
   }
@@ -63,9 +63,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
     const prevToggled = otherToggledButton;
     setOtherToggledButton(newToggle);
-    if (newToggle == ToggleValues.SETTINGS) {
+    if (newToggle === ToggleValues.SETTINGS) {
       onSettingsToggled();
-    } else if (prevToggled == ToggleValues.SETTINGS) {
+    } else if (prevToggled === ToggleValues.SETTINGS) {
       onSettingsUntoggled();
     }
   }
