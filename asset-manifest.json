@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/excel-parser/static/css/main.5ecd60fb.chunk.css",
+    "main.js": "/excel-parser/static/js/main.dc1c6846.chunk.js",
+    "main.js.map": "/excel-parser/static/js/main.dc1c6846.chunk.js.map",
+    "runtime-main.js": "/excel-parser/static/js/runtime-main.6cf27894.js",
+    "runtime-main.js.map": "/excel-parser/static/js/runtime-main.6cf27894.js.map",
+    "static/js/2.967ee0bb.chunk.js": "/excel-parser/static/js/2.967ee0bb.chunk.js",
+    "static/js/2.967ee0bb.chunk.js.map": "/excel-parser/static/js/2.967ee0bb.chunk.js.map",
+    "index.html": "/excel-parser/index.html",
+    "precache-manifest.8d54560944bf97d3ad49facd69f9a813.js": "/excel-parser/precache-manifest.8d54560944bf97d3ad49facd69f9a813.js",
+    "service-worker.js": "/excel-parser/service-worker.js",
+    "static/css/main.5ecd60fb.chunk.css.map": "/excel-parser/static/css/main.5ecd60fb.chunk.css.map",
+    "static/js/2.967ee0bb.chunk.js.LICENSE.txt": "/excel-parser/static/js/2.967ee0bb.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6cf27894.js",
+    "static/js/2.967ee0bb.chunk.js",
+    "static/css/main.5ecd60fb.chunk.css",
+    "static/js/main.dc1c6846.chunk.js"
+  ]
+}
