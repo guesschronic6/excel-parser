@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Month } from "../enums";
 
 class BillingPeriod {
   month: number;
@@ -34,6 +35,10 @@ class BillingPeriod {
     return (
       this.month === billingPeriod.month && this.year === billingPeriod.year
     );
+  }
+
+  toString() {
+    return `${Month[this.month - 1]} ${this.year}`;
   }
 }
 

@@ -2,9 +2,6 @@ import { makeStyles, Theme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    width: "100%",
-    height: "100%",
-    maxHeight: "100%",
     background: theme.palette.background.paper,
     padding: theme.spacing(3),
     fontSize: "1rem",
@@ -14,6 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "absolute",
     top: 0,
     left: 0,
+    height: "100%",
+    width: "100%",
   },
   title_div: {
     borderBottom: `1px solid ${theme.palette.divider}`,

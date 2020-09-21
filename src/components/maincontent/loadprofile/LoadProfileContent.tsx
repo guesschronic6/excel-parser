@@ -9,6 +9,8 @@ import React, { ChangeEvent, useContext, useState } from "react";
 import { HorizontalTab } from "../../common/components/tabs";
 import DataContent from "./data/DataContent";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
+import GraphContent from "./graph/GraphContent";
+
 type LoadProfileContentProps = {};
 
 enum DataTab {
@@ -42,8 +44,11 @@ const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = ({
           <HorizontalTab label="Graph" value={DataTab.GRAPH} />
         </Tabs>
       </div>
-      <div className={classes.loadProfileContent_Content}>
-        {selectedTab === DataTab.DATA && <DataContent></DataContent>}
+      <div className={classes.loadProfileContent_contentWrapper}>
+        <div className={classes.loadProfileContent_content}>
+          {selectedTab === DataTab.DATA && <DataContent />}
+          {selectedTab === DataTab.GRAPH && <GraphContent />}
+        </div>
       </div>
     </div>
   );
@@ -51,11 +56,11 @@ const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = ({
 
 const useStyles = makeStyles((theme: Theme) => ({
   loadProfileContent_root: {
-    flex: 1,
+    height: "100%",
     display: "flex",
     flexDirection: "column",
-    minWidth: 0,
-    minHeight: 0,
+    minHeight: "0px",
+    minWidth: "0px",
   },
   loadProfileContent_Header: {
     display: "flex",
@@ -66,11 +71,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(3),
     textAlign: "center",
   },
-  loadProfileContent_Content: {
-    flexGrow: 1,
+  loadProfileContent_contentWrapper: {
+    flex: 1,
+    overflow: "auto",
     display: "flex",
-    minHeight: "0px",
-    minWidth: "0px",
+    flexWrap: "nowrap",
+  },
+  loadProfileContent_content: {
+    flex: 1,
+    padding: theme.spacing(5),
   },
 }));
 

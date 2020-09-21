@@ -9,6 +9,7 @@ import {
   LoadProfileSum,
   NoneCoincidentalPeak,
 } from "../types";
+import { MonthlyLoadProfileData } from "../types/MonthlyLoadProfileData";
 
 class MonthlyLoadProfile {
   loadProfiles: Map<string, LoadProfile>;
@@ -20,6 +21,7 @@ class MonthlyLoadProfile {
   loadProfilesMax: LoadProfileMax[];
   loadProfilesSum: LoadProfileSum[];
   totalLoadpRofile: LoadProfile;
+  data: Map<string, any>;
 
   constructor(billingPeriod: BillingPeriod) {
     this.billingPeriod = billingPeriod;
@@ -31,6 +33,7 @@ class MonthlyLoadProfile {
     this.diversityFactor = null;
     this.loadProfilesMax = [];
     this.loadProfilesSum = [];
+    this.data = new Map();
   }
 
   addData(rawData: LoadProfile_Raw) {
@@ -66,8 +69,10 @@ class MonthlyLoadProfile {
     this.loadProfilesMax = [];
     this.loadProfilesSum = [];
     this.totalLoadpRofile = new LoadProfile("Total");
+    this.data = new Map();
 
     for (let loadProfile of this.loadProfiles.values()) {
+      console.log("METERING POINT: " + loadProfile.meteringPoint);
       for (let dailyLp of [...loadProfile.dailyLoadProfiles.values()]) {
         for (let hourlyLp of dailyLp.hourlyLoadProfiles) {
           let rawData = new LoadProfile_Raw(
@@ -83,9 +88,22 @@ class MonthlyLoadProfile {
           let dateString = `${rawData.month}/${rawData.day}/${rawData.year}`;
           this.totalLoadpRofile.addLoadProfileData(rawData, dateString);
         }
-      }
 
-      const { max, sum } = loadProfile.getMaxAndSum();
+        dailyLp.genMaxAndSum();
+        let dateKey = `${
+          dailyLp.date.getMonth() + 1
+        }/${dailyLp.date.getDate()}`;
+
+        if (!this.data.has(dateKey)) {
+          let obj: any = { date: dateKey };
+          obj[`${loadProfile.meteringPoint}`] = dailyLp.sum;
+          this.data.set(dateKey, obj);
+        } else {
+          let obj = this.data.get(dateKey);
+          obj[`${loadProfile.meteringPoint}`] = dailyLp.sum;
+        }
+      }
+      const { max, sum } = loadProfile.genMaxAndSum();
 
       if (sum.kwdel === 0) {
         this.loadProfiles.delete(loadProfile.meteringPoint);
@@ -126,6 +144,7 @@ class MonthlyLoadProfile {
       nonCoincidental: this.nonCoincidentPeak,
       diversityFactor: this.diversityFactor,
       totalLoadProfile: this.totalLoadpRofile,
+      data: this.data,
     });
   }
 }

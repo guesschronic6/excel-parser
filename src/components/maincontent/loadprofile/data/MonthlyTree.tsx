@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexShrink: 0,
-      display: "inline-block",
       fontSize: "1rem",
       padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
     },

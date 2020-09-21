@@ -37,22 +37,20 @@ class LoadProfile {
       : new DailyLoadProfile(new Date(dateString));
   }
 
-  getMaxAndSum(): {
-    max: LoadProfileMax;
-    sum: LoadProfileSum;
-  } {
+  genMaxAndSum() {
     let max = 0;
     let sum = 0;
     let maxHour = 1;
     let maxDate = new Date();
 
     for (let dailyLoadProfile of this.dailyLoadProfiles.values()) {
-      const { max: lpMax, sum: lpSum } = dailyLoadProfile.getMaxAndSum();
-      if (lpMax.kwdel > max) {
-        max = lpMax.kwdel;
-        maxHour = lpMax.hour;
+      const dailyMax = dailyLoadProfile.max;
+      const dailySum = dailyLoadProfile.sum;
+      if (dailyMax.kwdel > max) {
+        max = dailyMax.kwdel;
+        maxHour = dailyMax.hour;
         maxDate = dailyLoadProfile.date;
-        sum += lpSum.kwdel;
+        sum += dailySum;
       }
     }
 
@@ -63,11 +61,7 @@ class LoadProfile {
       meteringPoint: this.meteringPoint,
     };
     this.sum = { kwdel: sum, meteringPoint: this.meteringPoint };
-
-    return {
-      max: this.max,
-      sum: this.sum,
-    };
+    return { max: this.max, sum: this.sum };
   }
 }
 

@@ -56,10 +56,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   dashboard_root: {
     display: "flex",
     height: "100%",
-    width: "100%",
   },
   dashboard_content: {
     flex: 1,
+    position: "relative",
+    minHeight: "0px",
+    width: 0,
   },
 }));
 

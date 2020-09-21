@@ -108,7 +108,7 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      display: "inline-block",
+      flexShrink: 0,
       fontSize: "1rem",
       padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
     },

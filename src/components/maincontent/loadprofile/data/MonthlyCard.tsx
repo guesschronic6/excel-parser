@@ -22,6 +22,8 @@ const MonthlyCard: React.FunctionComponent<MonthlyCardProps> = (props) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      flexShrink: 0,
+      flexGrow: 0,
       display: "flex",
       backgroundColor: theme.palette.background.paper,
       borderRadius: theme.shape.borderRadius,

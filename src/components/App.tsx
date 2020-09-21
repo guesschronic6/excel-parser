@@ -32,7 +32,6 @@ const App: FunctionComponent<AppProps> = (props) => {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     height: "100vh",
-    width: "100vw",
     backgroundColor: theme.palette.background.default,
   },
 }));

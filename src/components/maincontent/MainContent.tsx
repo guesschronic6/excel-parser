@@ -39,7 +39,9 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
           />
         </Tabs>
       </div>
-      {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileContent />}
+      <div className={classes.mainContent_content}>
+        {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileContent />}
+      </div>
     </div>
   );
 };
@@ -47,7 +49,6 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
 const useStyles = makeStyles((theme: Theme) => ({
   maincontent_root: {
     height: "100%",
-    width: "100%",
     display: "flex",
   },
   tabs_container: {
@@ -57,6 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tabs: {
     display: "inline-block",
+  },
+  mainContent_content: {
+    flex: 1,
+    width: 0,
   },
 }));
 

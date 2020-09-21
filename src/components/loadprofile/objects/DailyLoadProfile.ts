@@ -5,10 +5,14 @@ import { LoadProfileMax, LoadProfileSum } from "../types";
 class DailyLoadProfile {
   date: Date;
   hourlyLoadProfiles: HourlyLoadProfile[];
+  max: { kwdel: number; hour: number };
+  sum: number;
 
   constructor(date: Date) {
     this.date = date;
     this.hourlyLoadProfiles = this.buildHourlyLoadProfiles();
+    this.max = { kwdel: 0, hour: 0 };
+    this.sum = 0;
   }
 
   private buildHourlyLoadProfiles() {
@@ -30,10 +34,7 @@ class DailyLoadProfile {
     });
   }
 
-  getMaxAndSum(): {
-    max: LoadProfileMax;
-    sum: LoadProfileSum;
-  } {
+  genMaxAndSum() {
     let maxKwdel = 0;
     let hour = 1;
     let sum = 0;
@@ -46,10 +47,9 @@ class DailyLoadProfile {
         maxKwdel = kwdel;
       }
     }
-    return {
-      max: { kwdel: maxKwdel, hour, meteringPoint: "", date: new Date() },
-      sum: { kwdel: sum, meteringPoint: "" },
-    };
+    this.max = { kwdel: maxKwdel, hour };
+    this.sum = sum;
+    return { max: this.max, sum: this.sum };
   }
 }
 
