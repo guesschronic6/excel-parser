@@ -125,7 +125,7 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
       }
       newMonthlyLoadProfiles.forEach((mlp) => {
         mlp.initOtherDetails();
-        if (mlp.nonCoincidentPeak?.kwdel === 0) {
+        if (mlp.nonCoincidentPeak === 0) {
           let key = `${mlp.billingPeriod.month}-${mlp.billingPeriod.year}`;
           newMonthlyLoadProfiles.delete(key);
         }

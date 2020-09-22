@@ -1,15 +1,10 @@
-import {
-  Button,
-  createStyles,
-  IconButton,
-  makeStyles,
-  Theme,
-} from "@material-ui/core";
+import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import { GetAppRounded } from "@material-ui/icons";
 import React from "react";
 import { MonthlyLoadProfile } from "../../../loadprofile/objects";
 import DetailsTree from "./DetailsTree";
 import MonthlyTree from "./MonthlyTree";
+import generateLoadProfileExcel from "../../../loadprofile/ExcelGenerator";
 
 type MonthlyCardProps = {
   monthlyLoadProfile: MonthlyLoadProfile;
@@ -19,7 +14,9 @@ const MonthlyCard: React.FunctionComponent<MonthlyCardProps> = (props) => {
   const { monthlyLoadProfile } = props;
   const classes = useStyles();
 
-  function handleDownloadClick() {}
+  function handleDownloadClick() {
+    generateLoadProfileExcel(monthlyLoadProfile);
+  }
 
   return (
     <div className={classes.monthlyCard_root}>

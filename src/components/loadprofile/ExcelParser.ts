@@ -59,7 +59,6 @@ function extractLoadProfileRawFromWorkbook(
           let settings = LoadProfileStorage.loadSettings();
           let cells = extractCells(worksheet, row, sheetName, settings);
           let rawData = extractDataFromRow(cells, settings, fileName);
-          console.log(rawData);
           lp_rawDatas.push(rawData);
         } catch (e) {
           errors.push(e.message);

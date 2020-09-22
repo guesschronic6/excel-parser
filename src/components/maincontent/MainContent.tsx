@@ -5,8 +5,11 @@ import LoadProfileTabPanel from "./loadprofile/LoadProfileTabPanel";
 type MainContentProps = {};
 
 enum ContentTabs {
-  LOAD_PROFILE = "loadprofile",
-  SUBSTATION_REPORT = "substationreport",
+  LOAD_PROFILE = "lp",
+  SUBSTATION_LOSS = "ssl",
+  FEEDERDEMAND_OUTAGED = "fdo",
+  POWER_BILL = "pbl",
+  POWER_SUBSTATION = "psb",
 }
 
 const MainContent: React.FunctionComponent<MainContentProps> = ({
@@ -33,9 +36,18 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
           onChange={handleTabChange}
         >
           <VerticalTab label="Load Profile" value={ContentTabs.LOAD_PROFILE} />
+          <VerticalTab label="Power Bill" value={ContentTabs.POWER_BILL} />
           <VerticalTab
-            label="Substation Report"
-            value={ContentTabs.SUBSTATION_REPORT}
+            label="Feeder Demand and Outages"
+            value={ContentTabs.FEEDERDEMAND_OUTAGED}
+          />
+          <VerticalTab
+            label="Substation Loss"
+            value={ContentTabs.SUBSTATION_LOSS}
+          />
+          <VerticalTab
+            label="Power Substation"
+            value={ContentTabs.POWER_SUBSTATION}
           />
         </Tabs>
       </div>

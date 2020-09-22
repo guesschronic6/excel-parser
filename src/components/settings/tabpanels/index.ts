@@ -1,3 +1,4 @@
 import LoadProfileSettingsPanel from "./LoadProfileSettingsPanel";
+import MonthlyInterruptionSettingsPanel from "./MonthlyInterruptionPanel";
 
-export { LoadProfileSettingsPanel };
+export { LoadProfileSettingsPanel, MonthlyInterruptionSettingsPanel };

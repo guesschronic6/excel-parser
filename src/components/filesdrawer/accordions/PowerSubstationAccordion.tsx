@@ -5,16 +5,15 @@ import { LoadProfileParser } from "../../loadprofile";
 import { LoadProfile_Raw } from "../../loadprofile/objects";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import FileDrop from "../FileDrop";
-import { LoadProfileParserRenderProps } from "../../loadprofile/LoadProfileParser";
 
-type LoadProfileAccordionProps = {
+type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
   onPanelChange: (newPanel: string) => void;
 };
-const panelName = "laodprofile_filespanel";
-const title = "Load Profile Files";
+const panelName = "ps_panel";
+const title = "Power Substation Files";
 
-const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> = ({
+const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionAccordionProps> = ({
   expandedPanel,
   onPanelChange,
   ...others
@@ -22,13 +21,8 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
   const [files, setFiles] = useState<Map<string, File>>(new Map());
   const loadProfileContext = useContext(LoadProfileContext);
 
-  useEffect(() => {
-    console.log("New File Added...");
-  }, [files, setFiles]);
-
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
-      //Set the files...IF dupplicate, returns
       setFiles((prevMap) => {
         if (!prevMap.has(file.name)) {
           const duplicate = new Map(prevMap);
@@ -75,7 +69,7 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
         onFileDrop={handleFileDrop}
         helperText="Drop files here"
       >
-        {[...files.values()].map((file) => {
+        {/* {[...files.values()].map((file) => {
           return (
             <LoadProfileParser
               onFileParsed={handleFileParsed}
@@ -99,11 +93,11 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
               )}
             />
           );
-        })}
+        })} */}
       </FileDrop>
     </CustomAccordion>
   );
 };
 
-export default LoadProfileAccordion;
+export default MonthlyInterruptionAccordion;
 export { panelName };

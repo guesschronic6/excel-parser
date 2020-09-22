@@ -47,7 +47,7 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelIcon={Functions}
         labelInfo={
           monthlyLoadProfile.nonCoincidentPeak
-            ? ` ${monthlyLoadProfile.nonCoincidentPeak.kwdel.toFixed(2)}`
+            ? ` ${monthlyLoadProfile.nonCoincidentPeak.toFixed(2)}`
             : ""
         }
       />
@@ -57,7 +57,7 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
         labelIcon={Functions}
         labelInfo={
           monthlyLoadProfile.diversityFactor
-            ? ` ${monthlyLoadProfile.diversityFactor.factor.toFixed(2)}`
+            ? ` ${monthlyLoadProfile.diversityFactor.toFixed(2)}`
             : ""
         }
       />

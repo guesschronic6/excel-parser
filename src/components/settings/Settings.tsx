@@ -1,14 +1,19 @@
 import { Tabs, Typography, Box } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import useStyles from "./use-styles";
-import { LoadProfileSettingsPanel } from "./tabpanels";
+import {
+  LoadProfileSettingsPanel,
+  MonthlyInterruptionSettingsPanel,
+} from "./tabpanels";
 import { VerticalTab } from "../common/components/tabs";
+import PowerSubstationPanel from "./tabpanels/PowerSubstationPanel";
 
 type SettingsProps = {};
 
 enum SettingsTabs {
-  LoadProfileTab = "lp_tab",
-  FeederDemandTab = "fd_tab",
+  LOADPROFILE_TAB = "lp_tab",
+  MONTHLYINTERRUPTION_TAB = "mi_tab",
+  POWERSUBSTATION_TAB = "ps_tab",
 }
 
 interface TabPanelProps {
@@ -36,7 +41,7 @@ function TabPanel(props: TabPanelProps) {
 
 const Settings: React.FunctionComponent<SettingsProps> = ({ ...others }) => {
   const [selectedTab, setSelectedTab] = useState<string>(
-    SettingsTabs.LoadProfileTab
+    SettingsTabs.LOADPROFILE_TAB
   );
 
   const classes = useStyles();
@@ -61,17 +66,29 @@ const Settings: React.FunctionComponent<SettingsProps> = ({ ...others }) => {
         >
           <VerticalTab
             label="Load Profile Settings"
-            value={SettingsTabs.LoadProfileTab}
+            value={SettingsTabs.LOADPROFILE_TAB}
           />
           <VerticalTab
-            value={SettingsTabs.FeederDemandTab}
-            label="Feeder and Demand Settings"
+            value={SettingsTabs.MONTHLYINTERRUPTION_TAB}
+            label="Monthly Interruption Settings"
+          />
+          <VerticalTab
+            value={SettingsTabs.POWERSUBSTATION_TAB}
+            label="Power Substation Settings"
           />
         </Tabs>
-        <TabPanel value={selectedTab} index={SettingsTabs.LoadProfileTab}>
+        <TabPanel value={selectedTab} index={SettingsTabs.LOADPROFILE_TAB}>
           <LoadProfileSettingsPanel />
         </TabPanel>
-        <div>{selectedTab === SettingsTabs.LoadProfileTab && <></>}</div>
+        <TabPanel
+          value={selectedTab}
+          index={SettingsTabs.MONTHLYINTERRUPTION_TAB}
+        >
+          <MonthlyInterruptionSettingsPanel />
+        </TabPanel>
+        <TabPanel value={selectedTab} index={SettingsTabs.POWERSUBSTATION_TAB}>
+          <PowerSubstationPanel />
+        </TabPanel>
       </div>
     </div>
   );

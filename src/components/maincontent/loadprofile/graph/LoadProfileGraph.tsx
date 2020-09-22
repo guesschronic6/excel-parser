@@ -26,7 +26,7 @@ const LoadProfileGraph: React.FunctionComponent<LoadProfileGraphProps> = (
 
   return (
     <Paper className={classes.graphContent}>
-      <Chart data={[...monthlyLoadProfile.data.values()]}>
+      <Chart data={[...monthlyLoadProfile.chartData.values()]}>
         <ArgumentScale factory={scaleBand} />
         <ArgumentAxis showGrid />
         <ValueAxis showGrid />
