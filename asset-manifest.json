@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/excel-parser/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/excel-parser/static/js/main.369bd16c.chunk.js",
-    "main.js.map": "/excel-parser/static/js/main.369bd16c.chunk.js.map",
+    "main.js": "/excel-parser/static/js/main.538deb98.chunk.js",
+    "main.js.map": "/excel-parser/static/js/main.538deb98.chunk.js.map",
     "runtime-main.js": "/excel-parser/static/js/runtime-main.6cf27894.js",
     "runtime-main.js.map": "/excel-parser/static/js/runtime-main.6cf27894.js.map",
-    "static/js/2.fa6b83f2.chunk.js": "/excel-parser/static/js/2.fa6b83f2.chunk.js",
-    "static/js/2.fa6b83f2.chunk.js.map": "/excel-parser/static/js/2.fa6b83f2.chunk.js.map",
+    "static/js/2.98b75f26.chunk.js": "/excel-parser/static/js/2.98b75f26.chunk.js",
+    "static/js/2.98b75f26.chunk.js.map": "/excel-parser/static/js/2.98b75f26.chunk.js.map",
     "index.html": "/excel-parser/index.html",
-    "precache-manifest.b66ef06b3e4664d1f92930112d4e8486.js": "/excel-parser/precache-manifest.b66ef06b3e4664d1f92930112d4e8486.js",
+    "precache-manifest.f645fa2142bd65ac3da72ca3910e119d.js": "/excel-parser/precache-manifest.f645fa2142bd65ac3da72ca3910e119d.js",
     "service-worker.js": "/excel-parser/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/excel-parser/static/css/main.5ecd60fb.chunk.css.map",
-    "static/js/2.fa6b83f2.chunk.js.LICENSE.txt": "/excel-parser/static/js/2.fa6b83f2.chunk.js.LICENSE.txt"
+    "static/js/2.98b75f26.chunk.js.LICENSE.txt": "/excel-parser/static/js/2.98b75f26.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.6cf27894.js",
-    "static/js/2.fa6b83f2.chunk.js",
+    "static/js/2.98b75f26.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.369bd16c.chunk.js"
+    "static/js/main.538deb98.chunk.js"
   ]
 }
