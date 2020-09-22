@@ -14,7 +14,7 @@ function loadSettings(): LoadProfileSettings {
   let dateCol = Number(localStorage.getItem(LoadProfileStorageKey.DATE) || "2");
   let timeCol = Number(localStorage.getItem(LoadProfileStorageKey.TIME) || "3");
   let dateFormat =
-    localStorage.getItem(LoadProfileStorageKey.DATE_FORMAT) || "MM/dd/yyyy";
+    localStorage.getItem(LoadProfileStorageKey.DATE_FORMAT) || "MM/DD/YYYY";
   let timeFormat =
     localStorage.getItem(LoadProfileStorageKey.TIME_FORMAT) || "HH:mm";
   return {

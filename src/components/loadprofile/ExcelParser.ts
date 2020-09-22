@@ -158,10 +158,14 @@ function extractKwdelCellData(
 ): { error: string | null; value: number | null } {
   let error = null;
   let value = null;
-  if (!(kwdelCell.t === "n" || Number(kwdelCell.v || kwdelCell.w))) {
-    error = `KwdelCell expectations: number received: ${kwdelCell.v}`;
+  if (kwdelCell) {
+    if (!(kwdelCell.t === "n" || Number(kwdelCell.v || kwdelCell.w))) {
+      error = `KwdelCell expectations: number received: ${kwdelCell.v}`;
+    } else {
+      value = Number(kwdelCell.v || kwdelCell.r);
+    }
   } else {
-    value = Number(kwdelCell.v || kwdelCell.r);
+    error = "Kwdel cell is null";
   }
   return { error, value };
 }
@@ -173,25 +177,23 @@ function extractDateCellData(
   let error: string | null = null;
   let value = null;
   let x: any = null;
-  // console.log({
-  //   dateCell_t: dateCell.t,
-  //   dateCell_w: dateCell.w,
-  //   dateCell_r: dateCell.r,
-  // });
-
-  if (dateCell.t !== "d") {
-    if (dateCell.t === "s") {
-      x = moment(dateCell.v || dateCell.w || dateCell.r, dateFormat, true);
-      if (!x.isValid()) {
-        error = `DateCell expectations: date received: ${dateCell.v}`;
+  if (dateCell) {
+    if (dateCell.t !== "d") {
+      if (dateCell.t === "s") {
+        x = moment(dateCell.v || dateCell.w || dateCell.r, dateFormat, true);
+        if (!x.isValid()) {
+          error = `DateCell, "${dateCell.v}" does not match the date format in settings ${dateFormat}`;
+        } else {
+          value = x.toDate();
+        }
       } else {
-        value = x.toDate();
+        error = `DateCell expectations: date received: ${dateCell.v}`;
       }
     } else {
-      error = `DateCell expectations: date received: ${dateCell.v}`;
+      value = dateCell.v as Date;
     }
   } else {
-    value = dateCell.v as Date;
+    error = "Date cell is null";
   }
 
   return { error, value };
@@ -204,19 +206,23 @@ function extractTimeCellData(
   let error: string | null = null;
   let value = null;
   let x: any = null;
-  if (timeCell.t !== "d") {
-    if (timeCell.t === "s") {
-      x = moment(timeCell.v || timeCell.w || timeCell.r, timeFormat);
-      if (!x.isValid()) {
-        error = `TimeCell expectations: date received: ${timeCell.v}`;
+  if (timeCell) {
+    if (timeCell.t !== "d") {
+      if (timeCell.t === "s") {
+        x = moment(timeCell.v || timeCell.w || timeCell.r, timeFormat);
+        if (!x.isValid()) {
+          error = `TimeCell, ${timeCell.v} does not match the time format in setstings ${timeFormat}`;
+        } else {
+          value = x.toDate();
+        }
       } else {
-        value = x.toDate();
+        error = `TimeCell expectations: date received: ${timeCell.v}`;
       }
     } else {
-      error = `TimeCell expectations: date received: ${timeCell.v}`;
+      value = timeCell.v as Date;
     }
   } else {
-    value = timeCell.v as Date;
+    error = "Time cell is null";
   }
 
   return { error, value };

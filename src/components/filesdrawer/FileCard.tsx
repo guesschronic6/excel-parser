@@ -154,6 +154,7 @@ const cardStyles = makeStyles((theme: Theme) => ({
   },
   error_container: {
     maxWidth: "100%",
+    width: "550px",
   },
   error_text: {
     fontSize: "0.9rem",

@@ -51,8 +51,8 @@ const GraphContent: React.FunctionComponent<GraphContentProps> = (
         <Paper className={classes.graphContent}>
           <Chart data={[...monthlyLoadProfile.data.values()]}>
             <ArgumentScale factory={scaleBand} />
-            <ArgumentAxis />
-            <ValueAxis />
+            <ArgumentAxis showGrid />
+            <ValueAxis showGrid />
             {[...monthlyLoadProfile.loadProfiles.values()].map((data) => {
               return (
                 <LineSeries

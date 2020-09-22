@@ -63,6 +63,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
       dateFormat,
       timeFormat,
     });
+    alert("Load profile settings saved");
   }
 
   return (
@@ -78,6 +79,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
           value={kwdel}
           type="number"
           onChange={handleKwdelChange}
+          helpertext="the column# of the kwdel value, note: column starts at 0"
         />
         <FormTextField
           label="Date Column#"
@@ -85,6 +87,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
           value={date}
           type="number"
           onChange={handleDateChange}
+          helpertext="the column# of the date value, note: column starts at 0"
         />
         <FormTextField
           label="Time Column#"
@@ -92,18 +95,21 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
           value={time}
           type="number"
           onChange={handleTimeChange}
+          helpertext="the column# of the time value, note: column starts at 0"
         />
         <FormTextField
           label="Date Format"
           placeholder="Date Format"
           value={dateFormat}
           onChange={handleDateFormatChange}
+          helpertext="(MM/DD/YYYY) = '09/22/2020', (MMMM/DD/YYYY) = 'September/22/2020'  "
         />
         <FormTextField
           label="Time Format"
           placeholder="Time Format"
           value={timeFormat}
           onChange={handleTimeFormatChange}
+          helpertext="(HH:mm) = '22:15', (hh:mm a) = '10:15 pm', (HH:mm:ss) = '22:15:13' "
         />
       </form>
       <div className={classes.actionContainer}>
