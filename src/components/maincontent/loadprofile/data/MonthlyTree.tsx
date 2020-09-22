@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexShrink: 0,
       fontSize: "1rem",
-      padding: `${theme.spacing(3)}px ${theme.spacing(1)}px`,
+      padding: `${theme.spacing(1)}px ${theme.spacing(1)}px`,
     },
     title: {
       fontSize: "1.5em",

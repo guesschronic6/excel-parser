@@ -1,7 +1,7 @@
 import { makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { VerticalTab } from "../common/components/tabs";
-import LoadProfileContent from "./loadprofile/LoadProfileContent";
+import LoadProfileTabPanel from "./loadprofile/LoadProfileTabPanel";
 type MainContentProps = {};
 
 enum ContentTabs {
@@ -40,7 +40,7 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
         </Tabs>
       </div>
       <div className={classes.mainContent_content}>
-        {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileContent />}
+        {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileTabPanel />}
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
   },
   tabs_container: {
-    marginTop: theme.spacing(10),
+    marginTop: theme.spacing(12),
     maxWidth: "300px",
     flexGrow: 0,
   },

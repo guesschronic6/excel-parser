@@ -1,17 +1,16 @@
-import {
-  LinearProgress,
-  makeStyles,
-  Tabs,
-  Theme,
-  Typography,
-} from "@material-ui/core";
-import React, { ChangeEvent, useContext, useState } from "react";
+import { createStyles, makeStyles, Tabs, Theme } from "@material-ui/core";
+import React, { ChangeEvent, ReactComponentElement } from "react";
+import { useState } from "react";
 import { HorizontalTab } from "../../common/components/tabs";
-import DataContent from "./data/DataContent";
-import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
-import GraphContent from "./graph/GraphContent";
+import { MonthlyLoadProfile } from "../../loadprofile/objects";
+import MonthlyCard from "./data/MonthlyCard";
+import LoadProfileGraph from "./graph/LoadProfileGraph";
 
-type LoadProfileContentProps = {};
+type LoadProfileContentProps = {
+  monthlyLoadProfile: MonthlyLoadProfile;
+  index: string;
+  value: string;
+};
 
 enum DataTab {
   DATA = "data",
@@ -19,22 +18,38 @@ enum DataTab {
   NONE = "",
 }
 
-const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = ({
-  ...others
-}) => {
+type TabPanelProps = {
+  monthlyLoadpRofile: MonthlyLoadProfile;
+  value: string;
+  index: string;
+  children: any;
+};
+
+function TabPanel(props: TabPanelProps) {
+  const { monthlyLoadpRofile, value, index, children } = props;
   const classes = useStyles();
+
+  return value === index ? (
+    <div className={classes.loadProfileContent_tabPanel}>{children}</div>
+  ) : (
+    <></>
+  );
+}
+
+const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = (
+  props
+) => {
+  const { monthlyLoadProfile, index, value } = props;
   const [selectedTab, setSelectedTab] = useState<string>(DataTab.DATA);
-  const loadProfileContext = useContext(LoadProfileContext);
+  const classes = useStyles();
 
   function handleTabChange(event: ChangeEvent<{}>, newTab: string) {
     setSelectedTab(newTab);
   }
-  return (
+
+  return index === value ? (
     <div className={classes.loadProfileContent_root}>
-      <div className={classes.loadProfileContent_Header}>
-        <Typography className={classes.loadProfileContent_Title} variant="h5">
-          Load Profile
-        </Typography>
+      <div>
         <Tabs
           onChange={handleTabChange}
           indicatorColor="primary"
@@ -44,43 +59,38 @@ const LoadProfileContent: React.FunctionComponent<LoadProfileContentProps> = ({
           <HorizontalTab label="Graph" value={DataTab.GRAPH} />
         </Tabs>
       </div>
-      <div className={classes.loadProfileContent_contentWrapper}>
-        <div className={classes.loadProfileContent_content}>
-          {selectedTab === DataTab.DATA && <DataContent />}
-          {selectedTab === DataTab.GRAPH && <GraphContent />}
-        </div>
-      </div>
+      <TabPanel
+        index={DataTab.DATA}
+        value={selectedTab}
+        monthlyLoadpRofile={monthlyLoadProfile}
+      >
+        <MonthlyCard monthlyLoadProfile={monthlyLoadProfile} />
+      </TabPanel>
+      <TabPanel
+        index={DataTab.GRAPH}
+        value={selectedTab}
+        monthlyLoadpRofile={monthlyLoadProfile}
+      >
+        <LoadProfileGraph monthlyLoadProfile={monthlyLoadProfile} />
+      </TabPanel>
     </div>
+  ) : (
+    <></>
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  loadProfileContent_root: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "0px",
-    minWidth: "0px",
-  },
-  loadProfileContent_Header: {
-    display: "flex",
-    alignItems: "flex-end",
-  },
-  loadProfileContent_Title: {
-    marginRight: theme.spacing(1),
-    paddingRight: theme.spacing(3),
-    textAlign: "center",
-  },
-  loadProfileContent_contentWrapper: {
-    flex: 1,
-    overflow: "auto",
-    display: "flex",
-    flexWrap: "nowrap",
-  },
-  loadProfileContent_content: {
-    flex: 1,
-    padding: theme.spacing(5),
-  },
-}));
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    loadProfileContent_root: {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+    },
+    loadProfileContent_tabPanel: {
+      flex: 1,
+      padding: theme.spacing(3),
+    },
+  })
+);
 
 export default LoadProfileContent;

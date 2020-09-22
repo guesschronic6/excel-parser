@@ -59,7 +59,7 @@ function extractLoadProfileRawFromWorkbook(
           let settings = LoadProfileStorage.loadSettings();
           let cells = extractCells(worksheet, row, sheetName, settings);
           let rawData = extractDataFromRow(cells, settings, fileName);
-
+          console.log(rawData);
           lp_rawDatas.push(rawData);
         } catch (e) {
           errors.push(e.message);
@@ -67,7 +67,6 @@ function extractLoadProfileRawFromWorkbook(
       }
     }
     console.log("finished");
-    handleProgressUpdate("Finished processing", 100);
     resolve({ value: lp_rawDatas, errors, meteringPoints });
   });
 }
@@ -162,7 +161,7 @@ function extractKwdelCellData(
     if (!(kwdelCell.t === "n" || Number(kwdelCell.v || kwdelCell.w))) {
       error = `KwdelCell expectations: number received: ${kwdelCell.v}`;
     } else {
-      value = Number(kwdelCell.v || kwdelCell.r);
+      value = Number(kwdelCell.r || kwdelCell.v);
     }
   } else {
     error = "Kwdel cell is null";
