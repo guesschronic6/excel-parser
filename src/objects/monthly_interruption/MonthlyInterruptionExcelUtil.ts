@@ -1,6 +1,5 @@
 import { WorkBook, WorkSheet } from "xlsx/types";
-import ExcelUtil from "../common/utils/ExcelUtil";
-import { LoadProfile_Raw } from "../loadprofile/objects";
+import ExcelUtil from "../../components/common/utils/ExcelUtil";
 import { loadSettings } from "./MonthlyInterruptionSettings";
 import {
   MonthlyInterruptionRawData,
@@ -8,10 +7,9 @@ import {
   MonthlyInterruptionSettings,
 } from "./types";
 
-import { findFeeder } from "../../objects/common/GeneralUtil";
+import { findFeeder } from "../common/GeneralUtil";
 import XLSX from "xlsx";
 import MonthlyInterruption from "./MonthlyInterruption";
-import { duration } from "@material-ui/core";
 
 function extractRawDatasFromWorkbook(
   filename: string,

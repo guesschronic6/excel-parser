@@ -1,7 +1,7 @@
 import { loadSettings, saveSettings } from "./MonthlyInterruptionSettings";
 import { extractRawDatasFromWorkbook } from "./MonthlyInterruptionExcelUtil";
 import { MonthlyInterruptionRawData } from "./types";
-import BillingPeriod from "../../objects/common/BillingPeriod";
+import BillingPeriod from "../common/BillingPeriod";
 
 const MonthlyInterruption = Object.freeze({
   extractRawDatasFromWorkbook,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FileUtil } from "../common/utils";
-import MonthlyInterruption from "./MonthlyInterruption";
-import { MonthlyInterruptionRawData } from "./types";
+import MonthlyInterruption from "../../objects/monthly_interruption/MonthlyInterruption";
+import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
 
 type LoadProfileParserProps = {
   file: File;
