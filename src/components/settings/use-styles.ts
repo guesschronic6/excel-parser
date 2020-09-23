@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 0,
     height: "100%",
     width: "100%",
+    minHeight: 0,
   },
   title_div: {
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -28,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(5),
     display: "flex",
     flexGrow: 1,
+    overflow: "auto",
   },
   tab_panel: {
     flexGrow: 1,

@@ -32,7 +32,8 @@ class ExcelUtil {
   }
 
   static extractNumber(
-    cell: CellObject
+    cell: CellObject,
+    strict: boolean = false
   ): { number: number | null; error: string | null } {
     let number: number | null = null;
     let error: string | null = null;
@@ -43,7 +44,11 @@ class ExcelUtil {
         number = Number(cell.r || cell.v);
       }
     } else {
-      error = "Cell is empty";
+      if (strict) {
+        error = "Cell is empty";
+      } else {
+        number = 0;
+      }
     }
 
     return { number, error };

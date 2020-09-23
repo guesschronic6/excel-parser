@@ -41,7 +41,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
     monthlyInterruptionRawDatas: MonthlyInterruptionRawData[]
   ) {}
 
-  function handleRemoveFile(file: File, meteringPoints: string[]) {
+  function handleRemoveFile(file: File) {
     setFiles((prevMap) => {
       const duplicate = new Map(prevMap);
       duplicate.delete(file.name);
@@ -66,6 +66,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
           return (
             <MonthlyInterruptionParser
               onFileParsed={handleFileParsed}
+              onRemoveFile={handleRemoveFile}
               key={file.name}
               file={file}
               render={(props) => (

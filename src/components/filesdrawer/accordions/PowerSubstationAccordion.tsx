@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import CustomAccordion from "../CustomAccordion";
 import FileCard from "../FileCard";
-import { LoadProfileParser } from "../../loadprofile";
-import { LoadProfile_Raw } from "../../loadprofile/objects";
-import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import FileDrop from "../FileDrop";
+import PowerSubstationParser from "../../power_substation/PowerSubstationParser";
+import { PowerSubstationRawData } from "../../../objects/power_substation/types";
 
 type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
@@ -13,13 +12,11 @@ type MonthlyInterruptionAccordionProps = {
 const panelName = "ps_panel";
 const title = "Power Substation Files";
 
-const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionAccordionProps> = ({
-  expandedPanel,
-  onPanelChange,
-  ...others
-}) => {
+const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionAccordionProps> = (
+  props
+) => {
+  const { expandedPanel, onPanelChange, ...others } = props;
   const [files, setFiles] = useState<Map<string, File>>(new Map());
-  const loadProfileContext = useContext(LoadProfileContext);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
@@ -39,20 +36,13 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 
   function handleDragLeave() {}
 
-  function handleFileParsed(lpRawDatas: LoadProfile_Raw[]) {
-    loadProfileContext.updateLoadProfiles(lpRawDatas);
-  }
+  function handleFileParsed(lpRawDatas: PowerSubstationRawData[]) {}
 
-  function handleRemoveFile(file: File, meteringPoints: string[]) {
+  function handleRemoveFile(file: File) {
     setFiles((prevMap) => {
       const duplicate = new Map(prevMap);
       duplicate.delete(file.name);
       return duplicate;
-    });
-
-    loadProfileContext.deleteLoadProfiles({
-      fileName: file.name,
-      meteringPoints,
     });
   }
 
@@ -69,31 +59,25 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
         onFileDrop={handleFileDrop}
         helperText="Drop files here"
       >
-        {/* {[...files.values()].map((file) => {
+        {[...files.values()].map((file) => {
           return (
-            <LoadProfileParser
+            <PowerSubstationParser
               onFileParsed={handleFileParsed}
+              onRemoveFile={handleRemoveFile}
               key={file.name}
               file={file}
-              onRemoveFile={handleRemoveFile}
-              render={({
-                progress,
-                progressInfo,
-                fileFromParser,
-                onRemoveFile,
-                errors,
-              }: LoadProfileParserRenderProps) => (
+              render={(props) => (
                 <FileCard
-                  progress={progress}
-                  progressInfo={progressInfo}
-                  file={fileFromParser}
-                  errors={errors}
-                  onRemoveFile={onRemoveFile}
+                  progress={props.progress}
+                  progressInfo={props.progressInfo}
+                  file={props.file}
+                  errors={props.errors}
+                  onRemoveFile={props.onRemoveFile}
                 />
               )}
             />
           );
-        })} */}
+        })}
       </FileDrop>
     </CustomAccordion>
   );

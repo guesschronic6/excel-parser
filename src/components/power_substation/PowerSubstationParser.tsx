@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { FileUtil } from "../../objects/common/utils";
-import MonthlyInterruption from "../../objects/monthly_interruption/MonthlyInterruption";
-import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
+import PowerSubstation from "../../objects/power_substation/PowerSubstation";
+import { PowerSubstationRawData } from "../../objects/power_substation/types";
 import { FilecardProps } from "../filesdrawer/FileCard";
 
-type MonthlyInterruptionParserProps = {
+type PowerSubstationParserProps = {
   file: File;
   render: React.FunctionComponent<FilecardProps>;
-  onFileParsed: (rawDatas: MonthlyInterruptionRawData[]) => void;
+  onFileParsed: (rawDatas: PowerSubstationRawData[]) => void;
   onRemoveFile: (file: File) => void;
 };
 
-const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps> = (
+const LoadProfileParser: React.FunctionComponent<PowerSubstationParserProps> = (
   props
 ) => {
   const { file, render, onFileParsed, onRemoveFile, ...others } = props;
@@ -22,7 +22,7 @@ const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps>
   useEffect(() => {
     FileUtil.extractWorkbookFromFile(file)
       .then((workbook) => {
-        return MonthlyInterruption.extractRawDatasFromWorkbook(
+        return PowerSubstation.extractRawDatasFromWorkbook(
           file.name,
           workbook,
           handleProgressUpdate
@@ -39,7 +39,7 @@ const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps>
   }, []);
 
   function handleFileParsed(
-    monthlyInterruptionRawDatas: MonthlyInterruptionRawData[]
+    monthlyInterruptionRawDatas: PowerSubstationRawData[]
   ) {}
 
   function handleProgressUpdate(info: string, percent: number) {

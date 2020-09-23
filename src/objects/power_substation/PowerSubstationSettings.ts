@@ -7,7 +7,7 @@ enum PowerSubstationSettingsKey {
   KVARHRENERGY = "ps_kvarhrenergy",
 }
 
-function savePowerSubstationSettings(settings: PowerSubstationSettings) {
+function saveSettings(settings: PowerSubstationSettings) {
   localStorage.setItem(
     PowerSubstationSettingsKey.DEMAND,
     settings.demandKwhrCol.toString()
@@ -26,7 +26,7 @@ function savePowerSubstationSettings(settings: PowerSubstationSettings) {
   );
 }
 
-function loadPowerSubstationSettings(): PowerSubstationSettings {
+function loadSettings(): PowerSubstationSettings {
   return {
     kvarhrEnergyCol:
       Number(localStorage.getItem(PowerSubstationSettingsKey.KVARHRENERGY)) ||
@@ -40,4 +40,4 @@ function loadPowerSubstationSettings(): PowerSubstationSettings {
   };
 }
 
-export { savePowerSubstationSettings, loadPowerSubstationSettings };
+export { saveSettings, loadSettings };
