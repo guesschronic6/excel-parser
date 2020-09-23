@@ -1,10 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SettingsPanel from "./SettingsPanel";
 import { FormTextField } from "../../common/components/textfields";
-import {
-  saveMonthlyInterruptionSettings,
-  loadMonthlyInterruptionSettings,
-} from "../../monthly_interruption/MonthlyInterruptionStorage";
+import MonthlyInterruption from "../../monthly_interruption/MonthlyInterruption";
 
 type MonthlyInterruptionPanelProps = {};
 
@@ -19,7 +16,7 @@ const MonthlyInterruptionPanel: React.FunctionComponent<MonthlyInterruptionPanel
   const [dateFormat, setDateFormat] = useState("");
 
   useEffect(() => {
-    let settings = loadMonthlyInterruptionSettings();
+    let settings = MonthlyInterruption.loadSettings();
     setDurationCol(settings.durationCol);
     setDateCol(settings.dateCol);
     setFeederCol(settings.feederCol);
@@ -27,7 +24,7 @@ const MonthlyInterruptionPanel: React.FunctionComponent<MonthlyInterruptionPanel
   }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    saveMonthlyInterruptionSettings({
+    MonthlyInterruption.saveSettings({
       dateCol,
       durationCol,
       feederCol,

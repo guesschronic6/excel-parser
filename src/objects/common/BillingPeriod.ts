@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Month } from "../enums";
+import { Month } from "../../components/enums";
 
 class BillingPeriod {
   month: number;

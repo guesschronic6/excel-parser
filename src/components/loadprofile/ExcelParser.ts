@@ -2,9 +2,8 @@ import XLSX from "xlsx";
 import { LoadProfileStorage } from ".";
 import { LoadProfileSettings } from "./types/LoadProfileSettings";
 import { LoadProfile_Raw } from "./objects";
-import moment from "moment";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
-import MeteringPoint from "./enums/MeteringPoints";
+import MeteringPoint from "../../objects/common/enums/MeteringPoints";
 import ExcelUtil from "./../common/utils/ExcelUtil";
 
 type LoadProfileRowData = {
@@ -118,13 +117,22 @@ function extractDataFromRow(
   let anyErrors = false;
   let rawData: LoadProfile_Raw | null = null;
 
-  let kwdelCellData = extractKwdelCellData(rowData.kwdelCell);
-  let kwhdelCellData = extractKwhdelCellData(rowData.kwhdelCell);
-  let dateCellData = extractDateCellData(rowData.dateCell, settings.dateFormat);
-  let timeCellData = extractTimeCellData(rowData.timeCell, settings.timeFormat);
+  let kwdelCellData = ExcelUtil.extractNumber(rowData.kwdelCell);
+  let kwhdelCellData = ExcelUtil.extractNumber(rowData.kwhdelCell);
+  let dateCellData = ExcelUtil.extractDate(
+    rowData.dateCell,
+    settings.dateFormat
+  );
+  let timeCellData = ExcelUtil.extractDate(
+    rowData.timeCell,
+    settings.timeFormat
+  );
 
   anyErrors = Boolean(
-    kwdelCellData.error || dateCellData.error || timeCellData.error
+    kwdelCellData.error ||
+      dateCellData.error ||
+      timeCellData.error ||
+      kwhdelCellData.error
   );
   if (anyErrors) {
     error = `Errors in row ${rowData.row + 1}:\n`;
@@ -139,13 +147,13 @@ function extractDataFromRow(
 
     throw new Error(error);
   } else {
-    let kwhdel = kwhdelCellData.value as number;
-    let kwdel = kwdelCellData.value as number;
-    let day = dateCellData.value?.getDate() as number;
-    let month = dateCellData.value?.getMonth() as number;
-    let hour = timeCellData.value?.getHours() as number;
-    let minute = timeCellData.value?.getMinutes() as number;
-    let year = dateCellData.value?.getFullYear() as number;
+    let kwhdel = kwhdelCellData.number as number;
+    let kwdel = kwdelCellData.number as number;
+    let day = dateCellData.date?.getDate() as number;
+    let month = dateCellData.date?.getMonth() as number;
+    let hour = timeCellData.date?.getHours() as number;
+    let minute = timeCellData.date?.getMinutes() as number;
+    let year = dateCellData.date?.getFullYear() as number;
     rawData = new LoadProfile_Raw(
       kwdel,
       kwhdel,
@@ -162,60 +170,6 @@ function extractDataFromRow(
 
   // console.log(`row: ${rawData.row} ${rawData.hour}:${rawData.minute}`);
   return rawData;
-}
-
-function extractKwdelCellData(
-  kwdelCell: CellObject
-): { error: string | null; value: number | null } {
-  let error = null;
-  let value = null;
-  try {
-    value = ExcelUtil.extractNumber(kwdelCell);
-  } catch (e) {
-    error = e.message;
-  }
-  return { error, value };
-}
-
-function extractKwhdelCellData(
-  kwhdelCell: CellObject
-): { error: string | null; value: number | null } {
-  let error = null;
-  let value = null;
-  try {
-    value = ExcelUtil.extractNumber(kwhdelCell);
-  } catch (e) {
-    error = e.message;
-  }
-  return { error, value };
-}
-
-function extractDateCellData(
-  dateCell: CellObject,
-  dateFormat: string
-): { error: string | null; value: Date | null } {
-  let error: string | null = null;
-  let value = null;
-  try {
-    value = ExcelUtil.extractDate(dateCell, dateFormat);
-  } catch (e) {
-    error = e.message;
-  }
-  return { error, value };
-}
-
-function extractTimeCellData(
-  timeCell: CellObject,
-  timeFormat: string
-): { error: string | null; value: Date | null } {
-  let error: string | null = null;
-  let value = null;
-  try {
-    value = ExcelUtil.extractDate(timeCell, timeFormat);
-  } catch (e) {
-    error = e.message;
-  }
-  return { error, value };
 }
 
 export default extractLoadProfileRawFromWorkbook;

@@ -19,6 +19,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
   useEffect(() => {
     let lpSettings = LoadProfileStorage.loadSettings();
     setKwdel(lpSettings.kwdelCol);
+    setKwhdel(lpSettings.kwhdelCol);
     setDateFormat(lpSettings.dateFormat);
     setDate(lpSettings.dateCol);
     setTime(lpSettings.timeCol);

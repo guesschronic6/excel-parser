@@ -102,12 +102,14 @@ class MonthlyLoadProfile {
   initOtherDetails() {
     this.resetData();
 
+    let hlpList: HourlyLoadProfile[] = [];
+
     for (let loadProfile of this.loadProfiles.values()) {
       for (let dailyLp of [...loadProfile.dailyLoadProfiles.values()]) {
+        dailyLp.genMaxAndSum();
         for (let hourlyLp of dailyLp.hourlyLoadProfiles) {
           this.extractDataThenAddToTotal(hourlyLp, dailyLp);
         }
-        dailyLp.genMaxAndSum();
         this.extractDailyLoadProfileTotalKwdelThenAddToData(
           dailyLp,
           loadProfile
@@ -146,6 +148,7 @@ class MonthlyLoadProfile {
       diversityFactor: this.diversityFactor,
       totalLoadProfile: this.totalLoadpRofile,
       chartData: this.chartData,
+      hourlyLoadpRofiles: hlpList,
     });
   }
 }

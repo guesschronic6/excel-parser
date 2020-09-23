@@ -27,7 +27,7 @@ class LoadProfile_Raw {
     fileName: string = ""
   ) {
     this.kwdel = kwdel;
-    this.kwhdel = kwdel;
+    this.kwhdel = kwhdel;
     this.day = day;
     this.hour = hour;
     this.month = month;

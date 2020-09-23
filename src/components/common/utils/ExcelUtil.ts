@@ -2,44 +2,76 @@ import moment from "moment";
 import { CellObject } from "xlsx/types";
 
 class ExcelUtil {
-  static extractDate(cell: CellObject, dateFormat: string): Date {
+  static extractDate(
+    cell: CellObject,
+    dateFormat: string
+  ): { date: Date | null; error: string | null } {
+    let date: Date | null = null;
+    let error: string | null = null;
     let x = null;
     if (cell) {
       if (cell.t !== "d") {
         if (cell.t === "s") {
           x = moment(cell.v || cell.w || cell.r, dateFormat);
           if (!x.isValid()) {
-            throw new Error(
-              ` ${cell.v} does not match the date format in setstings ${dateFormat}`
-            );
+            error = ` ${cell.v} does not match the date format in setstings ${dateFormat}`;
           } else {
-            return x.toDate();
+            date = x.toDate();
           }
         } else {
-          throw new Error(
-            `Invalid Cell Value: Expected Date, received: ${cell.v}`
-          );
+          error = `Invalid Cell Value: Expected Date, received: ${cell.v}`;
         }
       } else {
-        return cell.v as Date;
+        date = cell.v as Date;
       }
     } else {
-      throw new Error("Cell is empty");
+      error = "Cell is empty";
     }
+
+    return { date, error };
   }
 
-  static extractNumber(cell: CellObject): number {
+  static extractNumber(
+    cell: CellObject
+  ): { number: number | null; error: string | null } {
+    let number: number | null = null;
+    let error: string | null = null;
     if (cell) {
       if (!(cell.t === "n" || Number(cell.v || cell.w))) {
-        throw new Error(
-          `Invalid Cell Value: Expected number, received: ${cell.v}`
-        );
+        error = `Invalid Cell Value: Expected number, received: ${cell.v}`;
       } else {
-        return Number(cell.r || cell.v);
+        number = Number(cell.r || cell.v);
       }
     } else {
-      throw new Error("Cell is empty");
+      error = "Cell is empty";
     }
+
+    return { number, error };
+  }
+
+  static extractText(
+    cell: CellObject
+  ): { text: string | null; error: string | null } {
+    let error: string | null = null;
+    let text: string | null = null;
+    if (cell) {
+      if (cell.t !== "s") {
+        error = `Invalid Cell Value: Expected Text, received: ${cell.v}`;
+      } else {
+        text = cell.r || (cell.v as string);
+      }
+    } else {
+      error = "Cell is empty";
+    }
+    return { text, error };
+  }
+
+  static calculatePercent(i: number, total: number): Promise<number> {
+    return new Promise<number>((resolve, reject) => {
+      setTimeout(() => {
+        resolve((i / total) * 100);
+      }, 0);
+    });
   }
 }
 

@@ -48,14 +48,19 @@ class LoadProfile {
       const dailyMax = dailyLoadProfile.max;
       const dailyKwdelSum = dailyLoadProfile.sum.kwdel;
       const dailyKwhdelSum = dailyLoadProfile.sum.kwhdel;
+      console.log(
+        `Sum for day ${dailyLoadProfile.date.toLocaleDateString()} is: ${dailyKwhdelSum}`
+      );
+      kwhdelSum += dailyKwhdelSum;
+      kwdelSum += dailyKwdelSum;
+
       if (dailyMax.kwdel > max) {
         max = dailyMax.kwdel;
         maxHour = dailyMax.hour;
         maxDate = dailyLoadProfile.date;
-        kwdelSum += dailyKwdelSum;
-        kwhdelSum += dailyKwhdelSum;
       }
     }
+    console.log(`Sum for ${this.meteringPoint} is: ${kwhdelSum}`);
 
     this.max = {
       kwdel: max,

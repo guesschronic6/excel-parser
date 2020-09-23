@@ -43,12 +43,13 @@ class DailyLoadProfile {
     for (let hourlyLoadProfile of this.hourlyLoadProfiles) {
       let kwdel = hourlyLoadProfile.getTotalKwdel();
       kwdelSum += kwdel;
-      kwhdelSum += hourlyLoadProfile.getTotalKwhdel();
+      kwhdelSum += hourlyLoadProfile.getRawTotalKwhdel();
       if (kwdel > maxKwdel) {
         hour = hourlyLoadProfile.hour;
         maxKwdel = kwdel;
       }
     }
+
     this.max = { kwdel: maxKwdel, hour };
     this.sum = { kwdel: kwdelSum, kwhdel: kwhdelSum };
     return { max: this.max, sum: this.sum };
