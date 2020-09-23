@@ -3,6 +3,7 @@ import { Month } from "../../enums";
 
 class LoadProfile_Raw {
   kwdel: number;
+  kwhdel: number;
   hour: number;
   day: number;
   month: Month;
@@ -15,6 +16,7 @@ class LoadProfile_Raw {
 
   constructor(
     kwdel: number,
+    kwhdel: number,
     day: number,
     month: Month,
     year: number,
@@ -25,6 +27,7 @@ class LoadProfile_Raw {
     fileName: string = ""
   ) {
     this.kwdel = kwdel;
+    this.kwhdel = kwdel;
     this.day = day;
     this.hour = hour;
     this.month = month;

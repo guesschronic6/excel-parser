@@ -12,7 +12,7 @@ class LoadProfile {
     this.meteringPoint = meteringPoint;
     this.dailyLoadProfiles = new Map();
     this.max = { kwdel: 0, hour: 1, meteringPoint: "", date: new Date() };
-    this.sum = { kwdel: 0, meteringPoint: "" };
+    this.sum = { kwdel: 0, kwhdel: 0, meteringPoint: this.meteringPoint };
   }
 
   addLoadProfileData(rawData: LoadProfile_Raw, dateString: string) {
@@ -39,18 +39,21 @@ class LoadProfile {
 
   genMaxAndSum() {
     let max = 0;
-    let sum = 0;
+    let kwhdelSum = 0;
+    let kwdelSum = 0;
     let maxHour = 1;
     let maxDate = new Date();
 
     for (let dailyLoadProfile of this.dailyLoadProfiles.values()) {
       const dailyMax = dailyLoadProfile.max;
-      const dailySum = dailyLoadProfile.sum;
+      const dailyKwdelSum = dailyLoadProfile.sum.kwdel;
+      const dailyKwhdelSum = dailyLoadProfile.sum.kwhdel;
       if (dailyMax.kwdel > max) {
         max = dailyMax.kwdel;
         maxHour = dailyMax.hour;
         maxDate = dailyLoadProfile.date;
-        sum += dailySum;
+        kwdelSum += dailyKwdelSum;
+        kwhdelSum += dailyKwhdelSum;
       }
     }
 
@@ -60,7 +63,11 @@ class LoadProfile {
       date: maxDate,
       meteringPoint: this.meteringPoint,
     };
-    this.sum = { kwdel: sum, meteringPoint: this.meteringPoint };
+    this.sum = {
+      kwdel: kwdelSum,
+      kwhdel: kwhdelSum,
+      meteringPoint: this.meteringPoint,
+    };
     return { max: this.max, sum: this.sum };
   }
 }

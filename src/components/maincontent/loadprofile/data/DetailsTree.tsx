@@ -96,7 +96,7 @@ const DetailsTree: React.FunctionComponent<DetailsTreeProps> = (props) => {
               nodeId={`LS:S${lpSum.meteringPoint}`}
               labelIcon={Functions}
               labelText={`${lpSum.meteringPoint}`}
-              labelInfo={` ${lpSum.kwdel.toFixed(2)}`}
+              labelInfo={` ${lpSum.kwhdel.toFixed(2)}`}
             />
           );
         })}

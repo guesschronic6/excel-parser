@@ -8,4 +8,5 @@ export type LoadProfileMax = {
 export type LoadProfileSum = {
   meteringPoint: string;
   kwdel: number;
+  kwhdel: number;
 };

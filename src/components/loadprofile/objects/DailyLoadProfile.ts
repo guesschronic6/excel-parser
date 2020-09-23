@@ -6,13 +6,13 @@ class DailyLoadProfile {
   date: Date;
   hourlyLoadProfiles: HourlyLoadProfile[];
   max: { kwdel: number; hour: number };
-  sum: number;
+  sum: { kwdel: number; kwhdel: number };
 
   constructor(date: Date) {
     this.date = date;
     this.hourlyLoadProfiles = this.buildHourlyLoadProfiles();
     this.max = { kwdel: 0, hour: 0 };
-    this.sum = 0;
+    this.sum = { kwdel: 0, kwhdel: 0 };
   }
 
   private buildHourlyLoadProfiles() {
@@ -24,6 +24,7 @@ class DailyLoadProfile {
   addLoadProfileData(rawData: LoadProfile_Raw) {
     this.hourlyLoadProfiles[rawData.hour].addKwdel(
       rawData.kwdel,
+      rawData.kwhdel,
       rawData.fileName
     );
   }
@@ -37,18 +38,19 @@ class DailyLoadProfile {
   genMaxAndSum() {
     let maxKwdel = 0;
     let hour = 1;
-    let sum = 0;
-
+    let kwdelSum = 0;
+    let kwhdelSum = 0;
     for (let hourlyLoadProfile of this.hourlyLoadProfiles) {
       let kwdel = hourlyLoadProfile.getTotalKwdel();
-      sum += kwdel;
+      kwdelSum += kwdel;
+      kwhdelSum += hourlyLoadProfile.getTotalKwhdel();
       if (kwdel > maxKwdel) {
         hour = hourlyLoadProfile.hour;
         maxKwdel = kwdel;
       }
     }
     this.max = { kwdel: maxKwdel, hour };
-    this.sum = sum;
+    this.sum = { kwdel: kwdelSum, kwhdel: kwhdelSum };
     return { max: this.max, sum: this.sum };
   }
 }

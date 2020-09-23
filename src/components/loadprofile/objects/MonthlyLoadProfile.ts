@@ -68,6 +68,7 @@ class MonthlyLoadProfile {
   ) {
     let rawData = new LoadProfile_Raw(
       hourlyLoadProfile.getTotalKwdel(),
+      hourlyLoadProfile.getTotalKwhdel(),
       dailyLoadProfile.date.getDate(),
       dailyLoadProfile.date.getMonth() + 1,
       dailyLoadProfile.date.getFullYear(),
@@ -90,11 +91,11 @@ class MonthlyLoadProfile {
 
     if (!this.chartData.has(dateKey)) {
       let obj: any = { date: dateKey };
-      obj[`${loadProfile.meteringPoint}`] = dailyLoadProfile.sum;
+      obj[`${loadProfile.meteringPoint}`] = dailyLoadProfile.sum.kwdel;
       this.chartData.set(dateKey, obj);
     } else {
       let obj = this.chartData.get(dateKey);
-      obj[`${loadProfile.meteringPoint}`] = dailyLoadProfile.sum;
+      obj[`${loadProfile.meteringPoint}`] = dailyLoadProfile.sum.kwdel;
     }
   }
 

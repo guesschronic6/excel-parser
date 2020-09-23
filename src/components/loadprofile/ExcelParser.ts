@@ -5,9 +5,11 @@ import { LoadProfile_Raw } from "./objects";
 import moment from "moment";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
 import MeteringPoint from "./enums/MeteringPoints";
+import ExcelUtil from "./../common/utils/ExcelUtil";
 
 type LoadProfileRowData = {
   kwdelCell: CellObject;
+  kwhdelCell: CellObject;
   dateCell: CellObject;
   timeCell: CellObject;
   row: number;
@@ -89,18 +91,21 @@ function extractCells(
   let kwdelAddress = { c: settings.kwdelCol, r: row };
   let dateAddress = { c: settings.dateCol, r: row };
   let timeAddress = { c: settings.timeCol, r: row };
+  let kwhdelAddress = { c: settings.kwhdelCol, r: row };
 
   //Builds the encoded cell location {"A1", "B2"} to extract from worksheet
   let kwdelRef = XLSX.utils.encode_cell(kwdelAddress);
   let dateRef = XLSX.utils.encode_cell(dateAddress);
   let timeRef = XLSX.utils.encode_cell(timeAddress);
+  let kwhdelRef = XLSX.utils.encode_cell(kwhdelAddress);
 
   return {
     kwdelCell: worksheet[kwdelRef],
     timeCell: worksheet[timeRef],
     dateCell: worksheet[dateRef],
-    row,
+    kwhdelCell: worksheet[kwhdelRef],
     sheetName: sheetName,
+    row,
   };
 }
 
@@ -114,6 +119,7 @@ function extractDataFromRow(
   let rawData: LoadProfile_Raw | null = null;
 
   let kwdelCellData = extractKwdelCellData(rowData.kwdelCell);
+  let kwhdelCellData = extractKwhdelCellData(rowData.kwhdelCell);
   let dateCellData = extractDateCellData(rowData.dateCell, settings.dateFormat);
   let timeCellData = extractTimeCellData(rowData.timeCell, settings.timeFormat);
 
@@ -122,12 +128,18 @@ function extractDataFromRow(
   );
   if (anyErrors) {
     error = `Errors in row ${rowData.row + 1}:\n`;
-    if (kwdelCellData.error) error = error.concat(`\t${kwdelCellData.error}\n`);
-    if (dateCellData.error) error = error.concat(`\t${dateCellData.error}\n`);
-    if (timeCellData.error) error = error.concat(`\t${timeCellData.error}\n`);
+    if (kwdelCellData.error)
+      error = error.concat(`\tKwdel Cell: ${kwdelCellData.error}\n`);
+    if (dateCellData.error)
+      error = error.concat(`\tDate Cell: ${dateCellData.error}\n`);
+    if (timeCellData.error)
+      error = error.concat(`\tTime Cell: ${timeCellData.error}\n`);
+    if (kwhdelCellData.error)
+      error = error.concat(`\tKwhdel Cell: ${timeCellData.error}\n`);
 
     throw new Error(error);
   } else {
+    let kwhdel = kwhdelCellData.value as number;
     let kwdel = kwdelCellData.value as number;
     let day = dateCellData.value?.getDate() as number;
     let month = dateCellData.value?.getMonth() as number;
@@ -136,6 +148,7 @@ function extractDataFromRow(
     let year = dateCellData.value?.getFullYear() as number;
     rawData = new LoadProfile_Raw(
       kwdel,
+      kwhdel,
       day,
       month + 1,
       year,
@@ -156,14 +169,23 @@ function extractKwdelCellData(
 ): { error: string | null; value: number | null } {
   let error = null;
   let value = null;
-  if (kwdelCell) {
-    if (!(kwdelCell.t === "n" || Number(kwdelCell.v || kwdelCell.w))) {
-      error = `KwdelCell expectations: number received: ${kwdelCell.v}`;
-    } else {
-      value = Number(kwdelCell.r || kwdelCell.v);
-    }
-  } else {
-    error = "Kwdel cell is null";
+  try {
+    value = ExcelUtil.extractNumber(kwdelCell);
+  } catch (e) {
+    error = e.message;
+  }
+  return { error, value };
+}
+
+function extractKwhdelCellData(
+  kwhdelCell: CellObject
+): { error: string | null; value: number | null } {
+  let error = null;
+  let value = null;
+  try {
+    value = ExcelUtil.extractNumber(kwhdelCell);
+  } catch (e) {
+    error = e.message;
   }
   return { error, value };
 }
@@ -174,26 +196,11 @@ function extractDateCellData(
 ): { error: string | null; value: Date | null } {
   let error: string | null = null;
   let value = null;
-  let x: any = null;
-  if (dateCell) {
-    if (dateCell.t !== "d") {
-      if (dateCell.t === "s") {
-        x = moment(dateCell.v || dateCell.w || dateCell.r, dateFormat, true);
-        if (!x.isValid()) {
-          error = `DateCell, "${dateCell.v}" does not match the date format in settings ${dateFormat}`;
-        } else {
-          value = x.toDate();
-        }
-      } else {
-        error = `DateCell expectations: date received: ${dateCell.v}`;
-      }
-    } else {
-      value = dateCell.v as Date;
-    }
-  } else {
-    error = "Date cell is null";
+  try {
+    value = ExcelUtil.extractDate(dateCell, dateFormat);
+  } catch (e) {
+    error = e.message;
   }
-
   return { error, value };
 }
 
@@ -203,26 +210,11 @@ function extractTimeCellData(
 ): { error: string | null; value: Date | null } {
   let error: string | null = null;
   let value = null;
-  let x: any = null;
-  if (timeCell) {
-    if (timeCell.t !== "d") {
-      if (timeCell.t === "s") {
-        x = moment(timeCell.v || timeCell.w || timeCell.r, timeFormat);
-        if (!x.isValid()) {
-          error = `TimeCell, ${timeCell.v} does not match the time format in setstings ${timeFormat}`;
-        } else {
-          value = x.toDate();
-        }
-      } else {
-        error = `TimeCell expectations: date received: ${timeCell.v}`;
-      }
-    } else {
-      value = timeCell.v as Date;
-    }
-  } else {
-    error = "Time cell is null";
+  try {
+    value = ExcelUtil.extractDate(timeCell, timeFormat);
+  } catch (e) {
+    error = e.message;
   }
-
   return { error, value };
 }
 

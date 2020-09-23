@@ -10,6 +10,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
   ...others
 }) => {
   const [kwdel, setKwdel] = useState(0);
+  const [khwdel, setKwhdel] = useState(0);
   const [date, setDate] = useState(0);
   const [time, setTime] = useState(0);
   const [dateFormat, setDateFormat] = useState("");
@@ -28,6 +29,12 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
     setKwdel(Number(event.target.value));
+  }
+
+  function handleKwhdelChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    setKwhdel(Number(event.target.value));
   }
 
   function handleDateChange(
@@ -60,6 +67,7 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
       dateCol: date,
       dateFormat,
       timeFormat,
+      kwhdelCol: khwdel,
     });
     alert("Load profile settings saved");
   }
@@ -74,6 +82,16 @@ const LoadProfileSettingsPanel: React.FunctionComponent<LoadProfileSettingsProps
         onChange={handleKwdelChange}
         helpertext="the column# of the kwdel value, note: column starts at 0"
       />
+
+      <FormTextField
+        label="Kwhdel Column#"
+        placeholder="Kwhdel Column#"
+        value={khwdel}
+        type="number"
+        onChange={handleKwhdelChange}
+        helpertext="the column# of the kwhdel value, note: column starts at 0"
+      />
+
       <FormTextField
         label="Date Column#"
         placeholder="Date Column#"
