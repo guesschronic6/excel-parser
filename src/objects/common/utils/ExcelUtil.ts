@@ -58,7 +58,7 @@ class ExcelUtil {
       if (cell.t !== "s") {
         error = `Invalid Cell Value: Expected Text, received: ${cell.v}`;
       } else {
-        text = cell.r || (cell.v as string);
+        text = cell.v as string;
       }
     } else {
       error = "Cell is empty";

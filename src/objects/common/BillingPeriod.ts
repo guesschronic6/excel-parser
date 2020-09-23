@@ -14,6 +14,24 @@ class BillingPeriod {
     this.enddDate = this.getEndDate();
   }
 
+  static getBillingMonth(
+    month: number,
+    day: number,
+    minute: number = 1,
+    hour: number = 0
+  ) {
+    let billingMonth = month;
+    if (day >= 26) {
+      if (!(hour === 0 && minute === 0 && day === 26)) {
+        billingMonth = ++billingMonth % 12;
+        if (billingMonth === 0) {
+          billingMonth = 12;
+        }
+      }
+    }
+    return billingMonth;
+  }
+
   private getStartDate() {
     let startMonth = this.month === 1 ? 12 : this.month - 1;
     let startYear = this.month === 1 ? this.year - 1 : this.year;

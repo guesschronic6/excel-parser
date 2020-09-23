@@ -77,19 +77,13 @@ const LoadProfileAccordion: React.FunctionComponent<LoadProfileAccordionProps> =
               key={file.name}
               file={file}
               onRemoveFile={handleRemoveFile}
-              render={({
-                progress,
-                progressInfo,
-                fileFromParser,
-                onRemoveFile,
-                errors,
-              }: LoadProfileParserRenderProps) => (
+              render={(props) => (
                 <FileCard
-                  progress={progress}
-                  progressInfo={progressInfo}
-                  file={fileFromParser}
-                  errors={errors}
-                  onRemoveFile={onRemoveFile}
+                  progress={props.progress}
+                  progressInfo={props.progressInfo}
+                  file={props.file}
+                  errors={props.errors}
+                  onRemoveFile={props.onRemoveFile}
                 />
               )}
             />

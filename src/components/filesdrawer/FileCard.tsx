@@ -13,7 +13,7 @@ import {
 import { ErrorOutline } from "@material-ui/icons";
 import React, { useState } from "react";
 
-type FilecardProps = {
+export type FilecardProps = {
   file: File;
   progressInfo: string;
   progress: number;
@@ -33,7 +33,6 @@ const FileCard: React.FunctionComponent<FilecardProps> = ({
   const [openError, setOpenError] = useState(false);
 
   function handleSeeErrorsClick() {
-    console.log(errors);
     setOpenError(true);
   }
 

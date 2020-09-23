@@ -63,7 +63,7 @@ const MonthlyInterruptionPanel: React.FunctionComponent<MonthlyInterruptionPanel
       <FormTextField
         label="Feeder Column#"
         placeholder="Feeder Column#"
-        value={dateCol}
+        value={feederCol}
         type="number"
         onChange={handleFeederColChange}
         helpertext="the column# of the feeder value, note: column starts at 0"

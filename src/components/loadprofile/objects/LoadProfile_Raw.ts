@@ -49,12 +49,12 @@ class LoadProfile_Raw {
         this.day--;
       }
     }
-    let billingMonth = this.getBillingMonth({
-      month: this.month,
-      day: this.day,
-      hour: this.hour,
-      minute: this.minute,
-    });
+    let billingMonth = BillingPeriod.getBillingMonth(
+      this.month,
+      this.day,
+      this.hour,
+      this.minute
+    );
 
     this.billingPeriod = new BillingPeriod(billingMonth, this.year);
 
@@ -64,29 +64,6 @@ class LoadProfile_Raw {
         this.hour = 23;
       }
     }
-  }
-
-  getBillingMonth({
-    month,
-    day,
-    minute,
-    hour,
-  }: {
-    month: number;
-    day: number;
-    minute: number;
-    hour: number;
-  }) {
-    let billingMonth = month;
-    if (day >= 26) {
-      if (!(hour === 0 && minute === 0 && day === 26)) {
-        billingMonth = ++billingMonth % 12;
-        if (billingMonth === 0) {
-          billingMonth = 12;
-        }
-      }
-    }
-    return billingMonth;
   }
 }
 

@@ -1,5 +1,5 @@
 import { WorkBook, WorkSheet } from "xlsx/types";
-import ExcelUtil from "../../components/common/utils/ExcelUtil";
+import ExcelUtil from "../common/utils/ExcelUtil";
 import { loadSettings } from "./MonthlyInterruptionSettings";
 import {
   MonthlyInterruptionRawData,
@@ -20,6 +20,9 @@ function extractRawDatasFromWorkbook(
     let errors: string[] = [];
     let value: MonthlyInterruptionRawData[] = [];
 
+    console.log("MonthllyInterruption Workbook: ");
+    console.log(workbook);
+
     for (let sheetName of workbook.SheetNames) {
       let worksheet = workbook.Sheets[sheetName];
 
@@ -39,13 +42,13 @@ function extractRawDatasFromWorkbook(
           let settings = loadSettings();
           let cells = extractCells(worksheet, row, settings);
           let rawData = extractDataFromCells(cells, settings);
+          console.log(rawData);
           value.push(rawData);
         } catch (e) {
           errors.push(e.message);
         }
       }
     }
-
     resolve({ value, errors });
   });
 }
@@ -65,8 +68,7 @@ function extractDataFromCells(
   if (feederCellData.text) {
     let feeder = findFeeder(feederCellData.text);
     if (!feeder) {
-      feederCellData.error =
-        "Feeder value does not match any of the registered feeders";
+      feederCellData.error = `Feeder value ${feederCellData.text} does not match any of the registered feeders`;
     }
   }
 

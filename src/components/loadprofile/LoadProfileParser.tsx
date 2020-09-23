@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FileUtil } from "../common/utils";
+import { FileUtil } from "../../objects/common/utils";
 import { LoadProfile_Raw } from "./objects";
 import extractLoadProfileRawFromWorkbook from "./ExcelParser";
+import { FilecardProps } from "../filesdrawer/FileCard";
 
 type LoadProfileParserProps = {
   file: File;
-  render?: any;
+  render: React.FunctionComponent<FilecardProps>;
   onFileParsed: (data: LoadProfile_Raw[]) => void;
   onRemoveFile: (file: File, meteringPointss: string[]) => void;
 };
@@ -71,7 +72,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = ({
       {render({
         progress,
         progressInfo,
-        fileFromParser: file,
+        file,
         errors,
         onRemoveFile: handleRemoveFile,
       })}

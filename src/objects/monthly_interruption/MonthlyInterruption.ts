@@ -15,10 +15,12 @@ function createRawDataObject(
   feeder: string,
   date: Date
 ): MonthlyInterruptionRawData {
-  let billingPeriod = new BillingPeriod(
+  let billingMonth = BillingPeriod.getBillingMonth(
     date.getMonth() + 1,
-    date.getFullYear()
+    date.getDay()
   );
+
+  let billingPeriod = new BillingPeriod(billingMonth, date.getFullYear());
   return {
     duration,
     feeder,

@@ -4,7 +4,7 @@ import {
   LoadProfile_Raw,
   MonthlyLoadProfile,
 } from "../loadprofile/objects";
-import Stack from "../common/Stack";
+import Stack from "../../objects/common/Stack";
 
 export type DeleteLoadpRofileInfo = {
   fileName: string;

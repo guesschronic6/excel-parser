@@ -4,7 +4,7 @@ import { LoadProfileSettings } from "./types/LoadProfileSettings";
 import { LoadProfile_Raw } from "./objects";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
 import MeteringPoint from "../../objects/common/enums/MeteringPoints";
-import ExcelUtil from "./../common/utils/ExcelUtil";
+import ExcelUtil from "../../objects/common/utils/ExcelUtil";
 
 type LoadProfileRowData = {
   kwdelCell: CellObject;

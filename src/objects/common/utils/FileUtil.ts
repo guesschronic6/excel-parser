@@ -1,6 +1,6 @@
 import { WorkBook } from "xlsx/types";
 import XLSX from "xlsx";
-import InvalidFileError from "../../errors/InvalidFileError";
+import InvalidFileError from "../../../components/errors/InvalidFileError";
 
 async function extractWorkbookFromFile(file: File): Promise<WorkBook> {
   return new Promise<WorkBook>((resolve, reject) => {

@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { FileUtil } from "../common/utils";
+import { FileUtil } from "../../objects/common/utils";
 import MonthlyInterruption from "../../objects/monthly_interruption/MonthlyInterruption";
 import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
+import { FilecardProps } from "../filesdrawer/FileCard";
 
 type LoadProfileParserProps = {
   file: File;
-  render?: any;
+  render: React.FunctionComponent<FilecardProps>;
+  onFileParsed: (rawDatas: MonthlyInterruptionRawData[]) => void;
 };
 
 const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = (
   props
 ) => {
-  const { file, render, ...others } = props;
+  const { file, render, onFileParsed, ...others } = props;
   const [progress, setProgress] = useState<number>(0);
   const [progressInfo, setsProgressInfo] = useState<string>("");
   const [errors, setErrors] = useState<string[]>([]);
@@ -51,7 +53,7 @@ const LoadProfileParser: React.FunctionComponent<LoadProfileParserProps> = (
       {render({
         progress,
         progressInfo,
-        fileFromParser: file,
+        file,
         errors,
         onRemoveFile: handleRemoveFile,
       })}
