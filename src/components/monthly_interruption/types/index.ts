@@ -1,6 +1,5 @@
 import { CellObject } from "xlsx/types";
-import BillingPeriod from "../../common/BillingPeriod";
-import Feeder from "../../../objects/common/enums/Feeder";
+import BillingPeriod from "../../../objects/common/BillingPeriod";
 
 export type MonthlyInterruptionSettings = {
   dateCol: number;

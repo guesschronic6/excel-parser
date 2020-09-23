@@ -1,6 +1,6 @@
 import LoadProfile_Raw from "./LoadProfile_Raw";
 import LoadProfile from "./LoadProfile";
-import BillingPeriod from "../../common/BillingPeriod";
+import BillingPeriod from "../../../objects/common/BillingPeriod";
 import { LoadProfileMax, LoadProfileSum } from "../types";
 import { CoincidentPeak } from "./others";
 import HourlyLoadProfile from "./HourlyLoadProfile";

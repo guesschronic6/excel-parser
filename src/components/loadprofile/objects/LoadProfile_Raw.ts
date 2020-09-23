@@ -1,4 +1,4 @@
-import BillingPeriod from "../../common/BillingPeriod";
+import BillingPeriod from "../../../objects/common/BillingPeriod";
 import { Month } from "../../enums";
 
 class LoadProfile_Raw {
