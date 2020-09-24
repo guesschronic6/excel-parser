@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { MonthlyInterruptionRawData } from "../../../objects/monthly_interruption/types";
 import MonthlyInterruptionParser from "../../monthly_interruption/MonthlyInterruptionParser";
-import CustomAccordion from "../CustomAccordion";
+import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import FileDrop from "../FileDrop";
+import { MonthlyIterruptionContext } from "../../monthly_interruption/MonthlyInterruptionContextProvider";
 
 type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
@@ -18,6 +19,8 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
   ...others
 }) => {
   const [files, setFiles] = useState<Map<string, File>>(new Map());
+
+  const monthlyInterruptionContext = useContext(MonthlyIterruptionContext);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
@@ -37,9 +40,9 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 
   function handleDragLeave() {}
 
-  function handleFileParsed(
-    monthlyInterruptionRawDatas: MonthlyInterruptionRawData[]
-  ) {}
+  function handleFileParsed(rawDatas: MonthlyInterruptionRawData[]) {
+    monthlyInterruptionContext.addNewRawData(rawDatas);
+  }
 
   function handleRemoveFile(file: File) {
     setFiles((prevMap) => {

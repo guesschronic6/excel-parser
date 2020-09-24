@@ -22,7 +22,7 @@ const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps>
   useEffect(() => {
     FileUtil.extractWorkbookFromFile(file)
       .then((workbook) => {
-        return MonthlyInterruption.extractRawDatasFromWorkbook(
+        return MonthlyInterruption.utils.extractRawDatasFromWorkbook(
           file.name,
           workbook,
           handleProgressUpdate
@@ -40,7 +40,9 @@ const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps>
 
   function handleFileParsed(
     monthlyInterruptionRawDatas: MonthlyInterruptionRawData[]
-  ) {}
+  ) {
+    onFileParsed(monthlyInterruptionRawDatas);
+  }
 
   function handleProgressUpdate(info: string, percent: number) {
     setProgress(percent);

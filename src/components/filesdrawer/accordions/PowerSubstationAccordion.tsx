@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import CustomAccordion from "../CustomAccordion";
+import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import FileDrop from "../FileDrop";
 import PowerSubstationParser from "../../power_substation/PowerSubstationParser";
 import { PowerSubstationRawData } from "../../../objects/power_substation/types";
+import { PowerSubstationContext } from "../../power_substation/PowerSubstationContextProvider";
 
 type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
@@ -17,6 +18,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 ) => {
   const { expandedPanel, onPanelChange, ...others } = props;
   const [files, setFiles] = useState<Map<string, File>>(new Map());
+  const powerSubstationContext = useContext(PowerSubstationContext);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
@@ -36,7 +38,9 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 
   function handleDragLeave() {}
 
-  function handleFileParsed(lpRawDatas: PowerSubstationRawData[]) {}
+  function handleFileParsed(rawDatas: PowerSubstationRawData[]) {
+    powerSubstationContext.addNewRawDatas(rawDatas);
+  }
 
   function handleRemoveFile(file: File) {
     setFiles((prevMap) => {

@@ -15,6 +15,11 @@ export type MonthlyInterruptionRawData = {
   duration: number;
 };
 
+export type MonthlyInterruptionObject = {
+  feeder: string;
+  duration: number;
+};
+
 export type MonthlyInterruptionCells = {
   feeder: CellObject;
   date: CellObject;

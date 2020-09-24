@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import CustomAccordion from "../CustomAccordion";
+import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import { LoadProfileParser } from "../../loadprofile";
 import { LoadProfile_Raw } from "../../loadprofile/objects";

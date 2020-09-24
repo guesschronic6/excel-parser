@@ -1,3 +1,4 @@
 import FormTextField from "./FormTextField";
+import FormSelectField from "./FormSelectField";
 
-export { FormTextField };
+export { FormTextField, FormSelectField };

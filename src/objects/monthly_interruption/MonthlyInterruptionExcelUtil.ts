@@ -29,6 +29,7 @@ function extractRawDatasFromWorkbook(
       progressCallback(`Parsing ${sheetName}`, 0);
       console.log("Parsing worksheet: " + sheetName);
 
+      if (!worksheet["!ref"]) continue;
       const range = XLSX.utils.decode_range(worksheet["!ref"] as string);
       const totalRows = await Promise.resolve(range.e.r - range.s.r);
 
@@ -42,7 +43,6 @@ function extractRawDatasFromWorkbook(
           let settings = loadSettings();
           let cells = extractCells(worksheet, row, settings);
           let rawData = extractDataFromCells(cells, settings);
-          console.log(rawData);
           value.push(rawData);
         } catch (e) {
           errors.push(e.message);

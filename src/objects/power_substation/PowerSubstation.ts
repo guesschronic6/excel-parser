@@ -1,7 +1,7 @@
 import { Month } from "../../components/enums";
 import BillingPeriod from "../common/BillingPeriod";
 import { saveSettings, loadSettings } from "./PowerSubstationSettings";
-import { PowerSubstationRawData } from "./types";
+import { PowerSubstationObject, PowerSubstationRawData } from "./types";
 import { extractRawDatasFromWorkbook } from "./PowerSubstationExcelUtil";
 
 const PowerSubstation = Object.freeze({
@@ -9,7 +9,17 @@ const PowerSubstation = Object.freeze({
   loadSettings,
   createRawData,
   extractRawDatasFromWorkbook,
+  createObject,
 });
+
+function createObject(rawData: PowerSubstationRawData): PowerSubstationObject {
+  return {
+    feeder: rawData.feeder,
+    kwhrEnergy: rawData.kwhrEnergy,
+    kvarhrEnergy: rawData.kvarhrEnergy,
+    demandKwhr: rawData.demandKwhr,
+  };
+}
 
 function createRawData(
   feeder: string,

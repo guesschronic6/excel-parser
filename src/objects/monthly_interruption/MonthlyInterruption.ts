@@ -1,14 +1,28 @@
 import { loadSettings, saveSettings } from "./MonthlyInterruptionSettings";
 import { extractRawDatasFromWorkbook } from "./MonthlyInterruptionExcelUtil";
-import { MonthlyInterruptionRawData } from "./types";
+import { MonthlyInterruptionObject, MonthlyInterruptionRawData } from "./types";
+import { addToObject } from "./MonthlyInterruptionUtil";
 import BillingPeriod from "../common/BillingPeriod";
 
 const MonthlyInterruption = Object.freeze({
-  extractRawDatasFromWorkbook,
   saveSettings,
   loadSettings,
   createRawDataObject,
+  createObject,
+  utils: {
+    extractRawDatasFromWorkbook,
+    addToObject,
+  },
 });
+
+function createObject(
+  rawData: MonthlyInterruptionRawData
+): MonthlyInterruptionObject {
+  return {
+    feeder: rawData.feeder,
+    duration: rawData.duration,
+  };
+}
 
 function createRawDataObject(
   duration: number,

@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import { ExpandMore } from "@material-ui/icons";
 
-type CustomAccordionProps = {
+type StyledAccordionProps = {
   expandedPanel: string;
   onPanelChange: (newPanel: string) => void;
   panelName: string;
@@ -18,7 +18,7 @@ type CustomAccordionProps = {
   render?: any;
 };
 
-const CustomAccordion: React.FunctionComponent<CustomAccordionProps> = ({
+const StyledAccordion: React.FunctionComponent<StyledAccordionProps> = ({
   expandedPanel,
   onPanelChange,
   panelName,
@@ -40,7 +40,6 @@ const CustomAccordion: React.FunctionComponent<CustomAccordionProps> = ({
     <Accordion
       className={classes.accordion}
       square
-      expanded={expandedPanel === panelName}
       onChange={handlePanelChange}
     >
       <AccordionSummary
@@ -101,4 +100,4 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default CustomAccordion;
+export default StyledAccordion;

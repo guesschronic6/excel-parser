@@ -15,6 +15,7 @@ import BillingPeriod from "../common/BillingPeriod";
 function extractRawDatasFromWorkbook(
   filename: string,
   workbook: WorkBook,
+  billingPeriod: BillingPeriod,
   progressCallback: (info: string, progress: number) => void
 ): Promise<{ value: PowerSubstationRawData[]; errors: string[] }> {
   return new Promise(async (resolve, reject) => {
@@ -26,10 +27,10 @@ function extractRawDatasFromWorkbook(
 
     for (let sheetName of workbook.SheetNames) {
       let worksheet = workbook.Sheets[sheetName];
-
       progressCallback(`Parsing ${sheetName}`, 0);
       console.log("Parsing worksheet: " + sheetName);
 
+      if (!worksheet["!ref"]) continue;
       const range = XLSX.utils.decode_range(worksheet["!ref"] as string);
       const totalRows = await Promise.resolve(range.e.r - range.s.r);
 
@@ -42,8 +43,7 @@ function extractRawDatasFromWorkbook(
         try {
           let settings = loadSettings();
           let cells = extractCells(worksheet, row, settings);
-          let rawData = extractDataFromCells(cells);
-          console.log(rawData);
+          let rawData = extractDataFromCells(cells, billingPeriod);
           value.push(rawData);
         } catch (e) {
           errors.push(e.message);
@@ -55,7 +55,8 @@ function extractRawDatasFromWorkbook(
 }
 
 function extractDataFromCells(
-  rowCells: PowerSubstationCells
+  rowCells: PowerSubstationCells,
+  bililngPeriod: BillingPeriod
 ): PowerSubstationRawData {
   let error = null;
   let anyErrors = false;
@@ -108,7 +109,7 @@ function extractDataFromCells(
       kwhrEnergy,
       kvarhrEnergy,
       demandKwhr,
-      new BillingPeriod(5, 2020)
+      bililngPeriod
     );
   }
 

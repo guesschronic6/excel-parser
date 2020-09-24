@@ -23,3 +23,10 @@ export type PowerSubstationRawData = {
   feeder: string;
   billingPeriod: BillingPeriod;
 };
+
+export type PowerSubstationObject = {
+  demandKwhr: number;
+  kvarhrEnergy: number;
+  kwhrEnergy: number;
+  feeder: string;
+};

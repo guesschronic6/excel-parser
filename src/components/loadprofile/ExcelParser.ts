@@ -48,6 +48,7 @@ function extractLoadProfileRawFromWorkbook(
       console.log("Parsing worksheet: " + sheetName);
 
       const worksheet = workbook.Sheets[sheetName];
+      if (!worksheet["!ref"]) continue;
       const range = XLSX.utils.decode_range(worksheet["!ref"] as string);
       const totalRows = await Promise.resolve(range.e.r - range.s.r);
       for (let row = 0; row <= range.e.r; row++) {

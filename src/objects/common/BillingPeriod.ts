@@ -32,6 +32,13 @@ class BillingPeriod {
     return billingMonth;
   }
 
+  getTotalDays() {
+    return Math.round(
+      (this.enddDate.getTime() - this.startDate.getTime()) /
+        (1000 * 60 * 60 * 24)
+    );
+  }
+
   private getStartDate() {
     let startMonth = this.month === 1 ? 12 : this.month - 1;
     let startYear = this.month === 1 ? this.year - 1 : this.year;
