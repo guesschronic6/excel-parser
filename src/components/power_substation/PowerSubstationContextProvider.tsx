@@ -1,28 +1,20 @@
 import React, { createContext, useEffect, useState } from "react";
 import Stack from "../../objects/common/Stack";
-import {
-  PowerSubstationObject,
-  PowerSubstationRawData,
-} from "../../objects/power_substation/types";
-import PowerSubstation from "../../objects/power_substation/PowerSubstation";
+import { PowerSubstationRawData } from "../../objects/power_substation/types";
+import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
 
 export type PowerSubstationUpdateCallback = (
-  data: MonthlyPowerSubstationData
+  data: MonthlyPowerSubstation
 ) => void;
-
-export type MonthlyPowerSubstationData = {
-  map: Map<string, Map<string, PowerSubstationObject>>;
-  monthlyPowerSubstation: string;
-};
 
 type PowerSubstationContextProps = {
   addNewRawDatas: (rawDatas: PowerSubstationRawData[]) => void;
-  monthlyPowerSubstations: MonthlyPowerSubstationData;
+  monthlyPowerSubstation: MonthlyPowerSubstation;
   addUpdateCallback: (callback: PowerSubstationUpdateCallback) => void;
 };
 const PowerSubstationContext = createContext<PowerSubstationContextProps>({
   addNewRawDatas: ([]) => {},
-  monthlyPowerSubstations: { map: new Map(), monthlyPowerSubstation: "omar" },
+  monthlyPowerSubstation: new MonthlyPowerSubstation(),
   addUpdateCallback: () => {},
 });
 
@@ -31,9 +23,9 @@ type PowerSubstationContextProviderProps = {};
 const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationContextProviderProps> = (
   props
 ) => {
-  const [monthlyPowerSubstations, setMonthlyPowerSubstations] = useState<
-    MonthlyPowerSubstationData
-  >({ map: new Map(), monthlyPowerSubstation: "omar" });
+  const [monthlyPowerSubstation, setMonthlyPowerSubstations] = useState<
+    MonthlyPowerSubstation
+  >(new MonthlyPowerSubstation());
   const [buffer, setBuffer] = useState<Stack<PowerSubstationRawData[]>>(
     new Stack()
   );
@@ -62,34 +54,21 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
 
   useEffect(() => {
     updatecallbacks.forEach((callback) => {
-      callback(monthlyPowerSubstations);
+      callback(monthlyPowerSubstation);
     });
-  }, [monthlyPowerSubstations]);
+  }, [monthlyPowerSubstation]);
 
   function updateMonhlyPowerSubstation(
     rawDatas: PowerSubstationRawData[]
-  ): Promise<MonthlyPowerSubstationData> {
+  ): Promise<MonthlyPowerSubstation> {
     return new Promise((resolve, reject) => {
-      let newMonthlyPowerSubstations: MonthlyPowerSubstationData = {
-        map: new Map(monthlyPowerSubstations.map),
-        monthlyPowerSubstation: "omar",
-      };
+      let newMonthlyPowerSubstations = new MonthlyPowerSubstation(
+        monthlyPowerSubstation
+      );
 
       for (let rawData of rawDatas) {
-        let billingKey = rawData.billingPeriod.toString();
-        if (!newMonthlyPowerSubstations.map.has(billingKey)) {
-          newMonthlyPowerSubstations.map.set(billingKey, new Map());
-        }
-
-        let powerSubstation = newMonthlyPowerSubstations.map.get(
-          billingKey
-        ) as Map<string, PowerSubstationObject>;
-        powerSubstation.set(
-          rawData.feeder,
-          PowerSubstation.createObject(rawData)
-        );
+        newMonthlyPowerSubstations.addRawData(rawData);
       }
-
       resolve(newMonthlyPowerSubstations);
     });
   }
@@ -107,7 +86,7 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
 
   return (
     <PowerSubstationContext.Provider
-      value={{ addNewRawDatas, monthlyPowerSubstations, addUpdateCallback }}
+      value={{ addNewRawDatas, monthlyPowerSubstation, addUpdateCallback }}
     >
       {props.children}
     </PowerSubstationContext.Provider>

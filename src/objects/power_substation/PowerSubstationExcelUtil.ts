@@ -1,6 +1,6 @@
 import { WorkBook, WorkSheet } from "xlsx/types";
 import ExcelUtil from "../common/utils/ExcelUtil";
-import { loadSettings } from "./PowerSubstationSettings";
+import PowerSubstationUtil from "./PowerSubstationUtil";
 import {
   PowerSubstationCells,
   PowerSubstationRawData,
@@ -41,7 +41,7 @@ function extractRawDatasFromWorkbook(
           percent
         );
         try {
-          let settings = loadSettings();
+          let settings = PowerSubstationUtil.loadSettings();
           let cells = extractCells(worksheet, row, settings);
           let rawData = extractDataFromCells(cells, billingPeriod);
           value.push(rawData);
@@ -104,7 +104,7 @@ function extractDataFromCells(
     let kvarhrEnergy = kvarhrEnergyCelLData.number as number;
     let demandKwhr = demandKwhrCellData.number as number;
     let feeder = feederCellData.text as string;
-    rawData = PowerSubstation.createRawData(
+    rawData = PowerSubstationUtil.createRawData(
       feeder,
       kwhrEnergy,
       kvarhrEnergy,
@@ -143,4 +143,8 @@ function extractCells(
   };
 }
 
-export { extractRawDatasFromWorkbook };
+const PowerSubstationExcelUtil = Object.freeze({
+  extractRawDatasFromWorkbook,
+});
+
+export default PowerSubstationExcelUtil;

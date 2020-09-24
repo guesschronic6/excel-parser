@@ -1,40 +1,20 @@
 import { Month } from "../../components/enums";
 import BillingPeriod from "../common/BillingPeriod";
-import { saveSettings, loadSettings } from "./PowerSubstationSettings";
-import { PowerSubstationObject, PowerSubstationRawData } from "./types";
-import { extractRawDatasFromWorkbook } from "./PowerSubstationExcelUtil";
+import PowerSubstationItem from "./PowerSubstationItem";
+import { PowerSubstationRawData } from "./types";
 
-const PowerSubstation = Object.freeze({
-  saveSettings,
-  loadSettings,
-  createRawData,
-  extractRawDatasFromWorkbook,
-  createObject,
-});
+class PowerSubstation {
+  items: Map<string, PowerSubstationItem>;
+  billingPeriod: BillingPeriod;
 
-function createObject(rawData: PowerSubstationRawData): PowerSubstationObject {
-  return {
-    feeder: rawData.feeder,
-    kwhrEnergy: rawData.kwhrEnergy,
-    kvarhrEnergy: rawData.kvarhrEnergy,
-    demandKwhr: rawData.demandKwhr,
-  };
-}
+  constructor(billingPeriod: BillingPeriod) {
+    this.billingPeriod = billingPeriod;
+    this.items = new Map();
+  }
 
-function createRawData(
-  feeder: string,
-  kwhrEnergy: number,
-  kvarhrEnergy: number,
-  demandKwhr: number,
-  billingPeriod: BillingPeriod
-): PowerSubstationRawData {
-  return {
-    kwhrEnergy,
-    kvarhrEnergy,
-    demandKwhr,
-    billingPeriod,
-    feeder,
-  };
+  addRawData(rawData: PowerSubstationRawData) {
+    this.items.set(rawData.feeder, new PowerSubstationItem(rawData));
+  }
 }
 
 export default PowerSubstation;

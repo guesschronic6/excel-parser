@@ -1,4 +1,5 @@
-import { PowerSubstationSettings } from "./types";
+import BillingPeriod from "../common/BillingPeriod";
+import { PowerSubstationRawData, PowerSubstationSettings } from "./types";
 
 enum PowerSubstationSettingsKey {
   FEEDER = "ps_feeder",
@@ -40,4 +41,26 @@ function loadSettings(): PowerSubstationSettings {
   };
 }
 
-export { saveSettings, loadSettings };
+function createRawData(
+  feeder: string,
+  kwhrEnergy: number,
+  kvarhrEnergy: number,
+  demandKwhr: number,
+  billingPeriod: BillingPeriod
+): PowerSubstationRawData {
+  return {
+    kwhrEnergy,
+    kvarhrEnergy,
+    demandKwhr,
+    billingPeriod,
+    feeder,
+  };
+}
+
+const PowerSubstationUtil = Object.freeze({
+  saveSettings,
+  loadSettings,
+  createRawData,
+});
+
+export default PowerSubstationUtil;

@@ -2,14 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import Stack from "../../objects/common/Stack";
 import MonthlyFeederAndDemand from "../../objects/feeder_and_demand/MonthlyFeederAndDemand";
 import { MonthlyInterruptionObject } from "../../objects/monthly_interruption/types";
+import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
 import {
   MonthlyIterruptionContext,
   MonthlyMonthlyInterruptionData,
 } from "../monthly_interruption/MonthlyInterruptionContextProvider";
-import {
-  MonthlyPowerSubstationData,
-  PowerSubstationContext,
-} from "../power_substation/PowerSubstationContextProvider";
+import { PowerSubstationContext } from "../power_substation/PowerSubstationContextProvider";
 
 type FeederAndDemandContextProviderProps = {};
 
@@ -22,7 +20,7 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
   const monthlyInterruptionCotnext = useContext(MonthlyIterruptionContext);
 
   const [buffer, setBuffer] = useState<
-    Stack<MonthlyPowerSubstationData | MonthlyMonthlyInterruptionData>
+    Stack<MonthlyPowerSubstation | MonthlyMonthlyInterruptionData>
   >(new Stack());
   const [monthlyFeederAndDemand, setMonthlyFeederAndDemand] = useState<
     MonthlyFeederAndDemand
@@ -33,9 +31,24 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
     monthlyInterruptionCotnext.addUpdateCallback(onMonthlyInterruptionUpdated);
   }, []);
 
-  useEffect(() => {}, [buffer]);
+  useEffect(() => {
+    async function updateMonthlyFeederAndDemand() {
+      let data = buffer.pop() as
+        | MonthlyMonthlyInterruptionData
+        | MonthlyPowerSubstation;
+      if (data) {
+        //if data is power substation
+        if ((data as MonthlyPowerSubstation).powerSubstations) {
+        } else {
+          //if data is monthly interruption
+        }
+      }
+    }
 
-  function onMonthlyPowerSubstationUpdated(data: MonthlyPowerSubstationData) {
+    updateMonthlyFeederAndDemand();
+  }, [buffer]);
+
+  function onMonthlyPowerSubstationUpdated(data: MonthlyPowerSubstation) {
     console.log("MonthlyPowerSubstationData Updated...");
     setBuffer((prevBuffer) => {
       prevBuffer.push(data);

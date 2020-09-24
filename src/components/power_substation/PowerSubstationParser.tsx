@@ -12,7 +12,7 @@ import {
 import React, { FormEvent, useEffect, useState } from "react";
 import BillingPeriod from "../../objects/common/BillingPeriod";
 import { FileUtil } from "../../objects/common/utils";
-import PowerSubstation from "../../objects/power_substation/PowerSubstation";
+import PowerSubstationExcelUtil from "../../objects/power_substation/PowerSubstationExcelUtil";
 import { PowerSubstationRawData } from "../../objects/power_substation/types";
 import FormSelectFields from "../common/components/textfields/FormSelectField";
 import { FilecardProps } from "../filesdrawer/FileCard";
@@ -49,7 +49,7 @@ const LoadProfileParser: React.FunctionComponent<PowerSubstationParserProps> = (
     FileUtil.extractWorkbookFromFile(file)
       .then((workbook) => {
         let bp = billingPeriod;
-        return PowerSubstation.extractRawDatasFromWorkbook(
+        return PowerSubstationExcelUtil.extractRawDatasFromWorkbook(
           file.name,
           workbook,
           bp as BillingPeriod,

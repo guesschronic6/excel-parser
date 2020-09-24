@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SettingsPanel from "./SettingsPanel";
 import FormTextField from "../../common/components/textfields/FormTextField";
-import PowerSubstation from "../../../objects/power_substation/PowerSubstation";
+import PowerSubstationUtil from "../../../objects/power_substation/PowerSubstationUtil";
 
 type PowerSubstationPanelProps = {};
 
@@ -16,7 +16,7 @@ const PowerSubstationPanel: React.FunctionComponent<PowerSubstationPanelProps> =
   const [kvarhrEnergyCol, setKvarhrEnergyCol] = useState(0);
 
   useEffect(() => {
-    let settings = PowerSubstation.loadSettings();
+    let settings = PowerSubstationUtil.loadSettings();
     setDemandCol(settings.demandKwhrCol);
     setKwhrEnergyCol(settings.kwhrEnergyCol);
     setFeederCol(settings.feederCol);
@@ -24,7 +24,7 @@ const PowerSubstationPanel: React.FunctionComponent<PowerSubstationPanelProps> =
   }, []);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    PowerSubstation.saveSettings({
+    PowerSubstationUtil.saveSettings({
       kwhrEnergyCol,
       demandKwhrCol: demandCol,
       feederCol,
