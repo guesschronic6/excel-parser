@@ -1,46 +1,27 @@
-import { loadSettings, saveSettings } from "./MonthlyInterruptionSettings";
-import { extractRawDatasFromWorkbook } from "./MonthlyInterruptionExcelUtil";
-import { MonthlyInterruptionObject, MonthlyInterruptionRawData } from "./types";
-import { addToObject } from "./MonthlyInterruptionUtil";
 import BillingPeriod from "../common/BillingPeriod";
+import MonthlyInterruptionItem from "./MonthlyInterruptionItem";
+import { MonthlyInterruptionRawData } from "./types";
 
-const MonthlyInterruption = Object.freeze({
-  saveSettings,
-  loadSettings,
-  createRawDataObject,
-  createObject,
-  utils: {
-    extractRawDatasFromWorkbook,
-    addToObject,
-  },
-});
+class MonthlyInterruption {
+  billingPeriod: BillingPeriod;
+  items: Map<string, MonthlyInterruptionItem>;
 
-function createObject(
-  rawData: MonthlyInterruptionRawData
-): MonthlyInterruptionObject {
-  return {
-    feeder: rawData.feeder,
-    duration: rawData.duration,
-  };
-}
+  constructor(billingPeriod: BillingPeriod) {
+    this.billingPeriod = billingPeriod;
+    this.items = new Map();
+  }
 
-function createRawDataObject(
-  duration: number,
-  feeder: string,
-  date: Date
-): MonthlyInterruptionRawData {
-  let billingMonth = BillingPeriod.getBillingMonth(
-    date.getMonth() + 1,
-    date.getDay()
-  );
-
-  let billingPeriod = new BillingPeriod(billingMonth, date.getFullYear());
-  return {
-    duration,
-    feeder,
-    date,
-    billingPeriod,
-  };
+  addRawData(rawData: MonthlyInterruptionRawData) {
+    let key = rawData.feeder;
+    if (!this.items.has(key)) {
+      this.items.set(
+        key,
+        new MonthlyInterruptionItem(rawData.feeder, rawData.duration)
+      );
+    } else {
+      this.items.get(key)?.addDuration(rawData.duration);
+    }
+  }
 }
 
 export default MonthlyInterruption;

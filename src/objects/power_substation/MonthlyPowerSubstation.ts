@@ -10,6 +10,7 @@ class MonthlyPowerSubstation {
     } else {
       this.powerSubstations = new Map();
     }
+    console.trace("Monthly Power Substation Created...");
   }
 
   addRawData(rawData: PowerSubstationRawData) {

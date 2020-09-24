@@ -1,12 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import Stack from "../../objects/common/Stack";
 import MonthlyFeederAndDemand from "../../objects/feeder_and_demand/MonthlyFeederAndDemand";
-import { MonthlyInterruptionObject } from "../../objects/monthly_interruption/types";
+import MonthlyMonthlyInterruption from "../../objects/monthly_interruption/MonthlyMonthlyInterruption";
 import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
-import {
-  MonthlyIterruptionContext,
-  MonthlyMonthlyInterruptionData,
-} from "../monthly_interruption/MonthlyInterruptionContextProvider";
+import { MonthlyIterruptionContext } from "../monthly_interruption/MonthlyInterruptionContextProvider";
 import { PowerSubstationContext } from "../power_substation/PowerSubstationContextProvider";
 
 type FeederAndDemandContextProviderProps = {};
@@ -20,48 +16,109 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
   const monthlyInterruptionCotnext = useContext(MonthlyIterruptionContext);
 
   const [buffer, setBuffer] = useState<
-    Stack<MonthlyPowerSubstation | MonthlyMonthlyInterruptionData>
-  >(new Stack());
+    (MonthlyPowerSubstation | MonthlyMonthlyInterruption)[]
+  >([]);
   const [monthlyFeederAndDemand, setMonthlyFeederAndDemand] = useState<
     MonthlyFeederAndDemand
-  >(new MonthlyFeederAndDemand());
+  >();
 
   useEffect(() => {
     powerSubstationContext.addUpdateCallback(onMonthlyPowerSubstationUpdated);
     monthlyInterruptionCotnext.addUpdateCallback(onMonthlyInterruptionUpdated);
+    setMonthlyFeederAndDemand(new MonthlyFeederAndDemand());
   }, []);
 
   useEffect(() => {
+    console.log(monthlyFeederAndDemand);
+  }, [monthlyFeederAndDemand]);
+
+  useEffect(() => {
     async function updateMonthlyFeederAndDemand() {
-      let data = buffer.pop() as
-        | MonthlyMonthlyInterruptionData
-        | MonthlyPowerSubstation;
+      console.log("Updating monthly feeder and demand");
+      let newBuffer = [...buffer];
+      let data = newBuffer.pop();
+      console.log({ data });
       if (data) {
-        //if data is power substation
+        let result: MonthlyFeederAndDemand = new MonthlyFeederAndDemand(
+          monthlyFeederAndDemand
+        );
         if ((data as MonthlyPowerSubstation).powerSubstations) {
+          console.log("Adding Monthly Power Substation Data...");
+          result = await addMonthlyPowerSubstationData(
+            data as MonthlyPowerSubstation,
+            result
+          );
         } else {
-          //if data is monthly interruption
+          console.log("Adding Monthly MOnthly interruption Data...");
+          result = await addMonthlyMonthlyInterruptionData(
+            data as MonthlyMonthlyInterruption,
+            result
+          );
         }
+        setMonthlyFeederAndDemand(result);
+        setBuffer([...newBuffer]);
       }
     }
-
-    updateMonthlyFeederAndDemand();
+    console.log("Checking if buffer is not empty...");
+    if (buffer.length <= 0) {
+      let newMonthlyFeederAndDemand = new MonthlyFeederAndDemand(
+        monthlyFeederAndDemand
+      );
+      newMonthlyFeederAndDemand.initValues();
+      setMonthlyFeederAndDemand(newMonthlyFeederAndDemand);
+    } else {
+      updateMonthlyFeederAndDemand();
+    }
   }, [buffer]);
 
-  function onMonthlyPowerSubstationUpdated(data: MonthlyPowerSubstation) {
-    console.log("MonthlyPowerSubstationData Updated...");
-    setBuffer((prevBuffer) => {
-      prevBuffer.push(data);
-      return new Stack(prevBuffer);
+  function addMonthlyPowerSubstationData(
+    data: MonthlyPowerSubstation,
+    mfd: MonthlyFeederAndDemand
+  ) {
+    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
+      console.log({
+        message: "Monthly Feeder And Demand to be updated: ",
+        mfd,
+      });
+
+      for (let mps of data.powerSubstations.values()) {
+        let billingPeriod = mps.billingPeriod;
+        for (let ps of mps.items.values()) {
+          mfd.addPowerSubstationData(ps, billingPeriod);
+        }
+      }
+      resolve(mfd);
     });
   }
 
-  function onMonthlyInterruptionUpdated(data: MonthlyMonthlyInterruptionData) {
-    console.log("MonthlyPower Interruption data Updated...");
-    setBuffer((prevBuffer) => {
-      prevBuffer.push(data);
-      return new Stack(prevBuffer);
+  function addMonthlyMonthlyInterruptionData(
+    data: MonthlyMonthlyInterruption,
+    mfd: MonthlyFeederAndDemand
+  ) {
+    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
+      console.log({
+        message: "Monthly Feeder And Demand to be updated: ",
+        mfd,
+      });
+
+      for (let mmi of data.monthlyInterruptions.values()) {
+        let billingPeriod = mmi.billingPeriod;
+        for (let mi of mmi.items.values()) {
+          mfd.addMonthlyInterruptionData(mi, billingPeriod);
+        }
+      }
+      resolve(mfd);
     });
+  }
+
+  function onMonthlyPowerSubstationUpdated(data: MonthlyPowerSubstation) {
+    console.log("MonthlyPowerSubstationData Updated...");
+    setBuffer((prevBuffer) => [...prevBuffer, data]);
+  }
+
+  function onMonthlyInterruptionUpdated(data: MonthlyMonthlyInterruption) {
+    console.log("MonthlyPower Interruption data Updated...");
+    setBuffer((prevBuffer) => [...prevBuffer, data]);
   }
 
   return (

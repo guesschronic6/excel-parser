@@ -1,23 +1,16 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import Stack from "../../objects/common/Stack";
-import {
-  MonthlyInterruptionObject,
-  MonthlyInterruptionRawData,
-} from "../../objects/monthly_interruption/types";
+import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
 import MonthlyInterruption from "../../objects/monthly_interruption/MonthlyInterruption";
-
-export type MonthlyMonthlyInterruptionData = Map<
-  string,
-  Map<string, MonthlyInterruptionObject>
->;
+import MonthlyMonthlyInterruption from "../../objects/monthly_interruption/MonthlyMonthlyInterruption";
 
 export type MonthlyInterruptionUpdatecallback = (
-  data: MonthlyMonthlyInterruptionData
+  data: MonthlyMonthlyInterruption
 ) => void;
 
 type MonthlyInterruptionContextProps = {
   addNewRawData: (rawDatas: MonthlyInterruptionRawData[]) => void;
-  monthlyInterruptions: MonthlyMonthlyInterruptionData;
+  monthlyInterruptions: MonthlyMonthlyInterruption;
   addUpdateCallback: (callback: MonthlyInterruptionUpdatecallback) => void;
 };
 
@@ -25,10 +18,7 @@ const MonthlyIterruptionContext = createContext<
   MonthlyInterruptionContextProps
 >({
   addNewRawData: ([]) => {},
-  monthlyInterruptions: new Map<
-    string,
-    Map<string, MonthlyInterruptionObject>
-  >(),
+  monthlyInterruptions: new MonthlyMonthlyInterruption(),
   addUpdateCallback: () => {},
 });
 
@@ -38,8 +28,8 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
   props
 ) => {
   const [monthlyInterruptions, setMonthlyInterruptions] = useState<
-    Map<string, Map<string, MonthlyInterruptionObject>>
-  >(new Map());
+    MonthlyMonthlyInterruption
+  >();
 
   const [updateCallbacks, setUpdateCallbacks] = useState<
     MonthlyInterruptionUpdatecallback[]
@@ -50,8 +40,11 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
   );
 
   useEffect(() => {
+    setMonthlyInterruptions(new MonthlyMonthlyInterruption());
+  }, []);
+  useEffect(() => {
     updateCallbacks.forEach((callback) => {
-      callback(monthlyInterruptions);
+      callback(monthlyInterruptions as MonthlyMonthlyInterruption);
     });
   }, [monthlyInterruptions]);
 
@@ -86,30 +79,14 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
   }
 
   function updateMonthlyInterruptions(rawDatas: MonthlyInterruptionRawData[]) {
-    return new Promise<MonthlyMonthlyInterruptionData>((resolve, reject) => {
+    return new Promise<MonthlyMonthlyInterruption>((resolve, reject) => {
       console.log("Updating Monthly Interruptions....");
-      let newMonthlyInterruptions = new Map(monthlyInterruptions);
+      let newMonthlyInterruptions = new MonthlyMonthlyInterruption(
+        monthlyInterruptions
+      );
 
       for (let rawData of rawDatas) {
-        console.log("Parsing raw data:");
-        let billingKey = rawData.billingPeriod.toString();
-        if (!newMonthlyInterruptions.has(billingKey)) {
-          newMonthlyInterruptions.set(billingKey, new Map());
-        }
-        let monthlyInterruptionsMap = newMonthlyInterruptions.get(
-          billingKey
-        ) as Map<string, MonthlyInterruptionObject>;
-        if (!monthlyInterruptionsMap.has(rawData.feeder)) {
-          monthlyInterruptionsMap.set(
-            rawData.feeder,
-            MonthlyInterruption.createObject(rawData)
-          );
-        } else {
-          let object = monthlyInterruptionsMap.get(
-            rawData.feeder
-          ) as MonthlyInterruptionObject;
-          MonthlyInterruption.utils.addToObject(rawData, object);
-        }
+        newMonthlyInterruptions.addRawData(rawData);
       }
       resolve(newMonthlyInterruptions);
     });
@@ -121,12 +98,14 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
     });
   }
 
-  return (
+  return monthlyInterruptions ? (
     <MonthlyIterruptionContext.Provider
       value={{ addNewRawData, monthlyInterruptions, addUpdateCallback }}
     >
       {props.children}
     </MonthlyIterruptionContext.Provider>
+  ) : (
+    <></>
   );
 };
 

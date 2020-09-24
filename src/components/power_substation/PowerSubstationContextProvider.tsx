@@ -25,7 +25,7 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
 ) => {
   const [monthlyPowerSubstation, setMonthlyPowerSubstations] = useState<
     MonthlyPowerSubstation
-  >(new MonthlyPowerSubstation());
+  >();
   const [buffer, setBuffer] = useState<Stack<PowerSubstationRawData[]>>(
     new Stack()
   );
@@ -53,8 +53,14 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
   }, [buffer]);
 
   useEffect(() => {
+    setMonthlyPowerSubstations(new MonthlyPowerSubstation());
+  }, []);
+
+  useEffect(() => {
     updatecallbacks.forEach((callback) => {
-      callback(monthlyPowerSubstation);
+      if (monthlyPowerSubstation) {
+        callback(monthlyPowerSubstation);
+      }
     });
   }, [monthlyPowerSubstation]);
 
@@ -84,12 +90,14 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
     setUpdateCallbacks((prevCallbacks) => [...prevCallbacks, callback]);
   }
 
-  return (
+  return monthlyPowerSubstation ? (
     <PowerSubstationContext.Provider
       value={{ addNewRawDatas, monthlyPowerSubstation, addUpdateCallback }}
     >
       {props.children}
     </PowerSubstationContext.Provider>
+  ) : (
+    <></>
   );
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FileUtil } from "../../objects/common/utils";
-import MonthlyInterruption from "../../objects/monthly_interruption/MonthlyInterruption";
+import MonthlyInterruptionExcelUtil from "../../objects/monthly_interruption/MonthlyInterruptionExcelUtil";
 import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
 import { FilecardProps } from "../filesdrawer/FileCard";
 
@@ -22,7 +22,7 @@ const LoadProfileParser: React.FunctionComponent<MonthlyInterruptionParserProps>
   useEffect(() => {
     FileUtil.extractWorkbookFromFile(file)
       .then((workbook) => {
-        return MonthlyInterruption.utils.extractRawDatasFromWorkbook(
+        return MonthlyInterruptionExcelUtil.extractRawDatasFromWorkbook(
           file.name,
           workbook,
           handleProgressUpdate

@@ -53,7 +53,7 @@ function createRawData(
     kvarhrEnergy,
     demandKwhr,
     billingPeriod,
-    feeder,
+    feeder: feeder.toUpperCase().trim(),
   };
 }
 

@@ -1,6 +1,5 @@
 import { WorkBook, WorkSheet } from "xlsx/types";
 import ExcelUtil from "../common/utils/ExcelUtil";
-import { loadSettings } from "./MonthlyInterruptionSettings";
 import {
   MonthlyInterruptionRawData,
   MonthlyInterruptionCells,
@@ -9,7 +8,7 @@ import {
 
 import { findFeeder } from "../common/GeneralUtil";
 import XLSX from "xlsx";
-import MonthlyInterruption from "./MonthlyInterruption";
+import MonthlyInterruptionUtil from "./MonthlyInterruptionUtil";
 
 function extractRawDatasFromWorkbook(
   filename: string,
@@ -40,7 +39,7 @@ function extractRawDatasFromWorkbook(
           percent
         );
         try {
-          let settings = loadSettings();
+          let settings = MonthlyInterruptionUtil.loadSettings();
           let cells = extractCells(worksheet, row, settings);
           let rawData = extractDataFromCells(cells, settings);
           value.push(rawData);
@@ -89,7 +88,11 @@ function extractDataFromCells(
     let duration = durationCellData.number as number;
     let date = dateCellData.date as Date;
     let feeder = feederCellData.text as string;
-    rawData = MonthlyInterruption.createRawDataObject(duration, feeder, date);
+    rawData = MonthlyInterruptionUtil.createRawDataObject(
+      duration,
+      feeder,
+      date
+    );
   }
 
   // console.log(`row: ${rawData.row} ${rawData.hour}:${rawData.minute}`);
@@ -119,4 +122,8 @@ function extractCells(
   };
 }
 
-export { extractRawDatasFromWorkbook };
+const MonthlyInterruptionExcelUtil = Object.freeze({
+  extractRawDatasFromWorkbook,
+});
+
+export default MonthlyInterruptionExcelUtil;
