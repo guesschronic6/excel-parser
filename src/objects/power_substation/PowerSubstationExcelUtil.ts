@@ -11,6 +11,7 @@ import PowerSubstation from "./PowerSubstation";
 import { findFeeder } from "../common/GeneralUtil";
 import XLSX from "xlsx";
 import BillingPeriod from "../common/BillingPeriod";
+import Feeder from "../common/enums/Feeder";
 
 function extractRawDatasFromWorkbook(
   filename: string,
@@ -43,7 +44,7 @@ function extractRawDatasFromWorkbook(
         try {
           let settings = PowerSubstationUtil.loadSettings();
           let cells = extractCells(worksheet, row, settings);
-          let rawData = extractDataFromCells(cells, billingPeriod);
+          let rawData = extractDataFromCells(cells, billingPeriod, filename);
           value.push(rawData);
         } catch (e) {
           errors.push(e.message);
@@ -56,7 +57,8 @@ function extractRawDatasFromWorkbook(
 
 function extractDataFromCells(
   rowCells: PowerSubstationCells,
-  bililngPeriod: BillingPeriod
+  bililngPeriod: BillingPeriod,
+  fileName: string
 ): PowerSubstationRawData {
   let error = null;
   let anyErrors = false;
@@ -70,8 +72,9 @@ function extractDataFromCells(
     false
   );
 
+  let feeder = null;
   if (feederCellData.text) {
-    let feeder = findFeeder(feederCellData.text);
+    feeder = findFeeder(feederCellData.text);
     if (!feeder) {
       feederCellData.error = `Feeder value ${feederCellData.text} does not match any of the registered feeders`;
     }
@@ -105,12 +108,14 @@ function extractDataFromCells(
     let demandKwhr = demandKwhrCellData.number as number;
     let feeder = feederCellData.text as string;
     rawData = PowerSubstationUtil.createRawData(
-      feeder,
+      feeder as Feeder,
       kwhrEnergy,
       kvarhrEnergy,
       demandKwhr,
-      bililngPeriod
+      bililngPeriod,
+      fileName
     );
+    console.log({ rawData });
   }
 
   // console.log(`row: ${rawData.row} ${rawData.hour}:${rawData.minute}`);

@@ -1,11 +1,12 @@
 import { Month } from "../../components/enums";
 import Feeder from "./enums/Feeder";
+import Substation, { SubstationItem } from "./enums/Substation";
 
 function findFeeder(feederText: String): string | null {
   feederText = feederText.toUpperCase().trim();
   for (let feeder of Object.values(Feeder)) {
     if (feeder.toUpperCase().trim() === feederText) {
-      return feeder;
+      return feeder.toUpperCase().trim();
     }
   }
 
@@ -35,4 +36,45 @@ function getYears(): number[] {
   return years;
 }
 
+function isFeederExistsOnFeeders(feeder: Feeder, feeders: Feeder[]) {
+  for (let f of feeders) {
+    if (feeder.toUpperCase().trim() === f.toUpperCase().trim()) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function findSubstationOfFeeder(feeder: Feeder) {
+  let result = null;
+  for (let substation of Substation.ALL) {
+    for (let item of substation.substationItems.values()) {
+      if (isFeederExistsOnFeeders(feeder, [...item.feeders.values()])) {
+        return substation;
+      }
+    }
+  }
+  return result;
+}
+
+function findSubstationItemOfFeeder(feeder: Feeder, substation: Substation) {
+  let result = null;
+
+  for (let item of substation.substationItems.values()) {
+    if (isFeederExistsOnFeeders(feeder, [...item.feeders.values()])) {
+      return item;
+    }
+  }
+  return result;
+}
+
+const GeneralUtil = Object.freeze({
+  findSubstationOfFeeder,
+  getYears,
+  getMonths,
+  findFeeder,
+  findSubstationItemOfFeeder,
+});
+
+export default GeneralUtil;
 export { findFeeder, getMonths, getYears };

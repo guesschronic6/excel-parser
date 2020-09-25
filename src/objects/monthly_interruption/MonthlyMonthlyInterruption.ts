@@ -12,7 +12,7 @@ class MonthlyMonthlyInterruption {
     } else {
       this.monthlyInterruptions = new Map();
     }
-    console.trace("MonthlyMonthly Interruption creaated...");
+    console.log("MonthlyMonthly Interruption creaated...");
   }
 
   addRawData(rawData: MonthlyInterruptionRawData) {

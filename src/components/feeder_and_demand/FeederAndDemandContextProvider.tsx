@@ -7,7 +7,11 @@ import { PowerSubstationContext } from "../power_substation/PowerSubstationConte
 
 type FeederAndDemandContextProviderProps = {};
 
-const FeederAndDemandContext = createContext({});
+const tempMfd = new MonthlyFeederAndDemand();
+
+const FeederAndDemandContext = createContext({
+  monthlyFeederAndDemand: new MonthlyFeederAndDemand(),
+});
 
 const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandContextProviderProps> = (
   props
@@ -20,7 +24,7 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
   >([]);
   const [monthlyFeederAndDemand, setMonthlyFeederAndDemand] = useState<
     MonthlyFeederAndDemand
-  >();
+  >(tempMfd);
 
   useEffect(() => {
     powerSubstationContext.addUpdateCallback(onMonthlyPowerSubstationUpdated);
@@ -34,22 +38,18 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
 
   useEffect(() => {
     async function updateMonthlyFeederAndDemand() {
-      console.log("Updating monthly feeder and demand");
       let newBuffer = [...buffer];
       let data = newBuffer.pop();
-      console.log({ data });
       if (data) {
         let result: MonthlyFeederAndDemand = new MonthlyFeederAndDemand(
           monthlyFeederAndDemand
         );
         if ((data as MonthlyPowerSubstation).powerSubstations) {
-          console.log("Adding Monthly Power Substation Data...");
           result = await addMonthlyPowerSubstationData(
             data as MonthlyPowerSubstation,
             result
           );
         } else {
-          console.log("Adding Monthly MOnthly interruption Data...");
           result = await addMonthlyMonthlyInterruptionData(
             data as MonthlyMonthlyInterruption,
             result
@@ -59,7 +59,6 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
         setBuffer([...newBuffer]);
       }
     }
-    console.log("Checking if buffer is not empty...");
     if (buffer.length <= 0) {
       let newMonthlyFeederAndDemand = new MonthlyFeederAndDemand(
         monthlyFeederAndDemand
@@ -76,11 +75,6 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
     mfd: MonthlyFeederAndDemand
   ) {
     return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      console.log({
-        message: "Monthly Feeder And Demand to be updated: ",
-        mfd,
-      });
-
       for (let mps of data.powerSubstations.values()) {
         let billingPeriod = mps.billingPeriod;
         for (let ps of mps.items.values()) {
@@ -96,11 +90,6 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
     mfd: MonthlyFeederAndDemand
   ) {
     return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      console.log({
-        message: "Monthly Feeder And Demand to be updated: ",
-        mfd,
-      });
-
       for (let mmi of data.monthlyInterruptions.values()) {
         let billingPeriod = mmi.billingPeriod;
         for (let mi of mmi.items.values()) {
@@ -122,7 +111,11 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
   }
 
   return (
-    <FeederAndDemandContext.Provider value={{}}>
+    <FeederAndDemandContext.Provider
+      value={{
+        monthlyFeederAndDemand,
+      }}
+    >
       {props.children}
     </FeederAndDemandContext.Provider>
   );

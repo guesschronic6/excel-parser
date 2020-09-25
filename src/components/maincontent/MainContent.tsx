@@ -2,6 +2,8 @@ import { makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
 import { VerticalTab } from "../common/components/tabs";
 import LoadProfileTabPanel from "./loadprofile/LoadProfileTabPanel";
+import FeederAndDemandContentRoot from "./feeder_demand/FeederAndDemandContentRoot";
+import PowerTransformerLossContentRoot from "./power_transformer_loss/PowerTransformerLossContentRoot";
 type MainContentProps = {};
 
 enum ContentTabs {
@@ -9,8 +11,23 @@ enum ContentTabs {
   SUBSTATION_LOSS = "ssl",
   FEEDERDEMAND_OUTAGED = "fdo",
   POWER_BILL = "pbl",
-  POWER_SUBSTATION = "psb",
+  POWER_TRANSFORMER_LOSS = "pts",
 }
+
+type TabPanelProps = {
+  index: string;
+  value: string;
+};
+
+const TabPanel: React.FunctionComponent<TabPanelProps> = (props) => {
+  const { value, index, ...others } = props;
+  const classes = useStyles();
+  return value === index ? (
+    <div className={classes.mainContent_content}>{props.children}</div>
+  ) : (
+    <></>
+  );
+};
 
 const MainContent: React.FunctionComponent<MainContentProps> = ({
   ...others
@@ -46,14 +63,20 @@ const MainContent: React.FunctionComponent<MainContentProps> = ({
             value={ContentTabs.SUBSTATION_LOSS}
           />
           <VerticalTab
-            label="Power Substation"
-            value={ContentTabs.POWER_SUBSTATION}
+            label="Power Transformer Loss"
+            value={ContentTabs.POWER_TRANSFORMER_LOSS}
           />
         </Tabs>
       </div>
-      <div className={classes.mainContent_content}>
-        {selectedTab === ContentTabs.LOAD_PROFILE && <LoadProfileTabPanel />}
-      </div>
+      <TabPanel value={selectedTab} index={ContentTabs.LOAD_PROFILE}>
+        <LoadProfileTabPanel />
+      </TabPanel>
+      <TabPanel value={selectedTab} index={ContentTabs.FEEDERDEMAND_OUTAGED}>
+        <FeederAndDemandContentRoot />
+      </TabPanel>
+      <TabPanel value={selectedTab} index={ContentTabs.POWER_TRANSFORMER_LOSS}>
+        <PowerTransformerLossContentRoot />
+      </TabPanel>
     </div>
   );
 };

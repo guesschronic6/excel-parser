@@ -1,4 +1,5 @@
 import BillingPeriod from "../common/BillingPeriod";
+import Feeder from "../common/enums/Feeder";
 import {
   MonthlyInterruptionRawData,
   MonthlyInterruptionSettings,
@@ -6,7 +7,7 @@ import {
 
 function createRawDataObject(
   duration: number,
-  feeder: string,
+  feeder: Feeder,
   date: Date
 ): MonthlyInterruptionRawData {
   let billingMonth = BillingPeriod.getBillingMonth(
@@ -17,7 +18,7 @@ function createRawDataObject(
   let billingPeriod = new BillingPeriod(billingMonth, date.getFullYear());
   return {
     duration,
-    feeder: feeder.toUpperCase().trim(),
+    feeder: feeder,
     date,
     billingPeriod,
   };

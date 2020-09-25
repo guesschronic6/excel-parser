@@ -1,3 +1,4 @@
+import BillingPeriod from "../common/BillingPeriod";
 import PowerSubstation from "./PowerSubstation";
 import { PowerSubstationRawData } from "./types";
 
@@ -10,18 +11,21 @@ class MonthlyPowerSubstation {
     } else {
       this.powerSubstations = new Map();
     }
-    console.trace("Monthly Power Substation Created...");
+    console.log("Monthly Power Substation Created...");
   }
 
   addRawData(rawData: PowerSubstationRawData) {
-    let key = rawData.billingPeriod.toString();
+    this.addIfNotExist(rawData.billingPeriod);
+    this.powerSubstations
+      .get(rawData.billingPeriod.toString())
+      ?.addRawData(rawData);
+  }
+
+  private addIfNotExist(billingPeriod: BillingPeriod) {
+    let key = billingPeriod.toString();
     if (!this.powerSubstations.has(key)) {
-      this.powerSubstations.set(
-        key,
-        new PowerSubstation(rawData.billingPeriod)
-      );
+      this.powerSubstations.set(key, new PowerSubstation(billingPeriod));
     }
-    this.powerSubstations.get(key)?.addRawData(rawData);
   }
 }
 

@@ -14,37 +14,34 @@ class MonthlyFeederAndDemand {
     } else {
       this.feederAndDemands = new Map();
     }
-    console.trace("Monthly feeder and demand created");
+    console.log("Monthly feeder and demand created");
   }
 
   addMonthlyInterruptionData(
     data: MonthlyInterruptionItem,
     billingPeriod: BillingPeriod
   ) {
-    let key = billingPeriod.toString();
-    if (!this.feederAndDemands.has(key)) {
-      console.log(
-        "addMonthlyInterruptionData(), adding new feeder and demand, billing period: " +
-          billingPeriod.toString()
-      );
-      this.feederAndDemands.set(key, new FeederAndDemand(billingPeriod));
-    }
-    this.feederAndDemands.get(key)?.addMonthlyInterruptionData(data);
+    this.addIfNotExist(billingPeriod);
+    this.feederAndDemands
+      .get(billingPeriod.toString())
+      ?.addMonthlyInterruptionData(data);
   }
 
   addPowerSubstationData(
     data: PowerSubstationItem,
     billingPeriod: BillingPeriod
   ) {
+    this.addIfNotExist(billingPeriod);
+    this.feederAndDemands
+      .get(billingPeriod.toString())
+      ?.addPowerSubstationData(data);
+  }
+
+  private addIfNotExist(billingPeriod: BillingPeriod) {
     let key = billingPeriod.toString();
     if (!this.feederAndDemands.has(key)) {
-      console.log(
-        "addPowerSubstationData(), adding new feeder and demand, billing period: " +
-          billingPeriod.toString()
-      );
       this.feederAndDemands.set(key, new FeederAndDemand(billingPeriod));
     }
-    this.feederAndDemands.get(key)?.addPowerSubstationData(data);
   }
 
   initValues() {

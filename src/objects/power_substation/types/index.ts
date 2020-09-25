@@ -1,5 +1,6 @@
 import { CellObject } from "xlsx/types";
 import BillingPeriod from "../../common/BillingPeriod";
+import Feeder from "../../common/enums/Feeder";
 
 export type PowerSubstationSettings = {
   demandKwhrCol: number;
@@ -20,13 +21,7 @@ export type PowerSubstationRawData = {
   demandKwhr: number;
   kvarhrEnergy: number;
   kwhrEnergy: number;
-  feeder: string;
+  feeder: Feeder;
   billingPeriod: BillingPeriod;
-};
-
-export type PowerSubstationObject = {
-  demandKwhr: number;
-  kvarhrEnergy: number;
-  kwhrEnergy: number;
-  feeder: string;
+  fileName: string;
 };

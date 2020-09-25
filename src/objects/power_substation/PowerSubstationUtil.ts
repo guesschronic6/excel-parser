@@ -1,4 +1,5 @@
 import BillingPeriod from "../common/BillingPeriod";
+import Feeder from "../common/enums/Feeder";
 import { PowerSubstationRawData, PowerSubstationSettings } from "./types";
 
 enum PowerSubstationSettingsKey {
@@ -42,18 +43,20 @@ function loadSettings(): PowerSubstationSettings {
 }
 
 function createRawData(
-  feeder: string,
+  feeder: Feeder,
   kwhrEnergy: number,
   kvarhrEnergy: number,
   demandKwhr: number,
-  billingPeriod: BillingPeriod
+  billingPeriod: BillingPeriod,
+  fileName: string
 ): PowerSubstationRawData {
   return {
     kwhrEnergy,
     kvarhrEnergy,
     demandKwhr,
     billingPeriod,
-    feeder: feeder.toUpperCase().trim(),
+    feeder,
+    fileName,
   };
 }
 

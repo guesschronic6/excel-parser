@@ -13,6 +13,7 @@ import clsx from "clsx";
 import MonthlyInterruptionContextProvider from "./monthly_interruption/MonthlyInterruptionContextProvider";
 import PowerSubstationContextProvider from "./power_substation/PowerSubstationContextProvider";
 import FeederAndDemandContextProvider from "./feeder_and_demand/FeederAndDemandContextProvider";
+import PowerTransformerLossContextProvider from "./power_transformer_loss/PowerTransformerLossContextProvider";
 
 type AppProps = {};
 
@@ -26,9 +27,11 @@ const App: FunctionComponent<AppProps> = (props) => {
           <MonthlyInterruptionContextProvider>
             <PowerSubstationContextProvider>
               <FeederAndDemandContextProvider>
-                <div className={clsx(classes.root)}>
-                  <Dashboard />
-                </div>
+                <PowerTransformerLossContextProvider>
+                  <div className={clsx(classes.root)}>
+                    <Dashboard />
+                  </div>
+                </PowerTransformerLossContextProvider>
               </FeederAndDemandContextProvider>
             </PowerSubstationContextProvider>
           </MonthlyInterruptionContextProvider>

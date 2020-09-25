@@ -9,6 +9,7 @@ import {
 import { findFeeder } from "../common/GeneralUtil";
 import XLSX from "xlsx";
 import MonthlyInterruptionUtil from "./MonthlyInterruptionUtil";
+import Feeder from "../common/enums/Feeder";
 
 function extractRawDatasFromWorkbook(
   filename: string,
@@ -64,8 +65,9 @@ function extractDataFromCells(
   let feederCellData = ExcelUtil.extractText(rowCells.feeder);
   let durationCellData = ExcelUtil.extractNumber(rowCells.duration);
 
+  let feeder = null;
   if (feederCellData.text) {
-    let feeder = findFeeder(feederCellData.text);
+    feeder = findFeeder(feederCellData.text);
     if (!feeder) {
       feederCellData.error = `Feeder value ${feederCellData.text} does not match any of the registered feeders`;
     }
@@ -87,12 +89,12 @@ function extractDataFromCells(
   } else {
     let duration = durationCellData.number as number;
     let date = dateCellData.date as Date;
-    let feeder = feederCellData.text as string;
     rawData = MonthlyInterruptionUtil.createRawDataObject(
       duration,
-      feeder,
+      feeder as Feeder,
       date
     );
+    console.log({ rawData });
   }
 
   // console.log(`row: ${rawData.row} ${rawData.hour}:${rawData.minute}`);

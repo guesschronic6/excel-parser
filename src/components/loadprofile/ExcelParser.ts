@@ -27,6 +27,7 @@ function extractLoadProfileRawFromWorkbook(
   }>(async (resolve, reject) => {
     if (workbook === null) {
       reject(new Error("Invalid file"));
+      handleProgressUpdate("tsk, wrong file", 100);
       return;
     }
     console.log("Parsing workbook...");

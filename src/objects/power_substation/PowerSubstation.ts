@@ -1,10 +1,11 @@
 import { Month } from "../../components/enums";
 import BillingPeriod from "../common/BillingPeriod";
+import Feeder from "../common/enums/Feeder";
 import PowerSubstationItem from "./PowerSubstationItem";
 import { PowerSubstationRawData } from "./types";
 
 class PowerSubstation {
-  items: Map<string, PowerSubstationItem>;
+  items: Map<Feeder, PowerSubstationItem>;
   billingPeriod: BillingPeriod;
 
   constructor(billingPeriod: BillingPeriod) {

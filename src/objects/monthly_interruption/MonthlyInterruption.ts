@@ -1,10 +1,11 @@
 import BillingPeriod from "../common/BillingPeriod";
+import Feeder from "../common/enums/Feeder";
 import MonthlyInterruptionItem from "./MonthlyInterruptionItem";
 import { MonthlyInterruptionRawData } from "./types";
 
 class MonthlyInterruption {
   billingPeriod: BillingPeriod;
-  items: Map<string, MonthlyInterruptionItem>;
+  items: Map<Feeder, MonthlyInterruptionItem>;
 
   constructor(billingPeriod: BillingPeriod) {
     this.billingPeriod = billingPeriod;
