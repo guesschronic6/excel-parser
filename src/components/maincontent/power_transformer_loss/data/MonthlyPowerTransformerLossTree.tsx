@@ -24,22 +24,16 @@ const MonthlyPowerTransformerLossTree = (
       defaultExpandIcon={<ArrowRight />}
       defaultEndIcon={<div style={{ width: 24 }} />}
     >
-      <StyledTreeItem
-        nodeId="1"
-        labelText={powerTransformerLoss.billingPeriod.toString()}
-        labelIcon={CalendarToday}
-      >
-        {[...powerTransformerLoss.items.values()].map((item) => {
-          let key = `PFT:F:${item.substation.key}`;
-          return (
-            <PowerTransformerLossSubstationTree
-              powerTransformerLossSubstation={item}
-              billingPeriod={powerTransformerLoss.billingPeriod}
-              key={key}
-            />
-          );
-        })}
-      </StyledTreeItem>
+      {[...powerTransformerLoss.items.values()].map((item) => {
+        let key = `PFT:F:${item.substation.key}`;
+        return (
+          <PowerTransformerLossSubstationTree
+            powerTransformerLossSubstation={item}
+            billingPeriod={powerTransformerLoss.billingPeriod}
+            key={key}
+          />
+        );
+      })}
     </TreeView>
   );
 };

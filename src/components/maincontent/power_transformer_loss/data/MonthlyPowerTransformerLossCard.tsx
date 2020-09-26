@@ -3,6 +3,7 @@ import { GetAppRounded } from "@material-ui/icons";
 import React from "react";
 import PowerTransformerLoss from "../../../power_transformer_loss/PowerTransformerLoss";
 import MonthlyPowerTransformerLossTree from "./MonthlyPowerTransformerLossTree";
+import PowerTransformerLossUtil from "../../../power_transformer_loss/PowerTransformerLossUtil";
 
 type MonthlyPoowerTransformerLossCard = {
   powerTransformerLoss: PowerTransformerLoss;
@@ -14,6 +15,9 @@ const MonthlyPowerTransformerLossCard: React.FunctionComponent<MonthlyPoowerTran
   const { powerTransformerLoss } = props;
   const classes = useStyles();
 
+  function handleDownloadClick() {
+    PowerTransformerLossUtil.generateExcelFile(powerTransformerLoss);
+  }
   return (
     <div className={classes.monthlyCard_root}>
       <div className={classes.monthlyCard_paper}>
@@ -22,6 +26,7 @@ const MonthlyPowerTransformerLossCard: React.FunctionComponent<MonthlyPoowerTran
             className={classes.downloadBtn}
             size="small"
             startIcon={<GetAppRounded />}
+            onClick={handleDownloadClick}
           >
             download
           </Button>

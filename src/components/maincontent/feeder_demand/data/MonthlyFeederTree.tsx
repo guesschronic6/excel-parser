@@ -1,18 +1,11 @@
 import React from "react";
 
 import { TreeView } from "@material-ui/lab";
-import StyledTreeItem from "../../../common/components/StyledTreeItem";
-import {
-  ArrowDownward,
-  ArrowRight,
-  CalendarToday,
-  Place,
-  Title,
-} from "@material-ui/icons";
+import { ArrowDownward, ArrowRight, Place, Title } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
-import FeederAndDemand from "../../../../objects/feeder_and_demand/FeederAndDemand";
+import FeederAndDemand from "../../../feeder_and_demand/FeederAndDemand";
 import FeederTreeItem from "./FeederTreeItem";
-import FeederAndDemandItem from "../../../../objects/feeder_and_demand/FeederAndDemandItem";
+import FeederAndDemandItem from "../../../feeder_and_demand/FeederAndDemandItem";
 import Feeder from "../../../../objects/common/enums/Feeder";
 
 type MonthlyFeederTreeProps = {
@@ -30,29 +23,23 @@ const MonthlyFeederTree = (props: MonthlyFeederTreeProps) => {
       defaultExpandIcon={<ArrowRight />}
       defaultEndIcon={<div style={{ width: 24 }} />}
     >
-      <StyledTreeItem
-        nodeId="1"
-        labelText={feederAndDemand.billingPeriod.toString()}
-        labelIcon={CalendarToday}
-      >
-        <FeederTreeItem
-          labelIcon={Title}
-          feederAndDemandItem={new FeederAndDemandItem(Feeder.ACLEM, 0)}
-          nodeId={"header"}
-          header={true}
-        />
-        {[...feederAndDemand.items.values()].map((item) => {
-          let key = `FTI:F:${item.feeder}`;
-          return (
-            <FeederTreeItem
-              labelIcon={Place}
-              feederAndDemandItem={item}
-              key={key}
-              nodeId={key}
-            />
-          );
-        })}
-      </StyledTreeItem>
+      <FeederTreeItem
+        labelIcon={Title}
+        feederAndDemandItem={new FeederAndDemandItem(Feeder.ACLEM, 0)}
+        nodeId={"header"}
+        header={true}
+      />
+      {[...feederAndDemand.items.values()].map((item) => {
+        let key = `FTI:F:${item.feeder}`;
+        return (
+          <FeederTreeItem
+            labelIcon={Place}
+            feederAndDemandItem={item}
+            key={key}
+            nodeId={key}
+          />
+        );
+      })}
     </TreeView>
   );
 };

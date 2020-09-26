@@ -1,34 +1,41 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import MonthlyFeederAndDemand from "../../objects/feeder_and_demand/MonthlyFeederAndDemand";
-import MonthlyMonthlyInterruption from "../../objects/monthly_interruption/MonthlyMonthlyInterruption";
-import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
-import { MonthlyIterruptionContext } from "../monthly_interruption/MonthlyInterruptionContextProvider";
-import { PowerSubstationContext } from "../power_substation/PowerSubstationContextProvider";
+import React, { createContext, useEffect, useState } from "react";
+import MonthlyFeederAndDemand from "./MonthlyFeederAndDemand";
+import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
+import { PowerSubstationRawData } from "../../objects/power_substation/types";
 
 type FeederAndDemandContextProviderProps = {};
 
 const tempMfd = new MonthlyFeederAndDemand();
 
+enum Data {
+  MonthlyInterruptionData,
+  PowerSubstationData,
+}
+
 const FeederAndDemandContext = createContext({
   monthlyFeederAndDemand: new MonthlyFeederAndDemand(),
+  onMonthlyInterruptionOrPowerSubstationFileParsed: (
+    rawDatas: MonthlyInterruptionRawData[] | PowerSubstationRawData[]
+  ) => {},
+  onPowerSubstationDataFileRemoved: (fileName: string) => {},
+  onMonthlyInterruptionDataFileRemoved: (fileName: string) => {},
 });
 
 const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandContextProviderProps> = (
   props
 ) => {
-  const powerSubstationContext = useContext(PowerSubstationContext);
-  const monthlyInterruptionCotnext = useContext(MonthlyIterruptionContext);
-
   const [buffer, setBuffer] = useState<
-    (MonthlyPowerSubstation | MonthlyMonthlyInterruption)[]
+    (
+      | PowerSubstationRawData[]
+      | MonthlyInterruptionRawData[]
+      | { data: Data; fileName: string }
+    )[]
   >([]);
   const [monthlyFeederAndDemand, setMonthlyFeederAndDemand] = useState<
     MonthlyFeederAndDemand
   >(tempMfd);
 
   useEffect(() => {
-    powerSubstationContext.addUpdateCallback(onMonthlyPowerSubstationUpdated);
-    monthlyInterruptionCotnext.addUpdateCallback(onMonthlyInterruptionUpdated);
     setMonthlyFeederAndDemand(new MonthlyFeederAndDemand());
   }, []);
 
@@ -44,14 +51,21 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
         let result: MonthlyFeederAndDemand = new MonthlyFeederAndDemand(
           monthlyFeederAndDemand
         );
-        if ((data as MonthlyPowerSubstation).powerSubstations) {
-          result = await addMonthlyPowerSubstationData(
-            data as MonthlyPowerSubstation,
+        if ((data as { data: Data; fileName: string }).data) {
+          data = data as { data: Data; fileName: string };
+          if (data.data == Data.MonthlyInterruptionData) {
+            result = await removeMonthlyInterruptionData(data.fileName, result);
+          } else {
+            result = await removePowerSubstationData(data.fileName, result);
+          }
+        } else if ((data as PowerSubstationRawData[])[0]) {
+          result = await addRawPowerSubstationData(
+            data as PowerSubstationRawData[],
             result
           );
         } else {
-          result = await addMonthlyMonthlyInterruptionData(
-            data as MonthlyMonthlyInterruption,
+          result = await addRawMonthlyInterruptionData(
+            data as MonthlyInterruptionRawData[],
             result
           );
         }
@@ -70,50 +84,76 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
     }
   }, [buffer]);
 
-  function addMonthlyPowerSubstationData(
-    data: MonthlyPowerSubstation,
+  function addRawPowerSubstationData(
+    rawDatas: PowerSubstationRawData[],
     mfd: MonthlyFeederAndDemand
   ) {
     return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      for (let mps of data.powerSubstations.values()) {
-        let billingPeriod = mps.billingPeriod;
-        for (let ps of mps.items.values()) {
-          mfd.addPowerSubstationData(ps, billingPeriod);
-        }
-      }
+      console.log("Adding power substation raw datas...");
+      rawDatas.forEach((rawData) => {
+        mfd.addRawPowerSubstationData(rawData);
+      });
       resolve(mfd);
     });
   }
 
-  function addMonthlyMonthlyInterruptionData(
-    data: MonthlyMonthlyInterruption,
+  function addRawMonthlyInterruptionData(
+    rawDatas: MonthlyInterruptionRawData[],
     mfd: MonthlyFeederAndDemand
   ) {
     return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      for (let mmi of data.monthlyInterruptions.values()) {
-        let billingPeriod = mmi.billingPeriod;
-        for (let mi of mmi.items.values()) {
-          mfd.addMonthlyInterruptionData(mi, billingPeriod);
-        }
-      }
+      rawDatas.forEach((rawData) => {
+        mfd.addRawMonthlyInterruptionData(rawData);
+      });
       resolve(mfd);
     });
   }
 
-  function onMonthlyPowerSubstationUpdated(data: MonthlyPowerSubstation) {
-    console.log("MonthlyPowerSubstationData Updated...");
-    setBuffer((prevBuffer) => [...prevBuffer, data]);
+  function removeMonthlyInterruptionData(
+    fileName: string,
+    mfd: MonthlyFeederAndDemand
+  ) {
+    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
+      mfd.removeMonthlyInterruptionDataByFilename(fileName);
+      resolve(mfd);
+    });
+  }
+  function removePowerSubstationData(
+    fileName: string,
+    mfd: MonthlyFeederAndDemand
+  ) {
+    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
+      mfd.removePowerSubstationDataByFilename(fileName);
+      resolve(mfd);
+    });
   }
 
-  function onMonthlyInterruptionUpdated(data: MonthlyMonthlyInterruption) {
-    console.log("MonthlyPower Interruption data Updated...");
-    setBuffer((prevBuffer) => [...prevBuffer, data]);
+  function onMonthlyInterruptionOrPowerSubstationFileParsed(
+    rawDatas: MonthlyInterruptionRawData[] | PowerSubstationRawData[]
+  ) {
+    setBuffer((prevBuffer) => [...prevBuffer, rawDatas]);
+  }
+
+  function onPowerSubstationDataFileRemoved(fileName: string) {
+    setBuffer((prevBuffer) => [
+      ...prevBuffer,
+      { data: Data.PowerSubstationData, fileName },
+    ]);
+  }
+  function onMonthlyInterruptionDataFileRemoved(fileName: string) {
+    setBuffer((prevBuffer) => [
+      ...prevBuffer,
+      { data: Data.MonthlyInterruptionData, fileName },
+    ]);
   }
 
   return (
     <FeederAndDemandContext.Provider
       value={{
         monthlyFeederAndDemand,
+        onMonthlyInterruptionOrPowerSubstationFileParsed,
+        onMonthlyInterruptionDataFileRemoved,
+        onPowerSubstationDataFileRemoved,
       }}
     >
       {props.children}

@@ -2,7 +2,7 @@ import { createStyles, makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
 import { HorizontalTab } from "../../common/components/tabs";
-import FeederAndDemand from "../../../objects/feeder_and_demand/FeederAndDemand";
+import FeederAndDemand from "../../feeder_and_demand/FeederAndDemand";
 import MonthlyFeederCard from "./data/MonthlyFeederCard";
 
 type FeederAndDemandContentProps = {

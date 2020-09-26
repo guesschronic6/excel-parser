@@ -1,8 +1,9 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import { GetAppRounded } from "@material-ui/icons";
 import React from "react";
-import FeederAndDemand from "../../../../objects/feeder_and_demand/FeederAndDemand";
+import FeederAndDemand from "../../../feeder_and_demand/FeederAndDemand";
 import MonthlyTree from "./MonthlyFeederTree";
+import FeederAndDemandUtil from "../../../feeder_and_demand/FeederAndDemandUtil";
 
 type MonthlyFeederCardProps = {
   feederAndDemand: FeederAndDemand;
@@ -14,6 +15,10 @@ const MonthlyFeederCard: React.FunctionComponent<MonthlyFeederCardProps> = (
   const { feederAndDemand } = props;
   const classes = useStyles();
 
+  function handleDownloadClick() {
+    FeederAndDemandUtil.generateExcelFile(feederAndDemand);
+  }
+
   return (
     <div className={classes.monthlyCard_root}>
       <div className={classes.monthlyCard_paper}>
@@ -22,6 +27,7 @@ const MonthlyFeederCard: React.FunctionComponent<MonthlyFeederCardProps> = (
             className={classes.downloadBtn}
             size="small"
             startIcon={<GetAppRounded />}
+            onClick={handleDownloadClick}
           >
             download
           </Button>

@@ -6,17 +6,20 @@ import PowerTransformerLossSubstation from "./PowerTransformerLossSubstation";
 import GeneralUtil from "../../objects/common/GeneralUtil";
 import Substation from "../../objects/common/enums/Substation";
 import PowerTransformerLossItem from "./PowerTransformerLossItem";
+import { PowerSubstationRawData } from "../../objects/power_substation/types";
 
 class PowerTransformerLoss {
   billingPeriod: BillingPeriod;
   //key: substation
   items: Map<string, PowerTransformerLossSubstation>;
   operatingHours: number;
+  fileName: string;
 
-  constructor(billingPeriod: BillingPeriod) {
+  constructor(billingPeriod: BillingPeriod, fileName: string) {
     this.billingPeriod = billingPeriod;
     this.operatingHours = (billingPeriod.getTotalDays() + 1) * 24;
     this.items = new Map();
+    this.fileName = fileName;
   }
 
   replacePowerTransformerlossItem(item: PowerTransformerLossItem) {
@@ -25,7 +28,7 @@ class PowerTransformerLoss {
       ?.replacePowerTransformerLossItem(item);
   }
 
-  addPowerSubstationData(data: PowerSubstationItem) {
+  addPowerSubstationData(data: PowerSubstationRawData) {
     console.log("findgin substation of feeder: " + data.feeder);
     let substation = GeneralUtil.findSubstationOfFeeder(data.feeder);
     if (substation) {

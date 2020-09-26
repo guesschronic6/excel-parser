@@ -4,7 +4,8 @@ import FileCard from "../FileCard";
 import FileDrop from "../FileDrop";
 import PowerSubstationParser from "../../power_substation/PowerSubstationParser";
 import { PowerSubstationRawData } from "../../../objects/power_substation/types";
-import { PowerSubstationContext } from "../../power_substation/PowerSubstationContextProvider";
+import { PowerTransformerLossContext } from "../../power_transformer_loss/PowerTransformerLossContextProvider";
+import { FeederAndDemandContext } from "../../feeder_and_demand/FeederAndDemandContextProvider";
 
 type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
@@ -18,7 +19,8 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 ) => {
   const { expandedPanel, onPanelChange, ...others } = props;
   const [files, setFiles] = useState<Map<string, File>>(new Map());
-  const powerSubstationContext = useContext(PowerSubstationContext);
+  const powerTransformerLossContext = useContext(PowerTransformerLossContext);
+  const feederAndDemandContext = useContext(FeederAndDemandContext);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
@@ -39,7 +41,10 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
   function handleDragLeave() {}
 
   function handleFileParsed(rawDatas: PowerSubstationRawData[]) {
-    powerSubstationContext.addNewRawDatas(rawDatas);
+    powerTransformerLossContext.onPowerSubstationFileParsed(rawDatas);
+    feederAndDemandContext.onMonthlyInterruptionOrPowerSubstationFileParsed(
+      rawDatas
+    );
   }
 
   function handleRemoveFile(file: File) {
@@ -48,6 +53,8 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
       duplicate.delete(file.name);
       return duplicate;
     });
+    feederAndDemandContext.onPowerSubstationDataFileRemoved(file.name);
+    powerTransformerLossContext.onPowerSubstationFileRemoved(file.name);
   }
 
   return (

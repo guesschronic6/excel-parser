@@ -1,8 +1,4 @@
-import Substation, {
-  SubstationItem,
-} from "../../objects/common/enums/Substation";
-import { calculateOperatingHours } from "../../objects/feeder_and_demand/FeederAndDemandUtils";
-import MonthlyInterruptionItem from "../../objects/monthly_interruption/MonthlyInterruptionItem";
+import { SubstationItem } from "../../objects/common/enums/Substation";
 import PowerSubstationItem from "../../objects/power_substation/PowerSubstationItem";
 
 class PowerTransformerLossItem {

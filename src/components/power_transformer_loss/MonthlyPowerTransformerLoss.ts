@@ -1,6 +1,7 @@
 import BillingPeriod from "../../objects/common/BillingPeriod";
 import MonthlyInterruptionItem from "../../objects/monthly_interruption/MonthlyInterruptionItem";
 import PowerSubstationItem from "../../objects/power_substation/PowerSubstationItem";
+import { PowerSubstationRawData } from "../../objects/power_substation/types";
 import PowerTransformerLoss from "./PowerTransformerLoss";
 import PowerTransformerLossItem from "./PowerTransformerLossItem";
 
@@ -28,14 +29,19 @@ class MonthlyPowerTransformerLoss {
       ?.replacePowerTransformerlossItem(item);
   }
 
-  addPowerSubstationData(
-    data: PowerSubstationItem,
-    billingpPeriod: BillingPeriod
-  ) {
-    this.addIfNotExist(billingpPeriod);
+  removePowerSubstationData(fileName: string) {
+    for (let key of this.powerTransformerLosses.keys()) {
+      if (this.powerTransformerLosses.get(key)?.fileName === fileName) {
+        this.powerTransformerLosses.delete(key);
+      }
+    }
+  }
+
+  addRawPowerSubstationData(rawData: PowerSubstationRawData) {
+    this.addIfNotExist(rawData.billingPeriod, rawData.fileName);
     this.powerTransformerLosses
-      .get(billingpPeriod.toString())
-      ?.addPowerSubstationData(data);
+      .get(rawData.billingPeriod.toString())
+      ?.addPowerSubstationData(rawData);
   }
 
   initValues() {
@@ -48,7 +54,7 @@ class MonthlyPowerTransformerLoss {
     });
   }
 
-  private addIfNotExist(billingpPeriod: BillingPeriod) {
+  private addIfNotExist(billingpPeriod: BillingPeriod, fileName: string) {
     let key = billingpPeriod.toString();
     if (!this.powerTransformerLosses.has(key)) {
       console.log(
@@ -57,7 +63,7 @@ class MonthlyPowerTransformerLoss {
       );
       this.powerTransformerLosses.set(
         key,
-        new PowerTransformerLoss(billingpPeriod)
+        new PowerTransformerLoss(billingpPeriod, fileName)
       );
     }
   }

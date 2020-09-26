@@ -4,7 +4,7 @@ import MonthlyInterruptionParser from "../../monthly_interruption/MonthlyInterru
 import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import FileDrop from "../FileDrop";
-import { MonthlyIterruptionContext } from "../../monthly_interruption/MonthlyInterruptionContextProvider";
+import { FeederAndDemandContext } from "../../feeder_and_demand/FeederAndDemandContextProvider";
 
 type MonthlyInterruptionAccordionProps = {
   expandedPanel: string;
@@ -20,7 +20,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
 }) => {
   const [files, setFiles] = useState<Map<string, File>>(new Map());
 
-  const monthlyInterruptionContext = useContext(MonthlyIterruptionContext);
+  const feederAndDemandContext = useContext(FeederAndDemandContext);
 
   async function handleFileDrop(files: File[]) {
     files.forEach((file: File) => {
@@ -41,7 +41,9 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
   function handleDragLeave() {}
 
   function handleFileParsed(rawDatas: MonthlyInterruptionRawData[]) {
-    monthlyInterruptionContext.addNewRawData(rawDatas);
+    feederAndDemandContext.onMonthlyInterruptionOrPowerSubstationFileParsed(
+      rawDatas
+    );
   }
 
   function handleRemoveFile(file: File) {
@@ -50,7 +52,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
       duplicate.delete(file.name);
       return duplicate;
     });
-    monthlyInterruptionContext.onFileRemoved(file.name);
+    feederAndDemandContext.onMonthlyInterruptionDataFileRemoved(file.name);
   }
 
   return (

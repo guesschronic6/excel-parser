@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { TreeItemProps, TreeItem } from "@material-ui/lab";
 import React, { useEffect } from "react";
-import FeederAndDemandItem from "../../../../objects/feeder_and_demand/FeederAndDemandItem";
+import FeederAndDemandItem from "../../../feeder_and_demand/FeederAndDemandItem";
 import useTreeItemStyles from "./useTreeItemStyles";
 
 type FederTreeitemProps = TreeItemProps & {
@@ -147,14 +147,14 @@ const FederTreeitem: React.FunctionComponent<FederTreeitemProps> = (
                 variant="body2"
                 className={classes.labelContent}
               >
-                {feederAndDemandItem.minutes}
+                {feederAndDemandItem.totalMinutes}
               </Typography>
               <Typography
                 classes={{ root: classes.numbers }}
                 variant="body2"
                 className={classes.labelContent}
               >
-                {feederAndDemandItem.hours.toFixed(2)}
+                {feederAndDemandItem.totalHours.toFixed(2)}
               </Typography>
               <Typography
                 classes={{ root: classes.numbers }}

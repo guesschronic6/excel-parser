@@ -10,8 +10,6 @@ import theme from "./theme";
 import LoadProfileContextProvider from "./loadprofile/LoadProfileContextProvider";
 import Dashboard from "./dashboard";
 import clsx from "clsx";
-import MonthlyInterruptionContextProvider from "./monthly_interruption/MonthlyInterruptionContextProvider";
-import PowerSubstationContextProvider from "./power_substation/PowerSubstationContextProvider";
 import FeederAndDemandContextProvider from "./feeder_and_demand/FeederAndDemandContextProvider";
 import PowerTransformerLossContextProvider from "./power_transformer_loss/PowerTransformerLossContextProvider";
 
@@ -24,17 +22,13 @@ const App: FunctionComponent<AppProps> = (props) => {
     <ThemeProvider theme={theme}>
       <CssBaseline>
         <LoadProfileContextProvider>
-          <MonthlyInterruptionContextProvider>
-            <PowerSubstationContextProvider>
-              <FeederAndDemandContextProvider>
-                <PowerTransformerLossContextProvider>
-                  <div className={clsx(classes.root)}>
-                    <Dashboard />
-                  </div>
-                </PowerTransformerLossContextProvider>
-              </FeederAndDemandContextProvider>
-            </PowerSubstationContextProvider>
-          </MonthlyInterruptionContextProvider>
+          <FeederAndDemandContextProvider>
+            <PowerTransformerLossContextProvider>
+              <div className={clsx(classes.root)}>
+                <Dashboard />
+              </div>
+            </PowerTransformerLossContextProvider>
+          </FeederAndDemandContextProvider>
         </LoadProfileContextProvider>
       </CssBaseline>
     </ThemeProvider>
