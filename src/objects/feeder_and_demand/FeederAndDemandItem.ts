@@ -28,7 +28,7 @@ class FeederAndDemandItem {
   }
 
   setMonthlyInterruptionData(data: MonthlyInterruptionItem) {
-    this.minutes = data.duration;
+    this.minutes = data.getTotalDuration();
     this.hours = this.minutes / 60;
   }
 

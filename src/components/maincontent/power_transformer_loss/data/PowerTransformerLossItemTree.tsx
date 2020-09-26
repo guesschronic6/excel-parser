@@ -3,43 +3,28 @@ import {
   Theme,
   createStyles,
   Typography,
-  Box,
   SvgIconProps,
 } from "@material-ui/core";
+import transitions from "@material-ui/core/styles/transitions";
 import { TreeItemProps, TreeItem } from "@material-ui/lab";
-import React, { useEffect } from "react";
+import clsx from "clsx";
+import React, { ChangeEvent, useContext, useEffect } from "react";
+import { FormEvent } from "react";
+import { useState } from "react";
 import Substation from "../../../../objects/common/enums/Substation";
 import PowerTransformerLossItem from "../../../power_transformer_loss/PowerTransformerLossItem";
 import useTreeItemStyles from "./useTreeItemStyles";
+import { PowerTransformerLossContext } from "../../../power_transformer_loss/PowerTransformerLossContextProvider";
+import BillingPeriod from "../../../../objects/common/BillingPeriod";
 
 type PowerTransformerLossItemTreeProps = TreeItemProps & {
   bgColor?: string;
   color?: string;
   powerTransformerLossItem?: PowerTransformerLossItem;
+  billingPeriod: BillingPeriod;
   substation: Substation;
   labelIcon: React.ElementType<SvgIconProps>;
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    labelContent: {
-      width: "120px",
-      fontWeight: "normal",
-      flexGrow: 1,
-    },
-    feeder: {
-      width: "200px",
-    },
-    numbers: {
-      width: "130px",
-      maxWidth: "130px",
-    },
-    percent: {
-      width: "90px",
-      maxWidth: "90px",
-    },
-  })
-);
 
 const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLossItemTreeProps> = (
   props
@@ -52,8 +37,46 @@ const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLoss
     powerTransformerLossItem,
     substation,
     labelIcon: LabelIcon,
+    billingPeriod,
     ...other
   } = props;
+  const powerTransformerLossContext = useContext(PowerTransformerLossContext);
+  const [demand, setDemand] = useState("0");
+  const [demandError, setDemmandError] = useState(false);
+
+  useEffect(() => {
+    if (powerTransformerLossItem) {
+      setDemand(powerTransformerLossItem.demandMW.toString());
+    }
+  }, []);
+
+  function handleDemandChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    if (Number(event.target.value)) {
+      setDemmandError(false);
+    } else {
+      setDemmandError(true);
+    }
+    setDemand(event.target.value);
+  }
+
+  function handleDemandSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!demandError && powerTransformerLossItem) {
+      let newItem = new PowerTransformerLossItem(
+        powerTransformerLossItem.substationItem,
+        0,
+        powerTransformerLossItem
+      );
+      newItem.demandMW = Number(demand);
+      console.log({ newItem });
+      powerTransformerLossContext.onPowerTransformerLossItemChanged(
+        newItem,
+        billingPeriod
+      );
+    }
+  }
 
   return (
     <TreeItem
@@ -193,13 +216,15 @@ const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLoss
               >
                 {powerTransformerLossItem.energMwhr.toFixed(2)}
               </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.demandMW.toFixed(2)}
-              </Typography>
+              <form className={classes.percent} onSubmit={handleDemandSubmit}>
+                <input
+                  value={demand}
+                  className={clsx(classes.inputField, {
+                    [classes.errorField]: demandError,
+                  })}
+                  onChange={handleDemandChange}
+                />
+              </form>
               <Typography
                 classes={{ root: classes.percent }}
                 variant="body2"
@@ -297,5 +322,47 @@ const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLoss
     />
   );
 };
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    labelContent: {
+      width: "120px",
+      fontWeight: "normal",
+      flexGrow: 1,
+    },
+    feeder: {
+      width: "200px",
+    },
+    numbers: {
+      width: "130px",
+      maxWidth: "130px",
+    },
+    percent: {
+      width: "90px",
+      maxWidth: "90px",
+    },
+    inputField: {
+      width: "100%",
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.shape.borderRadius,
+      outline: "none",
+      color: theme.palette.text.primary,
+      transition: theme.transitions.create("borderColor", {
+        duration: theme.transitions.duration.standard,
+        easing: transitions.easing.easeInOut,
+      }),
+      "&:focus, &:hover": {
+        borderColor: theme.palette.primary.main,
+      },
+    },
+    errorField: {
+      borderColor: theme.palette.error.main,
+      "&:focus, &:hover": {
+        borderColor: theme.palette.error.main,
+      },
+      color: theme.palette.error.main,
+    },
+  })
+);
 
 export default PowerTransformerLossItemTree;

@@ -26,8 +26,8 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
   const [monthlyPowerSubstation, setMonthlyPowerSubstations] = useState<
     MonthlyPowerSubstation
   >();
-  const [buffer, setBuffer] = useState<Stack<PowerSubstationRawData[]>>(
-    new Stack()
+  const [buffer, setBuffer] = useState<(PowerSubstationRawData[] | string)[]>(
+    []
   );
 
   const [updatecallbacks, setUpdateCallbacks] = useState<
@@ -36,14 +36,20 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
   useEffect(() => {
     async function doSomething() {
       console.log("checking if buffer is empty...");
-      if (!buffer.isEmpty()) {
-        let rawData = buffer.pop();
-        let result = await updateMonhlyPowerSubstation(
-          rawData as PowerSubstationRawData[]
-        );
-        console.log(result);
-        setMonthlyPowerSubstations(result);
-        setBuffer(new Stack(buffer));
+      if (buffer.length > 0) {
+        let data = buffer.pop();
+        if ((data as PowerSubstationRawData[]).length) {
+          let result = await updateMonhlyPowerSubstation(
+            data as PowerSubstationRawData[]
+          );
+          console.log(result);
+          setMonthlyPowerSubstations(result);
+        } else {
+          let result = await removeFile(data as string);
+          setMonthlyPowerSubstations(result);
+        }
+
+        setBuffer([...buffer]);
       } else {
         console.log("buffer is empty");
       }
@@ -64,6 +70,16 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
     });
   }, [monthlyPowerSubstation]);
 
+  function removeFile(fileName: string) {
+    return new Promise<MonthlyPowerSubstation>((resolve, reject) => {
+      let newMonthlyPowerSubstation = new MonthlyPowerSubstation(
+        monthlyPowerSubstation
+      );
+      newMonthlyPowerSubstation.removeFile(fileName);
+      resolve(newMonthlyPowerSubstation);
+    });
+  }
+
   function updateMonhlyPowerSubstation(
     rawDatas: PowerSubstationRawData[]
   ): Promise<MonthlyPowerSubstation> {
@@ -80,10 +96,11 @@ const PowerSubstationContextProvider: React.FunctionComponent<PowerSubstationCon
   }
 
   function addNewRawDatas(rawDatas: PowerSubstationRawData[]) {
-    setBuffer((prevBuffer) => {
-      prevBuffer.push(rawDatas);
-      return new Stack(prevBuffer);
-    });
+    setBuffer((prevBuffer) => [...prevBuffer, rawDatas]);
+  }
+
+  function onFileRemoved(fileName: string) {
+    setBuffer((prevBuffer) => [...prevBuffer, fileName]);
   }
 
   function addUpdateCallback(callback: PowerSubstationUpdateCallback) {

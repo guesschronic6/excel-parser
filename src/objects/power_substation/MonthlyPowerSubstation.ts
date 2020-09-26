@@ -21,6 +21,12 @@ class MonthlyPowerSubstation {
       ?.addRawData(rawData);
   }
 
+  removeFile(fileName: string) {
+    this.powerSubstations.forEach((ps) => {
+      ps.removeFile(fileName);
+    });
+  }
+
   private addIfNotExist(billingPeriod: BillingPeriod) {
     let key = billingPeriod.toString();
     if (!this.powerSubstations.has(key)) {

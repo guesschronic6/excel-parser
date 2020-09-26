@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import MonthlyPowerTransformerLoss from "./MonthlyPowerTransformerLoss";
 import { PowerSubstationContext } from "../power_substation/PowerSubstationContextProvider";
 import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
+import PowerTransformerLossItem from "./PowerTransformerLossItem";
+import BillingPeriod from "../../objects/common/BillingPeriod";
 
 type PowerTransformerLossContextProviderProps = {};
 
@@ -9,6 +11,10 @@ const tempPowerTransformerLoss = new MonthlyPowerTransformerLoss();
 
 const PowerTransformerLossContext = createContext({
   monthlyPowerTransformerLoss: tempPowerTransformerLoss,
+  onPowerTransformerLossItemChanged: (
+    item: PowerTransformerLossItem,
+    billingPeriod: BillingPeriod
+  ) => {},
 });
 
 const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransformerLossContextProviderProps> = (
@@ -21,7 +27,12 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
     setMonthlyPowerTransformerLoss,
   ] = useState(tempPowerTransformerLoss);
 
-  const [buffer, setBuffer] = useState<MonthlyPowerSubstation[]>([]);
+  const [buffer, setBuffer] = useState<
+    (
+      | MonthlyPowerSubstation
+      | { item: PowerTransformerLossItem; billingPeriod: BillingPeriod }
+    )[]
+  >([]);
 
   useEffect(() => {
     powerSubstationContext.addUpdateCallback(onMonthlyPowerSubstationUpdated);
@@ -35,12 +46,25 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
     if (buffer.length > 0) {
       let newBuffer = [...buffer];
       let data = newBuffer.pop();
-      addPowerSubstationDataToTransformerLoss(
-        data as MonthlyPowerSubstation
-      ).then((result) => {
-        setMonthlyPowerTransformerLoss(result);
-        setBuffer(newBuffer);
-      });
+
+      if ((data as MonthlyPowerSubstation).powerSubstations) {
+        addPowerSubstationDataToTransformerLoss(
+          data as MonthlyPowerSubstation
+        ).then((result) => {
+          setMonthlyPowerTransformerLoss(result);
+          setBuffer(newBuffer);
+        });
+      } else {
+        replacePowerTransformerLossItem(
+          data as {
+            item: PowerTransformerLossItem;
+            billingPeriod: BillingPeriod;
+          }
+        ).then((result) => {
+          setMonthlyPowerTransformerLoss(result);
+          setBuffer(newBuffer);
+        });
+      }
     } else {
       initPowerTransformerLossValues().then((result) => {
         setMonthlyPowerTransformerLoss(result);
@@ -69,6 +93,23 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
     });
   }
 
+  function replacePowerTransformerLossItem(item: {
+    item: PowerTransformerLossItem;
+    billingPeriod: BillingPeriod;
+  }) {
+    return new Promise<MonthlyPowerTransformerLoss>((resolve, reject) => {
+      console.log("Updating PowerTransformerLoss....");
+      console.log({ item });
+      let newData = new MonthlyPowerTransformerLoss(
+        monthlyPowerTransformerLoss
+      );
+
+      newData.replacePowerTransformerLossItem(item.item, item.billingPeriod);
+
+      resolve(newData);
+    });
+  }
+
   function addPowerSubstationDataToTransformerLoss(
     monthlyPowerSubstation: MonthlyPowerSubstation
   ) {
@@ -88,9 +129,16 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
     });
   }
 
+  function onPowerTransformerLossItemChanged(
+    item: PowerTransformerLossItem,
+    billingPeriod: BillingPeriod
+  ) {
+    setBuffer((prevBuffer) => [...prevBuffer, { item, billingPeriod }]);
+  }
+
   return (
     <PowerTransformerLossContext.Provider
-      value={{ monthlyPowerTransformerLoss }}
+      value={{ monthlyPowerTransformerLoss, onPowerTransformerLossItemChanged }}
     >
       {props.children}
     </PowerTransformerLossContext.Provider>

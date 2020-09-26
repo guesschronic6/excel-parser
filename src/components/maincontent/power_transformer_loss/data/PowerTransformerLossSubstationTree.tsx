@@ -13,15 +13,17 @@ import {
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import PowerTransformerLossSubstation from "../../../power_transformer_loss/PowerTransformerLossSubstation";
 import PowerTransformerLossItemTree from "./PowerTransformerLossItemTree";
+import BillingPeriod from "../../../../objects/common/BillingPeriod";
 
 type PowerTransformerLossSubstationTreeProps = {
   powerTransformerLossSubstation: PowerTransformerLossSubstation;
+  billingPeriod: BillingPeriod;
 };
 
 const PowerTransformerLossSubstationTree = (
   props: PowerTransformerLossSubstationTreeProps
 ) => {
-  const { powerTransformerLossSubstation } = props;
+  const { powerTransformerLossSubstation, billingPeriod } = props;
   const classes = useStyles();
 
   return (
@@ -40,6 +42,7 @@ const PowerTransformerLossSubstationTree = (
           labelIcon={Title}
           substation={powerTransformerLossSubstation.substation}
           nodeId="header"
+          billingPeriod={billingPeriod}
         />
         {[...powerTransformerLossSubstation.substationItems.values()].map(
           (substationItem) => {
@@ -51,6 +54,7 @@ const PowerTransformerLossSubstationTree = (
                 substation={powerTransformerLossSubstation.substation}
                 key={key}
                 nodeId={key}
+                billingPeriod={billingPeriod}
               />
             );
           }

@@ -14,6 +14,7 @@ export type MonthlyInterruptionRawData = {
   date: Date;
   billingPeriod: BillingPeriod;
   duration: number;
+  fileName: string;
 };
 
 export type MonthlyInterruptionCells = {

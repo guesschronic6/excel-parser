@@ -15,13 +15,15 @@ class MonthlyInterruption {
   addRawData(rawData: MonthlyInterruptionRawData) {
     let key = rawData.feeder;
     if (!this.items.has(key)) {
-      this.items.set(
-        key,
-        new MonthlyInterruptionItem(rawData.feeder, rawData.duration)
-      );
-    } else {
-      this.items.get(key)?.addDuration(rawData.duration);
+      this.items.set(key, new MonthlyInterruptionItem(rawData.feeder));
     }
+    this.items.get(key)?.addDuration(rawData.duration, rawData.fileName);
+  }
+
+  removeFile(fileName: string) {
+    this.items.forEach((item) => {
+      item.removeFile(fileName);
+    });
   }
 }
 

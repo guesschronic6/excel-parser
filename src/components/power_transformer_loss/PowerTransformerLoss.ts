@@ -5,6 +5,7 @@ import PowerTransformerLossSubstation from "./PowerTransformerLossSubstation";
 
 import GeneralUtil from "../../objects/common/GeneralUtil";
 import Substation from "../../objects/common/enums/Substation";
+import PowerTransformerLossItem from "./PowerTransformerLossItem";
 
 class PowerTransformerLoss {
   billingPeriod: BillingPeriod;
@@ -16,6 +17,12 @@ class PowerTransformerLoss {
     this.billingPeriod = billingPeriod;
     this.operatingHours = (billingPeriod.getTotalDays() + 1) * 24;
     this.items = new Map();
+  }
+
+  replacePowerTransformerlossItem(item: PowerTransformerLossItem) {
+    this.items
+      .get(item.substationItem.substationKey)
+      ?.replacePowerTransformerLossItem(item);
   }
 
   addPowerSubstationData(data: PowerSubstationItem) {

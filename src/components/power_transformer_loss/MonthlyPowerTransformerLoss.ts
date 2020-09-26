@@ -2,6 +2,7 @@ import BillingPeriod from "../../objects/common/BillingPeriod";
 import MonthlyInterruptionItem from "../../objects/monthly_interruption/MonthlyInterruptionItem";
 import PowerSubstationItem from "../../objects/power_substation/PowerSubstationItem";
 import PowerTransformerLoss from "./PowerTransformerLoss";
+import PowerTransformerLossItem from "./PowerTransformerLossItem";
 
 class MonthlyPowerTransformerLoss {
   //key: billingpPeriod.toString(),
@@ -16,6 +17,15 @@ class MonthlyPowerTransformerLoss {
       this.powerTransformerLosses = new Map();
     }
     console.log("MonthlyPowerTransformerLoss created..");
+  }
+
+  replacePowerTransformerLossItem(
+    item: PowerTransformerLossItem,
+    billingPeriod: BillingPeriod
+  ) {
+    this.powerTransformerLosses
+      .get(billingPeriod.toString())
+      ?.replacePowerTransformerlossItem(item);
   }
 
   addPowerSubstationData(

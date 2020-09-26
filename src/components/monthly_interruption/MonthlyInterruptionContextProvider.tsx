@@ -12,6 +12,7 @@ type MonthlyInterruptionContextProps = {
   addNewRawData: (rawDatas: MonthlyInterruptionRawData[]) => void;
   monthlyInterruptions: MonthlyMonthlyInterruption;
   addUpdateCallback: (callback: MonthlyInterruptionUpdatecallback) => void;
+  onFileRemoved: (fileName: string) => void;
 };
 
 const MonthlyIterruptionContext = createContext<
@@ -20,6 +21,7 @@ const MonthlyIterruptionContext = createContext<
   addNewRawData: ([]) => {},
   monthlyInterruptions: new MonthlyMonthlyInterruption(),
   addUpdateCallback: () => {},
+  onFileRemoved: (fileName: string) => {},
 });
 
 type MonthlyInterruptionContextProviderProps = {};
@@ -35,13 +37,14 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
     MonthlyInterruptionUpdatecallback[]
   >([]);
 
-  const [buffer, setBuffer] = useState<Stack<MonthlyInterruptionRawData[]>>(
-    new Stack()
-  );
+  const [buffer, setBuffer] = useState<
+    (MonthlyInterruptionRawData[] | string)[]
+  >([]);
 
   useEffect(() => {
     setMonthlyInterruptions(new MonthlyMonthlyInterruption());
   }, []);
+
   useEffect(() => {
     updateCallbacks.forEach((callback) => {
       callback(monthlyInterruptions as MonthlyMonthlyInterruption);
@@ -51,17 +54,22 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
   useEffect(() => {
     async function update() {
       console.log("Checking if buffer is not empty...");
-      if (!buffer.isEmpty()) {
+      if (buffer.length > 0) {
         try {
           console.log("Buffer isn ot empty...");
           console.log(buffer);
-          let rawDatas = buffer.pop();
-          let result = await updateMonthlyInterruptions(
-            rawDatas as MonthlyInterruptionRawData[]
-          );
-          console.log(result);
-          setMonthlyInterruptions(result);
-          setBuffer(new Stack(buffer));
+          let data = buffer.pop() as unknown;
+
+          if ((data as MonthlyInterruptionRawData[]).length) {
+            let result = await updateMonthlyInterruptions(
+              data as MonthlyInterruptionRawData[]
+            );
+            setMonthlyInterruptions(result);
+          } else {
+            let result = await removeFile(data as string);
+            setMonthlyInterruptions(result);
+          }
+          setBuffer([...buffer]);
         } catch (e) {
           console.log(e);
         }
@@ -71,11 +79,21 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
   }, [buffer]);
 
   function addNewRawData(rawdatas: MonthlyInterruptionRawData[]) {
-    setBuffer((prevBuffer) => {
-      console.log("Pushing to buffer....");
-      prevBuffer.push(rawdatas);
-      return new Stack(prevBuffer);
+    setBuffer((prevBuffer) => [...prevBuffer, rawdatas]);
+  }
+
+  function removeFile(fileName: string) {
+    return new Promise<MonthlyMonthlyInterruption>((resolve, reject) => {
+      let newMonthlyInterruptions = new MonthlyMonthlyInterruption(
+        monthlyInterruptions
+      );
+      newMonthlyInterruptions.removeFile(fileName);
+      resolve(newMonthlyInterruptions);
     });
+  }
+
+  function onFileRemoved(fileName: string) {
+    setBuffer((prevBuffer) => [...prevBuffer, fileName]);
   }
 
   function updateMonthlyInterruptions(rawDatas: MonthlyInterruptionRawData[]) {
@@ -100,7 +118,12 @@ const MonthlyInterruptionContextProvider: React.FunctionComponent<MonthlyInterru
 
   return monthlyInterruptions ? (
     <MonthlyIterruptionContext.Provider
-      value={{ addNewRawData, monthlyInterruptions, addUpdateCallback }}
+      value={{
+        addNewRawData,
+        monthlyInterruptions,
+        addUpdateCallback,
+        onFileRemoved,
+      }}
     >
       {props.children}
     </MonthlyIterruptionContext.Provider>

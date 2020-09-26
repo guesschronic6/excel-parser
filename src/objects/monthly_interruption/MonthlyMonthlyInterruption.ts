@@ -26,6 +26,12 @@ class MonthlyMonthlyInterruption {
 
     this.monthlyInterruptions.get(key)?.addRawData(rawData);
   }
+
+  removeFile(fileName: string) {
+    this.monthlyInterruptions.forEach((monthlyInterruption) => {
+      monthlyInterruption.removeFile(fileName);
+    });
+  }
 }
 
 export default MonthlyMonthlyInterruption;

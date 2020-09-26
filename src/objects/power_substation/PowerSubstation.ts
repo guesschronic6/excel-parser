@@ -16,6 +16,14 @@ class PowerSubstation {
   addRawData(rawData: PowerSubstationRawData) {
     this.items.set(rawData.feeder, new PowerSubstationItem(rawData));
   }
+
+  removeFile(fileName: string) {
+    for (let key of this.items.keys()) {
+      if (this.items.get(key)?.fileName === fileName) {
+        this.items.delete(key);
+      }
+    }
+  }
 }
 
 export default PowerSubstation;

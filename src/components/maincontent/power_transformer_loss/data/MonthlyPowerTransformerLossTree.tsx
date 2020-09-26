@@ -34,6 +34,7 @@ const MonthlyPowerTransformerLossTree = (
           return (
             <PowerTransformerLossSubstationTree
               powerTransformerLossSubstation={item}
+              billingPeriod={powerTransformerLoss.billingPeriod}
               key={key}
             />
           );

@@ -24,24 +24,49 @@ class PowerTransformerLossItem {
   rawEnergyMwh: { fileName: string; value: number }[];
   rawKvarhrEnergy: { fileName: string; value: number }[];
 
-  constructor(substationItem: SubstationItem, operationHours: number) {
-    this.substationItem = substationItem;
-    this.operationHours = operationHours;
-    this.energMwhr = 0;
-    this.demandMW = 17.02;
-    this.powerFactor = 0;
-    this.loadMVA = 0;
-    this.percentLoading = 0;
-    this.averageLoad = 0;
-    this.loadFactor = 0;
-    this.lossFactor = 0;
-    this.coreLoss = 0;
-    this.windingLoss = 0;
-    this.auxiliaryLoss = 0;
-    this.totalLosses = 0;
-    this.rawDemand = [];
-    this.rawEnergyMwh = [];
-    this.rawKvarhrEnergy = [];
+  constructor(
+    substationItem: SubstationItem,
+    operationHours: number,
+    item?: PowerTransformerLossItem
+  ) {
+    if (item) {
+      this.substationItem = item.substationItem;
+      this.operationHours = item.operationHours;
+      this.energMwhr = item.energMwhr;
+      this.demandMW = item.demandMW;
+      this.powerFactor = item.powerFactor;
+      this.loadMVA = item.loadMVA;
+      this.percentLoading = item.percentLoading;
+      this.averageLoad = item.averageLoad;
+      this.loadFactor = item.loadFactor;
+      this.lossFactor = item.lossFactor;
+      this.coreLoss = item.coreLoss;
+      this.windingLoss = item.windingLoss;
+      this.auxiliaryLoss = item.auxiliaryLoss;
+      this.totalLosses = item.totalLosses;
+      this.rawDemand = item.rawDemand;
+      this.rawEnergyMwh = item.rawEnergyMwh;
+      this.rawKvarhrEnergy = item.rawKvarhrEnergy;
+    } else {
+      this.substationItem = substationItem;
+      this.operationHours = operationHours;
+      this.energMwhr = 0;
+      this.demandMW = 0;
+      this.powerFactor = 0;
+      this.loadMVA = 0;
+      this.percentLoading = 0;
+      this.averageLoad = 0;
+      this.loadFactor = 0;
+      this.lossFactor = 0;
+      this.coreLoss = 0;
+      this.windingLoss = 0;
+      this.auxiliaryLoss = 0;
+      this.totalLosses = 0;
+      this.rawDemand = [];
+      this.rawEnergyMwh = [];
+      this.rawKvarhrEnergy = [];
+    }
+
     console.log(
       "PowerTransformerLossItem Created: " + substationItem.toString()
     );

@@ -42,7 +42,7 @@ function extractRawDatasFromWorkbook(
         try {
           let settings = MonthlyInterruptionUtil.loadSettings();
           let cells = extractCells(worksheet, row, settings);
-          let rawData = extractDataFromCells(cells, settings);
+          let rawData = extractDataFromCells(cells, settings, filename);
           value.push(rawData);
         } catch (e) {
           errors.push(e.message);
@@ -55,7 +55,8 @@ function extractRawDatasFromWorkbook(
 
 function extractDataFromCells(
   rowCells: MonthlyInterruptionCells,
-  settings: MonthlyInterruptionSettings
+  settings: MonthlyInterruptionSettings,
+  fileName: string
 ): MonthlyInterruptionRawData {
   let error = null;
   let anyErrors = false;
@@ -92,7 +93,8 @@ function extractDataFromCells(
     rawData = MonthlyInterruptionUtil.createRawDataObject(
       duration,
       feeder as Feeder,
-      date
+      date,
+      fileName
     );
     console.log({ rawData });
   }

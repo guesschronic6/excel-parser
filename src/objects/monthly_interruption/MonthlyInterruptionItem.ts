@@ -2,15 +2,29 @@ import Feeder from "../common/enums/Feeder";
 
 class MonthlyInterruptionItem {
   feeder: Feeder;
-  duration: number;
+  durations: { fileName: string; value: number }[];
 
-  constructor(feeder: Feeder, duration: number) {
+  constructor(feeder: Feeder) {
     this.feeder = feeder;
-    this.duration = duration;
+    this.durations = [];
   }
 
-  addDuration(duration: number) {
-    this.duration += duration;
+  addDuration(duration: number, fileName: string) {
+    this.durations.push({ fileName, value: duration });
+  }
+
+  getTotalDuration() {
+    let total = 0;
+    for (let duration of this.durations) {
+      total += duration.value;
+    }
+    return total;
+  }
+
+  removeFile(fileName: string) {
+    this.durations = this.durations.filter(
+      (duration) => duration.fileName !== fileName
+    );
   }
 }
 

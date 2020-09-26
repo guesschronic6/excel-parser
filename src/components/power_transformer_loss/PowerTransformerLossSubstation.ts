@@ -16,6 +16,10 @@ class PowerTransformerLossSubstation {
     this.operatingHours = operatingHours;
   }
 
+  replacePowerTransformerLossItem(item: PowerTransformerLossItem) {
+    this.substationItems.set(this.generateKey(item.substationItem), item);
+  }
+
   addPowerSubstationData(data: PowerSubstationItem) {
     console.log(
       "finding substation item of: " +

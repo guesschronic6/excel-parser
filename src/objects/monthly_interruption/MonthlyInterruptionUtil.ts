@@ -8,7 +8,8 @@ import {
 function createRawDataObject(
   duration: number,
   feeder: Feeder,
-  date: Date
+  date: Date,
+  fileName: string
 ): MonthlyInterruptionRawData {
   let billingMonth = BillingPeriod.getBillingMonth(
     date.getMonth() + 1,
@@ -21,6 +22,7 @@ function createRawDataObject(
     feeder: feeder,
     date,
     billingPeriod,
+    fileName,
   };
 }
 

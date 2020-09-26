@@ -50,6 +50,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
       duplicate.delete(file.name);
       return duplicate;
     });
+    monthlyInterruptionContext.onFileRemoved(file.name);
   }
 
   return (
