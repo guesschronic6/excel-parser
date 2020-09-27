@@ -1,10 +1,10 @@
 import XLSX from "xlsx";
 import { LoadProfileStorage } from ".";
-import { LoadProfileSettings } from "./types/LoadProfileSettings";
+import { LoadProfileSettings } from "./objects/types";
 import { LoadProfile_Raw } from "./objects";
 import { CellObject, WorkBook, WorkSheet } from "xlsx/types";
-import MeteringPoint from "../../objects/common/enums/MeteringPoints";
-import ExcelUtil from "../../objects/common/utils/ExcelUtil";
+import { MeteringPoint } from "../common/object";
+import ExcelUtil from "../common/utils/ExcelUtil";
 
 type LoadProfileRowData = {
   kwdelCell: CellObject;

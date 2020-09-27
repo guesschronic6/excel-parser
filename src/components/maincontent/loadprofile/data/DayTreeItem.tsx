@@ -3,7 +3,7 @@ import { LoadProfile } from "../../../loadprofile/objects";
 
 import StyledTreeItem from "./StyledTreeItem";
 import { Today } from "@material-ui/icons";
-import { Month } from "../../../enums";
+import { Month } from "../../../common/object";
 import HourTreeItem from "./HourTreeItem";
 
 type DayTreeProps = {

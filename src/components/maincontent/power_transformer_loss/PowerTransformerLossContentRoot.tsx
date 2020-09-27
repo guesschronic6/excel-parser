@@ -1,6 +1,6 @@
 import { makeStyles, Tabs, Theme, Typography } from "@material-ui/core";
 import React, { ChangeEvent, useContext, useState } from "react";
-import { HorizontalTab } from "../../common/components/tabs";
+import { HorizontalTab } from "../../styled_components";
 import { PowerTransformerLossContext } from "../../power_transformer_loss/PowerTransformerLossContextProvider";
 import PowerTransformerLossContent from "./PowerTransformerLossContent";
 

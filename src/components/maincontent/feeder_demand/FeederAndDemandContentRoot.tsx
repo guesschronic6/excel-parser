@@ -1,6 +1,6 @@
 import { makeStyles, Tabs, Theme, Typography } from "@material-ui/core";
 import React, { ChangeEvent, useContext, useState } from "react";
-import { HorizontalTab } from "../../common/components/tabs";
+import { HorizontalTab } from "../../styled_components";
 import { FeederAndDemandContext } from "../../feeder_and_demand/FeederAndDemandContextProvider";
 import FeederAndDemandContent from "./FeederAndDemandContent";
 

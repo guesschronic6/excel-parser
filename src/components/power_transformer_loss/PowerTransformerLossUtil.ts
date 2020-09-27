@@ -1,7 +1,100 @@
-import PowerTransformerLoss from "./PowerTransformerLoss";
+import {
+  PowerTransformerLoss,
+  PowerTransformerLossItem,
+  MonthlyPowerTransformerLoss,
+} from "./objects";
+import { PowerSubstationRawData } from "../power_substation/types";
 import XLSX from "xlsx";
+import { GeneralUtil, BillingPeriod } from "../common/object";
 
-const PowerTransformerLossUtil = Object.freeze({ generateExcelFile });
+const PowerTransformerLossUtil = Object.freeze({
+  generateExcelFile,
+  addPowerSubstatoinRawDatas,
+  addPowerSubstatoinRawDatasAsync,
+  removePowerSubstationFileAsync,
+  removePowerSubstationFile,
+  replacePowerTransformerLossItem,
+  replacePowerTransformerLossItemAsync,
+});
+
+async function addPowerSubstatoinRawDatasAsync(
+  rawDatas: PowerSubstationRawData[],
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  return addPowerSubstatoinRawDatas(rawDatas, monthlyPowerTransformerLoss);
+}
+
+function addPowerSubstatoinRawDatas(
+  rawDatas: PowerSubstationRawData[],
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  rawDatas.forEach((rawData) => {
+    let substation = GeneralUtil.findSubstationOfFeeder(rawData.feeder);
+    if (substation) {
+      let substationItem = GeneralUtil.findSubstationItemOfFeeder(
+        rawData.feeder,
+        substation
+      );
+      if (substationItem) {
+        monthlyPowerTransformerLoss
+          .addIfNotExistOrElseGet(rawData.billingPeriod, rawData.fileName)
+          .addIfNotExistsOrElseGet(substation)
+          .addIfNotExistsOrElseGet(substationItem)
+          .addPowerSubstatoinData(rawData);
+      }
+    }
+  });
+  return monthlyPowerTransformerLoss;
+}
+async function removePowerSubstationFileAsync(
+  fileName: string,
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  return removePowerSubstationFile(fileName, monthlyPowerTransformerLoss);
+}
+
+function removePowerSubstationFile(
+  fileName: string,
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  [...monthlyPowerTransformerLoss.powerTransformerLosses.keys()].forEach(
+    (key) => {
+      if (
+        monthlyPowerTransformerLoss.powerTransformerLosses.get(key)
+          ?.fileName === fileName
+      ) {
+        monthlyPowerTransformerLoss.powerTransformerLosses.delete(key);
+      }
+    }
+  );
+
+  return monthlyPowerTransformerLoss;
+}
+
+async function replacePowerTransformerLossItemAsync(
+  item: PowerTransformerLossItem,
+  billingPeriod: BillingPeriod,
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  return replacePowerTransformerLossItem(
+    item,
+    billingPeriod,
+    monthlyPowerTransformerLoss
+  );
+}
+
+function replacePowerTransformerLossItem(
+  item: PowerTransformerLossItem,
+  billingPeriod: BillingPeriod,
+  monthlyPowerTransformerLoss: MonthlyPowerTransformerLoss
+) {
+  monthlyPowerTransformerLoss.powerTransformerLosses
+    .get(billingPeriod.toString())
+    ?.items.get(item.substationItem.substationKey)
+    ?.replacePowerTransformerLossItem(item);
+
+  return monthlyPowerTransformerLoss;
+}
 
 function generateExcelFile(powerTransformerLoss: PowerTransformerLoss) {
   let workbook = XLSX.utils.book_new();

@@ -8,14 +8,17 @@ import {
 import transitions from "@material-ui/core/styles/transitions";
 import { TreeItemProps, TreeItem } from "@material-ui/lab";
 import clsx from "clsx";
-import React, { ChangeEvent, useContext, useEffect } from "react";
-import { FormEvent } from "react";
-import { useState } from "react";
-import Substation from "../../../../objects/common/enums/Substation";
-import PowerTransformerLossItem from "../../../power_transformer_loss/PowerTransformerLossItem";
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useState,
+  FormEvent,
+} from "react";
+import { BillingPeriod, Substation } from "../../../common/object";
+import { PowerTransformerLossItem } from "../../../power_transformer_loss/objects";
 import useTreeItemStyles from "./useTreeItemStyles";
 import { PowerTransformerLossContext } from "../../../power_transformer_loss/PowerTransformerLossContextProvider";
-import BillingPeriod from "../../../../objects/common/BillingPeriod";
 
 type PowerTransformerLossItemTreeProps = TreeItemProps & {
   bgColor?: string;

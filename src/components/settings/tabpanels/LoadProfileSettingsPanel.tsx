@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 import { LoadProfileStorage } from "../../loadprofile";
 import SettingsPanel from "./SettingsPanel";
-import FormTextField from "../../common/components/textfields/FormTextField";
+import { FormTextField } from "../../styled_components";
 
 type LoadProfileSettingsProps = {};
 

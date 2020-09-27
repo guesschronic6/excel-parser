@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import FileDrop from "../FileDrop";
 import PowerSubstationParser from "../../power_substation/PowerSubstationParser";
-import { PowerSubstationRawData } from "../../../objects/power_substation/types";
+import { PowerSubstationRawData } from "../../power_substation/types";
 import { PowerTransformerLossContext } from "../../power_transformer_loss/PowerTransformerLossContextProvider";
 import { FeederAndDemandContext } from "../../feeder_and_demand/FeederAndDemandContextProvider";
 

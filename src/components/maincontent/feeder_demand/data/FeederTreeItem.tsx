@@ -3,12 +3,11 @@ import {
   Theme,
   createStyles,
   Typography,
-  Box,
   SvgIconProps,
 } from "@material-ui/core";
 import { TreeItemProps, TreeItem } from "@material-ui/lab";
-import React, { useEffect } from "react";
-import FeederAndDemandItem from "../../../feeder_and_demand/FeederAndDemandItem";
+import React from "react";
+import { FeederAndDemandItem } from "../../../feeder_and_demand/objects";
 import useTreeItemStyles from "./useTreeItemStyles";
 
 type FederTreeitemProps = TreeItemProps & {

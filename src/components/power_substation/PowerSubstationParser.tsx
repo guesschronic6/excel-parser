@@ -10,13 +10,13 @@ import {
   Theme,
 } from "@material-ui/core";
 import React, { FormEvent, useEffect, useState } from "react";
-import BillingPeriod from "../../objects/common/BillingPeriod";
-import { FileUtil } from "../../objects/common/utils";
-import PowerSubstationExcelUtil from "../../objects/power_substation/PowerSubstationExcelUtil";
-import { PowerSubstationRawData } from "../../objects/power_substation/types";
-import FormSelectFields from "../common/components/textfields/FormSelectField";
+import { BillingPeriod } from "../common/object";
+import { FileUtil } from "../common/utils";
+import PowerSubstationExcelUtil from "./PowerSubstationExcelUtil";
+import { PowerSubstationRawData } from "../power_substation/types";
+import FormSelectFields from "../styled_components/FormSelectField";
 import { FilecardProps } from "../filesdrawer/FileCard";
-import { getYears, getMonths } from "../../objects/common/GeneralUtil";
+import { GeneralUtil } from "../common/object";
 
 type PowerSubstationParserProps = {
   file: File;
@@ -120,7 +120,7 @@ const LoadProfileParser: React.FunctionComponent<PowerSubstationParserProps> = (
               value={billingYear.toString()}
               label="Year"
               onChange={handleYearChange}
-              items={getYears().map((year) => ({
+              items={GeneralUtil.getYears().map((year) => ({
                 value: year.toString(),
                 text: year.toString(),
               }))}
@@ -129,7 +129,7 @@ const LoadProfileParser: React.FunctionComponent<PowerSubstationParserProps> = (
               value={billingMonth.toString()}
               label="Month"
               onChange={handleMonthChange}
-              items={getMonths().map((month) => ({
+              items={GeneralUtil.getMonths().map((month) => ({
                 value: month.monthNum.toString(),
                 text: month.month.toString(),
               }))}

@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SettingsPanel from "./SettingsPanel";
-import FormTextField from "../../common/components/textfields/FormTextField";
-import PowerSubstationUtil from "../../../objects/power_substation/PowerSubstationUtil";
+import { FormTextField } from "../../styled_components";
+import PowerSubstationUtil from "../../power_substation/PowerSubstationUtil";
 
 type PowerSubstationPanelProps = {};
 

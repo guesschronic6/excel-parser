@@ -1,19 +1,18 @@
 import React from "react";
 
 import { TreeView } from "@material-ui/lab";
-import StyledTreeItem from "../../../common/components/StyledTreeItem";
+import { StyledTreeItem } from "../../../styled_components";
 import {
   ArrowDownward,
   ArrowRight,
-  CalendarToday,
   Place,
   PlaceOutlined,
   Title,
 } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
-import PowerTransformerLossSubstation from "../../../power_transformer_loss/PowerTransformerLossSubstation";
+import { PowerTransformerLossSubstation } from "../../../power_transformer_loss/objects";
 import PowerTransformerLossItemTree from "./PowerTransformerLossItemTree";
-import BillingPeriod from "../../../../objects/common/BillingPeriod";
+import { BillingPeriod } from "../../../common/object";
 
 type PowerTransformerLossSubstationTreeProps = {
   powerTransformerLossSubstation: PowerTransformerLossSubstation;

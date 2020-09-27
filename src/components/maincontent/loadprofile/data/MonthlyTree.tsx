@@ -5,7 +5,7 @@ import { TreeView } from "@material-ui/lab";
 import StyledTreeItem from "./StyledTreeItem";
 import { ArrowDownward, ArrowRight, CalendarToday } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
-import { Month } from "../../../enums";
+import { Month } from "../../../common/object";
 import DayTreeItem from "./DayTreeItem";
 
 type MonthlyTreeProps = {

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { MonthlyInterruptionRawData } from "../../../objects/monthly_interruption/types";
+import React, { useContext, useState } from "react";
+import { MonthlyInterruptionRawData } from "../../monthly_interruption/types";
 import MonthlyInterruptionParser from "../../monthly_interruption/MonthlyInterruptionParser";
 import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
@@ -52,7 +52,7 @@ const MonthlyInterruptionAccordion: React.FunctionComponent<MonthlyInterruptionA
       duplicate.delete(file.name);
       return duplicate;
     });
-    feederAndDemandContext.onMonthlyInterruptionDataFileRemoved(file.name);
+    feederAndDemandContext.onMonthlyInterruptionFileRemoved(file.name);
   }
 
   return (

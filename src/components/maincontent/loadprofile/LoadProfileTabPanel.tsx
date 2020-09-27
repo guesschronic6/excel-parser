@@ -1,9 +1,8 @@
 import { makeStyles, Tabs, Theme, Typography } from "@material-ui/core";
 import React, { ChangeEvent, useContext, useState } from "react";
-import { HorizontalTab } from "../../common/components/tabs";
+import { HorizontalTab } from "../../styled_components";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import LoadProfileContent from "./LoadProfileContent";
-import { MonthlyLoadProfile } from "../../loadprofile/objects";
 
 type LoadProfileContentProps = {};
 

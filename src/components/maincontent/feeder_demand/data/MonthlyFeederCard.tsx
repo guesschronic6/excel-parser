@@ -1,7 +1,7 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import { GetAppRounded } from "@material-ui/icons";
 import React from "react";
-import FeederAndDemand from "../../../feeder_and_demand/FeederAndDemand";
+import FeederAndDemand from "../../../feeder_and_demand/objects/FeederAndDemand";
 import MonthlyTree from "./MonthlyFeederTree";
 import FeederAndDemandUtil from "../../../feeder_and_demand/FeederAndDemandUtil";
 

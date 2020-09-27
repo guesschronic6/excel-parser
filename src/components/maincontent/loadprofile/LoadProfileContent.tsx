@@ -1,7 +1,7 @@
 import { createStyles, makeStyles, Tabs, Theme } from "@material-ui/core";
-import React, { ChangeEvent, ReactComponentElement } from "react";
+import React, { ChangeEvent } from "react";
 import { useState } from "react";
-import { HorizontalTab } from "../../common/components/tabs";
+import { HorizontalTab } from "../../styled_components";
 import { MonthlyLoadProfile } from "../../loadprofile/objects";
 import MonthlyCard from "./data/MonthlyCard";
 import LoadProfileGraph from "./graph/LoadProfileGraph";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FileUtil } from "../../objects/common/utils";
-import MonthlyInterruptionExcelUtil from "../../objects/monthly_interruption/MonthlyInterruptionExcelUtil";
-import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
+import { FileUtil } from "../common/utils";
+import MonthlyInterruptionExcelUtil from "./MonthlyInterruptionExcelUtil";
+import { MonthlyInterruptionRawData } from "../monthly_interruption/types";
 import { FilecardProps } from "../filesdrawer/FileCard";
 
 type MonthlyInterruptionParserProps = {

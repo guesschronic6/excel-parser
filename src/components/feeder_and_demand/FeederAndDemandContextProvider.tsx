@@ -1,7 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
-import MonthlyFeederAndDemand from "./MonthlyFeederAndDemand";
-import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
-import { PowerSubstationRawData } from "../../objects/power_substation/types";
+import { MonthlyInterruptionRawData } from "../monthly_interruption/types";
+import { PowerSubstationRawData } from "../power_substation/types";
+import FeederAndDemandUtil from "./FeederAndDemandUtil";
+import { MonthlyFeederAndDemand } from "./objects";
 
 type FeederAndDemandContextProviderProps = {};
 
@@ -18,7 +19,7 @@ const FeederAndDemandContext = createContext({
     rawDatas: MonthlyInterruptionRawData[] | PowerSubstationRawData[]
   ) => {},
   onPowerSubstationDataFileRemoved: (fileName: string) => {},
-  onMonthlyInterruptionDataFileRemoved: (fileName: string) => {},
+  onMonthlyInterruptionFileRemoved: (fileName: string) => {},
 });
 
 const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandContextProviderProps> = (
@@ -44,88 +45,55 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
   }, [monthlyFeederAndDemand]);
 
   useEffect(() => {
-    async function updateMonthlyFeederAndDemand() {
-      let newBuffer = [...buffer];
-      let data = newBuffer.pop();
-      if (data) {
-        let result: MonthlyFeederAndDemand = new MonthlyFeederAndDemand(
-          monthlyFeederAndDemand
-        );
-        if ((data as { data: Data; fileName: string }).data) {
-          data = data as { data: Data; fileName: string };
-          if (data.data == Data.MonthlyInterruptionData) {
-            result = await removeMonthlyInterruptionData(data.fileName, result);
-          } else {
-            result = await removePowerSubstationData(data.fileName, result);
-          }
-        } else if ((data as PowerSubstationRawData[])[0]) {
-          result = await addRawPowerSubstationData(
-            data as PowerSubstationRawData[],
-            result
-          );
-        } else {
-          result = await addRawMonthlyInterruptionData(
-            data as MonthlyInterruptionRawData[],
-            result
-          );
-        }
-        setMonthlyFeederAndDemand(result);
-        setBuffer([...newBuffer]);
-      }
-    }
-    if (buffer.length <= 0) {
+    if (buffer.length > 0) {
+      processBufferDatas();
+    } else {
       let newMonthlyFeederAndDemand = new MonthlyFeederAndDemand(
         monthlyFeederAndDemand
       );
       newMonthlyFeederAndDemand.initValues();
       setMonthlyFeederAndDemand(newMonthlyFeederAndDemand);
-    } else {
-      updateMonthlyFeederAndDemand();
     }
   }, [buffer]);
 
-  function addRawPowerSubstationData(
-    rawDatas: PowerSubstationRawData[],
-    mfd: MonthlyFeederAndDemand
-  ) {
-    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      console.log("Adding power substation raw datas...");
-      rawDatas.forEach((rawData) => {
-        mfd.addRawPowerSubstationData(rawData);
-      });
-      resolve(mfd);
-    });
-  }
-
-  function addRawMonthlyInterruptionData(
-    rawDatas: MonthlyInterruptionRawData[],
-    mfd: MonthlyFeederAndDemand
-  ) {
-    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      rawDatas.forEach((rawData) => {
-        mfd.addRawMonthlyInterruptionData(rawData);
-      });
-      resolve(mfd);
-    });
-  }
-
-  function removeMonthlyInterruptionData(
-    fileName: string,
-    mfd: MonthlyFeederAndDemand
-  ) {
-    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      mfd.removeMonthlyInterruptionDataByFilename(fileName);
-      resolve(mfd);
-    });
-  }
-  function removePowerSubstationData(
-    fileName: string,
-    mfd: MonthlyFeederAndDemand
-  ) {
-    return new Promise<MonthlyFeederAndDemand>((resolve, reject) => {
-      mfd.removePowerSubstationDataByFilename(fileName);
-      resolve(mfd);
-    });
+  async function processBufferDatas() {
+    let newBuffer = [...buffer];
+    let data = newBuffer.pop();
+    if (data) {
+      let result: MonthlyFeederAndDemand = new MonthlyFeederAndDemand(
+        monthlyFeederAndDemand
+      );
+      if ((data as { data: Data; fileName: string }).data) {
+        data = data as { data: Data; fileName: string };
+        if (data.data == Data.MonthlyInterruptionData) {
+          result = await FeederAndDemandUtil.removeMonthlyInterruptionFileAsync(
+            data.fileName,
+            result
+          );
+        } else {
+          result = await FeederAndDemandUtil.removePowerSubstationFileAsync(
+            data.fileName,
+            result
+          );
+        }
+      } else if (Array.isArray(data)) {
+        if (data.length > 0) {
+          if ((data as PowerSubstationRawData[])[0].kvarhrEnergy) {
+            result = await FeederAndDemandUtil.addPowerSubstationRawDataAsync(
+              data as PowerSubstationRawData[],
+              result
+            );
+          } else {
+            result = await FeederAndDemandUtil.addMonthlyInterruptionRawDataAsync(
+              data as MonthlyInterruptionRawData[],
+              result
+            );
+          }
+        }
+      }
+      setMonthlyFeederAndDemand(result);
+      setBuffer([...newBuffer]);
+    }
   }
 
   function onMonthlyInterruptionOrPowerSubstationFileParsed(
@@ -140,7 +108,7 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
       { data: Data.PowerSubstationData, fileName },
     ]);
   }
-  function onMonthlyInterruptionDataFileRemoved(fileName: string) {
+  function onMonthlyInterruptionFileRemoved(fileName: string) {
     setBuffer((prevBuffer) => [
       ...prevBuffer,
       { data: Data.MonthlyInterruptionData, fileName },
@@ -152,7 +120,7 @@ const FeederAndDemandContextProvider: React.FunctionComponent<FeederAndDemandCon
       value={{
         monthlyFeederAndDemand,
         onMonthlyInterruptionOrPowerSubstationFileParsed,
-        onMonthlyInterruptionDataFileRemoved,
+        onMonthlyInterruptionFileRemoved,
         onPowerSubstationDataFileRemoved,
       }}
     >

@@ -2,7 +2,6 @@ import React, { FunctionComponent } from "react";
 import {
   CssBaseline,
   ThemeProvider,
-  Box,
   makeStyles,
   Theme,
 } from "@material-ui/core";

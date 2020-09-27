@@ -1,4 +1,4 @@
-import { LoadProfileSettings } from "./types/LoadProfileSettings";
+import { LoadProfileSettings } from "./objects/types";
 enum LoadProfileStorageKey {
   KWDEL = "lp_kwdelCol",
   KWHDEL = "lp_kwhdelCol",

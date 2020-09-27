@@ -1,6 +1,6 @@
 import LoadProfile_Raw from "./LoadProfile_Raw";
 import DailyLoadProfile from "./DailyLoadProfile";
-import { LoadProfileMax, LoadProfileSum } from "../types";
+import { LoadProfileMax, LoadProfileSum } from "./types";
 
 class LoadProfile {
   meteringPoint: string;

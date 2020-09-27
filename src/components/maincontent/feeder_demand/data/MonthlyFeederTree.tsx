@@ -3,10 +3,13 @@ import React from "react";
 import { TreeView } from "@material-ui/lab";
 import { ArrowDownward, ArrowRight, Place, Title } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
-import FeederAndDemand from "../../../feeder_and_demand/FeederAndDemand";
+
 import FeederTreeItem from "./FeederTreeItem";
-import FeederAndDemandItem from "../../../feeder_and_demand/FeederAndDemandItem";
-import Feeder from "../../../../objects/common/enums/Feeder";
+import {
+  FeederAndDemandItem,
+  FeederAndDemand,
+} from "../../../feeder_and_demand/objects/";
+import { Feeder } from "../../../common/object";
 
 type MonthlyFeederTreeProps = {
   feederAndDemand: FeederAndDemand;

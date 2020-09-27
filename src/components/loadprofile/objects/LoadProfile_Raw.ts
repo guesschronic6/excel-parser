@@ -1,5 +1,4 @@
-import BillingPeriod from "../../../objects/common/BillingPeriod";
-import { Month } from "../../enums";
+import { BillingPeriod, Month } from "../../common/object";
 
 class LoadProfile_Raw {
   kwdel: number;

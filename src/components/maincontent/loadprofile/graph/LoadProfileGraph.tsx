@@ -1,4 +1,4 @@
-import { AreaSeries, ArgumentScale, Stack } from "@devexpress/dx-react-chart";
+import { ArgumentScale, Stack } from "@devexpress/dx-react-chart";
 import { scaleBand } from "@devexpress/dx-chart-core";
 import {
   ArgumentAxis,

@@ -1,10 +1,9 @@
 import React from "react";
 
 import { TreeView } from "@material-ui/lab";
-import StyledTreeItem from "../../../common/components/StyledTreeItem";
 import { ArrowDownward, ArrowRight, CalendarToday } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
-import PowerTransformerLoss from "../../../power_transformer_loss/PowerTransformerLoss";
+import { PowerTransformerLoss } from "../../../power_transformer_loss/objects";
 import PowerTransformerLossSubstationTree from "./PowerTransformerLossSubstationTree";
 
 type MonthlyPowerTransformerLossTreeProps = {

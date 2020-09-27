@@ -1,9 +1,11 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import MonthlyPowerTransformerLoss from "./MonthlyPowerTransformerLoss";
-import MonthlyPowerSubstation from "../../objects/power_substation/MonthlyPowerSubstation";
-import PowerTransformerLossItem from "./PowerTransformerLossItem";
-import BillingPeriod from "../../objects/common/BillingPeriod";
-import { PowerSubstationRawData } from "../../objects/power_substation/types";
+import React, { createContext, useEffect, useState } from "react";
+import {
+  PowerTransformerLossItem,
+  MonthlyPowerTransformerLoss,
+} from "./objects";
+import { BillingPeriod } from "../common/object";
+import { PowerSubstationRawData } from "../power_substation/types";
+import PowerTransformerLossUtil from "./PowerTransformerLossUtil";
 
 type PowerTransformerLossContextProviderProps = {};
 
@@ -50,25 +52,38 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
           billingPeriod: BillingPeriod;
         }).item
       ) {
-        replacePowerTransformerLossItem(
-          data as {
-            item: PowerTransformerLossItem;
-            billingPeriod: BillingPeriod;
-          }
+        let d = data as {
+          item: PowerTransformerLossItem;
+          billingPeriod: BillingPeriod;
+        };
+        PowerTransformerLossUtil.replacePowerTransformerLossItemAsync(
+          d.item,
+          d.billingPeriod,
+          monthlyPowerTransformerLoss
         ).then((result) => {
-          setMonthlyPowerTransformerLoss(result);
+          setMonthlyPowerTransformerLoss(
+            new MonthlyPowerTransformerLoss(result)
+          );
           setBuffer(newBuffer);
         });
       } else if (Array.isArray(data)) {
-        addRawPowerSubstationData(data as PowerSubstationRawData[]).then(
-          (result) => {
-            setMonthlyPowerTransformerLoss(result);
-            setBuffer(newBuffer);
-          }
-        );
+        PowerTransformerLossUtil.addPowerSubstatoinRawDatasAsync(
+          data as PowerSubstationRawData[],
+          monthlyPowerTransformerLoss
+        ).then((result) => {
+          setMonthlyPowerTransformerLoss(
+            new MonthlyPowerTransformerLoss(result)
+          );
+          setBuffer(newBuffer);
+        });
       } else {
-        removePowerSubstationData(data as string).then((result) => {
-          setMonthlyPowerTransformerLoss(result);
+        PowerTransformerLossUtil.removePowerSubstationFileAsync(
+          data as string,
+          monthlyPowerTransformerLoss
+        ).then((result) => {
+          setMonthlyPowerTransformerLoss(
+            new MonthlyPowerTransformerLoss(result)
+          );
           setBuffer(newBuffer);
         });
       }
@@ -93,50 +108,8 @@ const PowerTransformerLossContextProvider: React.FunctionComponent<PowerTransfor
     });
   }
 
-  function replacePowerTransformerLossItem(item: {
-    item: PowerTransformerLossItem;
-    billingPeriod: BillingPeriod;
-  }) {
-    return new Promise<MonthlyPowerTransformerLoss>((resolve, reject) => {
-      console.log("Updating PowerTransformerLoss....");
-      console.log({ item });
-      let newData = new MonthlyPowerTransformerLoss(
-        monthlyPowerTransformerLoss
-      );
-
-      newData.replacePowerTransformerLossItem(item.item, item.billingPeriod);
-
-      resolve(newData);
-    });
-  }
-
-  function removePowerSubstationData(fileName: string) {
-    return new Promise<MonthlyPowerTransformerLoss>((resolve, reject) => {
-      let newData = new MonthlyPowerTransformerLoss(
-        monthlyPowerTransformerLoss
-      );
-      newData.removePowerSubstationData(fileName);
-
-      resolve(newData);
-    });
-  }
-
   function onPowerSubstationFileParsed(rawDatas: PowerSubstationRawData[]) {
     setBuffer((prevBuffer) => [...prevBuffer, rawDatas]);
-  }
-
-  function addRawPowerSubstationData(rawDatas: PowerSubstationRawData[]) {
-    return new Promise<MonthlyPowerTransformerLoss>((resolve, reject) => {
-      console.log("Updating PowerTransformerLoss....");
-      let newData = new MonthlyPowerTransformerLoss(
-        monthlyPowerTransformerLoss
-      );
-      rawDatas.forEach((rawData) => {
-        newData.addRawPowerSubstationData(rawData);
-      });
-
-      resolve(newData);
-    });
   }
 
   function onPowerSubstationFileRemoved(fileName: string) {

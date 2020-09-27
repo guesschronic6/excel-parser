@@ -1,6 +1,5 @@
 import LoadProfile_Raw from "./LoadProfile_Raw";
 import HourlyLoadProfile from "./HourlyLoadProfile";
-import { LoadProfileMax, LoadProfileSum } from "../types";
 
 class DailyLoadProfile {
   date: Date;

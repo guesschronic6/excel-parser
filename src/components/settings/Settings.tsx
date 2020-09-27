@@ -5,7 +5,7 @@ import {
   LoadProfileSettingsPanel,
   MonthlyInterruptionSettingsPanel,
 } from "./tabpanels";
-import { VerticalTab } from "../common/components/tabs";
+import { VerticalTab } from "../styled_components";
 import PowerSubstationPanel from "./tabpanels/PowerSubstationPanel";
 
 type SettingsProps = {};

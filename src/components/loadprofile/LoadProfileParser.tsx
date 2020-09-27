@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FileUtil } from "../../objects/common/utils";
+import { FileUtil } from "../common/utils";
 import { LoadProfile_Raw } from "./objects";
 import extractLoadProfileRawFromWorkbook from "./ExcelParser";
 import { FilecardProps } from "../filesdrawer/FileCard";

@@ -1,10 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import {
-  LoadProfile,
-  LoadProfile_Raw,
-  MonthlyLoadProfile,
-} from "../loadprofile/objects";
-import Stack from "../../objects/common/Stack";
+import { LoadProfile_Raw, MonthlyLoadProfile } from "../loadprofile/objects";
 
 export type DeleteLoadpRofileInfo = {
   fileName: string;
@@ -33,46 +28,33 @@ const LoadProfileContextProvider: React.FunctionComponent<LoadProfileContextProv
   );
 
   const [buffer, setBuffer] = useState<
-    Stack<LoadProfile_Raw[] | DeleteLoadpRofileInfo>
-  >(new Stack());
+    (LoadProfile_Raw[] | DeleteLoadpRofileInfo)[]
+  >([]);
   const [working, setWorking] = useState(false);
 
-  useEffect(() => {
-    console.log("MonthlyLoadProfiles State Updated");
-    console.log(monthlyLoadProfiles);
-  }, [monthlyLoadProfiles]);
+  useEffect(() => {}, [monthlyLoadProfiles]);
 
   function updateLoadProfiles(rawDatas: LoadProfile_Raw[]) {
-    console.log("Updating load profile datas in context....");
-
-    setBuffer((prevBuffer) => {
-      let newbuffer = new Stack(prevBuffer);
-      newbuffer.push(rawDatas);
-      return newbuffer;
-    });
+    setBuffer((prevBuffer) => [...prevBuffer, rawDatas]);
   }
 
   function deleteLoadProfiles(deleteLaodProfileInfo: DeleteLoadpRofileInfo) {
-    setBuffer((prevBuffer) => {
-      let newbuffer = new Stack(prevBuffer);
-      newbuffer.push(deleteLaodProfileInfo);
-      return newbuffer;
-    });
+    setBuffer((prevBuffer) => [...prevBuffer, deleteLaodProfileInfo]);
   }
 
   useEffect(() => {
     if (working) return;
-    if (buffer.isEmpty()) {
+    if (buffer.length <= 0) {
       setWorking(false);
       return;
     }
 
-    let newBuffer = new Stack(buffer);
+    let newBuffer = [...buffer];
     let data = newBuffer.pop();
     if (data) {
       setWorking(true);
 
-      if (data instanceof Array) {
+      if (Array.isArray(data)) {
         console.log("Data instance of ARRRRAAAAY....");
         addRawDatasToMonthlyLoadProfiles(data).then((result) => {
           setMonthlyLoadProfiles(result);

@@ -1,6 +1,6 @@
 import { makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent, useState } from "react";
-import { VerticalTab } from "../common/components/tabs";
+import { VerticalTab } from "../styled_components";
 import LoadProfileTabPanel from "./loadprofile/LoadProfileTabPanel";
 import FeederAndDemandContentRoot from "./feeder_demand/FeederAndDemandContentRoot";
 import PowerTransformerLossContentRoot from "./power_transformer_loss/PowerTransformerLossContentRoot";

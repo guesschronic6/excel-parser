@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import CustomAccordion from "../StyledAccordion";
 import FileCard from "../FileCard";
 import { LoadProfileParser } from "../../loadprofile";
 import { LoadProfile_Raw } from "../../loadprofile/objects";
 import { LoadProfileContext } from "../../loadprofile/LoadProfileContextProvider";
 import FileDrop from "../FileDrop";
-import { LoadProfileParserRenderProps } from "../../loadprofile/LoadProfileParser";
 
 type LoadProfileAccordionProps = {
   expandedPanel: string;

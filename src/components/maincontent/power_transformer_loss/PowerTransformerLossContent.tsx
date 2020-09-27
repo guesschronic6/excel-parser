@@ -1,8 +1,8 @@
 import { createStyles, makeStyles, Tabs, Theme } from "@material-ui/core";
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
-import { HorizontalTab } from "../../common/components/tabs";
-import PowerTransformerLoss from "../../power_transformer_loss/PowerTransformerLoss";
+import { HorizontalTab } from "../../styled_components";
+import { PowerTransformerLoss } from "../../power_transformer_loss/objects";
 import MonthlyPowerTransformerLossCard from "./data/MonthlyPowerTransformerLossCard";
 
 type PowerTransformerLossContentProps = {

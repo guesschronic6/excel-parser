@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import SettingsPanel from "./SettingsPanel";
-import FormTextField from "../../common/components/textfields/FormTextField";
-import MonthlyInterruptionUtil from "../../../objects/monthly_interruption/MonthlyInterruptionUtil";
+import { FormTextField } from "../../styled_components";
+import MonthlyInterruptionUtil from "../../monthly_interruption/MonthlyInterruptionUtil";
 
 type MonthlyInterruptionPanelProps = {};
 

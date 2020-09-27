@@ -1,39 +1,109 @@
-import MonthlyFeederAndDemand from "./MonthlyFeederAndDemand";
 import XLSX from "xlsx";
-import FeederAndDemand from "./FeederAndDemand";
+import { PowerSubstationRawData } from "../power_substation/types";
+import { MonthlyInterruptionRawData } from "../monthly_interruption/types";
+import { MonthlyFeederAndDemand, FeederAndDemand } from "./objects";
+import { BillingPeriod } from "../common/object";
 
 const FeederAndDemandUtil = Object.freeze({
   removePowerSubstationFile,
   removeMonthlyInterruptionFile,
+  addPowerSubstationRawData,
+  addMonthlyInterruptionRawData,
+  addPowerSubstationRawDataAsync,
+  addMonthlyInterruptionRawDataAsync,
+  removePowerSubstationFileAsync,
+  removeMonthlyInterruptionFileAsync,
   generateExcelFile,
+  calculateOperatingHours,
 });
+
+async function addPowerSubstationRawDataAsync(
+  rawDatas: PowerSubstationRawData[],
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  return addPowerSubstationRawData(rawDatas, monthlyFeederAndDemand);
+}
+
+async function addMonthlyInterruptionRawDataAsync(
+  rawDatas: MonthlyInterruptionRawData[],
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  return addMonthlyInterruptionRawData(rawDatas, monthlyFeederAndDemand);
+}
+
+async function removePowerSubstationFileAsync(
+  fileName: string,
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  return removePowerSubstationFile(fileName, monthlyFeederAndDemand);
+}
+
+async function removeMonthlyInterruptionFileAsync(
+  fileName: string,
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  return removeMonthlyInterruptionFile(fileName, monthlyFeederAndDemand);
+}
+
+function addPowerSubstationRawData(
+  rawDatas: PowerSubstationRawData[],
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  rawDatas.forEach((rawData) => {
+    monthlyFeederAndDemand
+      .addFeederAndDemandIfNotExists(rawData.billingPeriod)
+      .addItemIfNotExistElseGet(rawData.feeder)
+      .setPowerSubstationData(rawData);
+  });
+  return monthlyFeederAndDemand;
+}
+
+function addMonthlyInterruptionRawData(
+  rawDatas: MonthlyInterruptionRawData[],
+  monthlyFeederAndDemand: MonthlyFeederAndDemand
+) {
+  console.log({ message: "Processing raw datas" });
+  rawDatas.forEach((rawData) => {
+    let item = monthlyFeederAndDemand
+      .addFeederAndDemandIfNotExists(rawData.billingPeriod)
+      .addItemIfNotExistElseGet(rawData.feeder);
+    console.log({
+      message: "Adding rawData to item feeder: ",
+      itemFeeder: item.feeder,
+    });
+    item.addRawMonthlyInterruptionData(rawData);
+  });
+  return monthlyFeederAndDemand;
+}
 
 function removePowerSubstationFile(
   fileName: string,
   monthlyFeederAndDemand: MonthlyFeederAndDemand
 ) {
-  let newData = new MonthlyFeederAndDemand(monthlyFeederAndDemand);
-  [...newData.feederAndDemands.values()].forEach((feederAndDemand) => {
-    [...feederAndDemand.items.values()].forEach((feederAndDemandItem) => {
-      feederAndDemandItem.removePowerSubstationData(fileName);
-    });
-  });
+  [...monthlyFeederAndDemand.feederAndDemands.values()].forEach(
+    (feederAndDemand) => {
+      [...feederAndDemand.items.values()].forEach((feederAndDemandItem) => {
+        feederAndDemandItem.removePowerSubstationData(fileName);
+      });
+    }
+  );
 
-  return newData;
+  return monthlyFeederAndDemand;
 }
 
 function removeMonthlyInterruptionFile(
   fileName: string,
   monthlyFeederAndDemand: MonthlyFeederAndDemand
 ) {
-  let newData = new MonthlyFeederAndDemand(monthlyFeederAndDemand);
-  [...newData.feederAndDemands.values()].forEach((feederAndDemand) => {
-    [...feederAndDemand.items.values()].forEach((feederAndDemandItem) => {
-      feederAndDemandItem.removeMonthlyInterruptionData(fileName);
-    });
-  });
+  [...monthlyFeederAndDemand.feederAndDemands.values()].forEach(
+    (feederAndDemand) => {
+      [...feederAndDemand.items.values()].forEach((feederAndDemandItem) => {
+        feederAndDemandItem.removeMonthlyInterruptionData(fileName);
+      });
+    }
+  );
 
-  return newData;
+  return monthlyFeederAndDemand;
 }
 
 function generateExcelFile(feederAndDemand: FeederAndDemand) {
@@ -46,6 +116,10 @@ function generateExcelFile(feederAndDemand: FeederAndDemand) {
     workbook,
     `Monthly Feeder And Demand Report of ${feederAndDemand.billingPeriod.toString()}.xlsx`
   );
+}
+
+function calculateOperatingHours(hours: number, billingPeriod: BillingPeriod) {
+  return (billingPeriod.getTotalDays() + 1) * 24 - hours;
 }
 
 function generateSheetData(feederAndDemand: FeederAndDemand) {

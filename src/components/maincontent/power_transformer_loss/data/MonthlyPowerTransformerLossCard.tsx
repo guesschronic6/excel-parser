@@ -1,7 +1,7 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import { GetAppRounded } from "@material-ui/icons";
 import React from "react";
-import PowerTransformerLoss from "../../../power_transformer_loss/PowerTransformerLoss";
+import { PowerTransformerLoss } from "../../../power_transformer_loss/objects";
 import MonthlyPowerTransformerLossTree from "./MonthlyPowerTransformerLossTree";
 import PowerTransformerLossUtil from "../../../power_transformer_loss/PowerTransformerLossUtil";
 
