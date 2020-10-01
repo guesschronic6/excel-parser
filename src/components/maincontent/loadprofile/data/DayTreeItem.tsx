@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LoadProfile } from "../../../loadprofile/objects";
 
-import StyledTreeItem from "./StyledTreeItem";
+import { StyledTreeItem } from "../../../styled_components";
 import { Today } from "@material-ui/icons";
 import { Month } from "../../../common/object";
 import HourTreeItem from "./HourTreeItem";

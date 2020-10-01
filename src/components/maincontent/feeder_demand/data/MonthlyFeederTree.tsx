@@ -27,7 +27,6 @@ const MonthlyFeederTree = (props: MonthlyFeederTreeProps) => {
       defaultEndIcon={<div style={{ width: 24 }} />}
     >
       <FeederTreeItem
-        labelIcon={Title}
         feederAndDemandItem={new FeederAndDemandItem(Feeder.ACLEM, 0)}
         nodeId={"header"}
         header={true}
@@ -35,12 +34,7 @@ const MonthlyFeederTree = (props: MonthlyFeederTreeProps) => {
       {[...feederAndDemand.items.values()].map((item) => {
         let key = `FTI:F:${item.feeder}`;
         return (
-          <FeederTreeItem
-            labelIcon={Place}
-            feederAndDemandItem={item}
-            key={key}
-            nodeId={key}
-          />
+          <FeederTreeItem feederAndDemandItem={item} key={key} nodeId={key} />
         );
       })}
     </TreeView>

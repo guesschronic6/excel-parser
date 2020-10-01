@@ -9,7 +9,7 @@ import { TreeView } from "@material-ui/lab";
 import React from "react";
 import { MonthlyLoadProfile } from "../../../loadprofile/objects";
 
-import StyledTreeItem from "./StyledTreeItem";
+import { StyledTreeItem } from "../../../styled_components";
 
 type DetailsTreeProps = {
   monthlyLoadProfile: MonthlyLoadProfile;

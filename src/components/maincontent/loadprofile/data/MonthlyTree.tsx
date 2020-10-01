@@ -2,7 +2,7 @@ import React from "react";
 import { MonthlyLoadProfile } from "../../../loadprofile/objects";
 
 import { TreeView } from "@material-ui/lab";
-import StyledTreeItem from "./StyledTreeItem";
+import { StyledTreeItem } from "../../../styled_components";
 import { ArrowDownward, ArrowRight, CalendarToday } from "@material-ui/icons";
 import { makeStyles, Theme, createStyles } from "@material-ui/core";
 import { Month } from "../../../common/object";

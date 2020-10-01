@@ -1,6 +1,6 @@
-import Feeder from "../common/Feeder";
-import { MonthlyInterruptionRawData } from "../../objects/monthly_interruption/types";
-import { PowerSubstationRawData } from "../../objects/power_substation/types";
+import { Feeder } from "../../common/object";
+import { MonthlyInterruptionRawData } from "../../monthly_interruption/types";
+import { PowerSubstationRawData } from "../../power_substation/types";
 
 class FeederAndDemandItem {
   feeder: Feeder;

@@ -17,8 +17,8 @@ import React, {
 } from "react";
 import { BillingPeriod, Substation } from "../../../common/object";
 import { PowerTransformerLossItem } from "../../../power_transformer_loss/objects";
-import useTreeItemStyles from "./useTreeItemStyles";
 import { PowerTransformerLossContext } from "../../../power_transformer_loss/PowerTransformerLossContextProvider";
+import { StyledTreeItem } from "../../../styled_components";
 
 type PowerTransformerLossItemTreeProps = TreeItemProps & {
   bgColor?: string;
@@ -32,7 +32,6 @@ type PowerTransformerLossItemTreeProps = TreeItemProps & {
 const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLossItemTreeProps> = (
   props
 ) => {
-  const treeItemClasses = useTreeItemStyles();
   const classes = useStyles();
   const {
     color,
@@ -41,6 +40,7 @@ const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLoss
     substation,
     labelIcon: LabelIcon,
     billingPeriod,
+    nodeId,
     ...other
   } = props;
   const powerTransformerLossContext = useContext(PowerTransformerLossContext);
@@ -82,267 +82,135 @@ const PowerTransformerLossItemTree: React.FunctionComponent<PowerTransformerLoss
   }
 
   return (
-    <TreeItem
-      label={
-        <div className={treeItemClasses.labelRoot}>
-          <LabelIcon color="inherit" className={treeItemClasses.labelIcon} />
-          {!powerTransformerLossItem ? (
-            <React.Fragment>
-              <Typography
-                classes={{ root: classes.feeder }}
-                variant="body2"
-                className={treeItemClasses.labelText}
-              >
-                Substation
-              </Typography>
+    <StyledTreeItem
+      nodeId={nodeId}
+      bold={!powerTransformerLossItem}
+      content={
+        !powerTransformerLossItem ? (
+          <React.Fragment>
+            <Typography classes={{ root: classes.feeder }} variant="body2">
+              Substation
+            </Typography>
 
-              <Typography
-                classes={{ root: classes.feeder }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Transformer
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Energy (MWHR)
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Demand (MW)
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Power Factor
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Load (MVA)
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Percent Loading
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Operation Hours
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Ave. Load (MW)
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Load Factor
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Loss Factor
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Core Loss
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Winding Loss
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Auxiliary Loss
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                Total Losses
-              </Typography>
-            </React.Fragment>
-          ) : (
-            <React.Fragment>
-              <Typography
-                classes={{ root: classes.feeder }}
-                variant="body2"
-                className={treeItemClasses.labelText}
-              >
-                {substation.text}
-              </Typography>
+            <Typography classes={{ root: classes.feeder }} variant="body2">
+              Transformer
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              Energy (MWHR)
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Demand (MW)
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Power Factor
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Load (MVA)
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Percent Loading
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Operation Hours
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Ave. Load (MW)
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Load Factor
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              Loss Factor
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              Core Loss
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              Winding Loss
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              Auxiliary Loss
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              Total Losses
+            </Typography>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <Typography classes={{ root: classes.feeder }} variant="body2">
+              {substation.text}
+            </Typography>
 
-              <Typography
-                classes={{ root: classes.feeder }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.substationItem.transformer.text}
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.energMwhr.toFixed(2)}
-              </Typography>
-              <form className={classes.percent} onSubmit={handleDemandSubmit}>
-                <input
-                  value={demand}
-                  className={clsx(classes.inputField, {
-                    [classes.errorField]: demandError,
-                  })}
-                  onChange={handleDemandChange}
-                />
-              </form>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.powerFactor.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.loadMVA.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.percentLoading.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.operationHours}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.averageLoad.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.loadFactor.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.percent }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.lossFactor.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.coreLoss.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.windingLoss.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.auxiliaryLoss.toFixed(2)}
-              </Typography>
-              <Typography
-                classes={{ root: classes.numbers }}
-                variant="body2"
-                className={classes.labelContent}
-              >
-                {powerTransformerLossItem.totalLosses.toFixed(2)}
-              </Typography>
-            </React.Fragment>
-          )}
-        </div>
+            <Typography classes={{ root: classes.feeder }} variant="body2">
+              {powerTransformerLossItem.substationItem.transformer.text}
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              {powerTransformerLossItem.energMwhr.toFixed(2)}
+            </Typography>
+            <form className={classes.percent} onSubmit={handleDemandSubmit}>
+              <input
+                value={demand}
+                className={clsx(classes.inputField, {
+                  [classes.errorField]: demandError,
+                })}
+                onChange={handleDemandChange}
+              />
+            </form>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.powerFactor.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.loadMVA.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.percentLoading.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.operationHours}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.averageLoad.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.loadFactor.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.percent }} variant="body2">
+              {powerTransformerLossItem.lossFactor.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              {powerTransformerLossItem.coreLoss.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              {powerTransformerLossItem.windingLoss.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              {powerTransformerLossItem.auxiliaryLoss.toFixed(2)}
+            </Typography>
+            <Typography classes={{ root: classes.numbers }} variant="body2">
+              {powerTransformerLossItem.totalLosses.toFixed(2)}
+            </Typography>
+          </React.Fragment>
+        )
       }
-      style={{
-        "--tree-view-color": color,
-        "--tree-view-bg-color": bgColor,
-      }}
-      classes={{
-        root: treeItemClasses.root,
-        content: treeItemClasses.content,
-        expanded: treeItemClasses.expanded,
-        selected: treeItemClasses.selected,
-        group: treeItemClasses.group,
-        label: treeItemClasses.label,
-      }}
-      {...other}
     />
   );
 };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    labelContent: {
-      width: "120px",
-      fontWeight: "normal",
-      flexGrow: 1,
-    },
     feeder: {
       width: "200px",
+      fontWeight: "inherit",
     },
     numbers: {
       width: "130px",
       maxWidth: "130px",
+      fontWeight: "inherit",
     },
     percent: {
       width: "90px",
       maxWidth: "90px",
+      fontWeight: "inherit",
     },
     inputField: {
       width: "100%",
